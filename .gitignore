@@ -1,0 +1,9 @@
+*  
+#ignora todo
+!/**/ 
+#no ignora los directorios
+!*.* 
+#no ignora los archivos que tengan extension.
+#solo quedan los archivos que no tengan extension
+
+exe/*
