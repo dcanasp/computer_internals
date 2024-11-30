@@ -6,4 +6,5 @@
 #no ignora los archivos que tengan extension.
 #solo quedan los archivos que no tengan extension
 
+!LICENSE
 exe/*
