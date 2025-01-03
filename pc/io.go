@@ -10,18 +10,33 @@ import (
 	"time"
 )
 
-func preLoadedInstructions(wg *sync.WaitGroup) {
+func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 	defer wg.Done()
-	instructionMemory := []int{
-		0b000000000000000000000000000, // BEGIN
-		0b000010000000010000000001010, // LOAD R4, 10
-		0b000010000000010100000001011, // LOAD R5, 11
-		0b001010000000010000000000101, // ADD R4 + R5
-		0b000100000000001000000000001, // STORE R1 -> Mem[2]
-		0b001000000000011000000000010, // LOADDISK R6, Mem[2]
-		0b000110000000011100000000100, // MOVE R7, R4
-		0b001110000000010000000001011, // MULT R4, R5
-		0b111110000000000000000000000, // END
+
+	// Open the file
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	// Read instructions from the file
+	var instructionMemory []int
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		instruction, err := strconv.ParseInt(line, 2, 64) // Assuming instructions are in binary
+		if err != nil {
+			fmt.Println("Error parsing instruction:", err)
+			continue
+		}
+		instructionMemory = append(instructionMemory, int(instruction))
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading file:", err)
+		return
 	}
 
 	for pos := range instructionMemory {
@@ -33,6 +48,8 @@ func preLoadedInstructions(wg *sync.WaitGroup) {
 		// Send signal to CPU to start processing
 		controlBus <- 0
 		<-cpuDone
+		// fmt.Println("Registers:", registers)
+		// fmt.Println("Memory:", dataMemory[:20])
 
 	}
 
@@ -73,7 +90,7 @@ func getInput(reader *bufio.Reader) (int, bool) {
 		}
 
 		// Convert binary string to integer (for easier manipulation)
-		binaryInstruction, err := strconv.ParseInt(input, 2, 32)
+		binaryInstruction, err := strconv.ParseInt(input, 2, 64)
 		if err != nil {
 			fmt.Print("Error parsing binary input:\n> ", err)
 			continue

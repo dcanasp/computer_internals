@@ -43,6 +43,9 @@ func alu(op, regA, regB int) (int, error) {
 		}
 		return regA / regB, nil
 	case 0b01001:
+		if regB == 0 {
+			return 0, fmt.Errorf("division by zero")
+		}
 		return regA % regB, nil
 	default:
 		fmt.Println("Unknown Operation: ", op)

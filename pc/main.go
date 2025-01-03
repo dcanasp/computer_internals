@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sync"
 )
 
-var dataMemory = make([]int, 2048)
+var dataMemory = make([]int, 8192)
+
+// var dataMemory = make([]int, 2048)
 var registers = make([]int, 32)
 
 var programCounter = 0
@@ -27,23 +30,27 @@ type controlSignal struct {
 }
 
 func main() {
-	var wg sync.WaitGroup
 
-	// Start CPU and MemoryUnit in separate goroutines
+	if len(os.Args) < 2 {
+		fmt.Println("No hay archivo de entrada: ./pc <input_file>")
+		return
+	}
+
 	go cpu()
 	go memoryUnit()
 	go operativeSystem()
 
-	// var wg2 sync.WaitGroup
-	// wg2.Add(1)
-	// go preLoadedInstructions(&wg2)
-	// wg2.Wait()
+	inputFile := os.Args[1]
+	var wg2 sync.WaitGroup
+	wg2.Add(1)
+	go preLoadedInstructions(&wg2, inputFile)
+	wg2.Wait()
 	go printEachCycle()
-	// Start IO in a separate goroutine
-	wg.Add(1)
-	go io(&wg)
-	// Wait for IO to finish
-	wg.Wait()
+
+	// var wg sync.WaitGroup
+	// wg.Add(1)
+	// go io(&wg)
+	// wg.Wait()
 
 	// Output final state
 	fmt.Println("Final Registers:", registers)
