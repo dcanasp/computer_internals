@@ -67,8 +67,8 @@ func getInput(reader *bufio.Reader) (int, bool) {
 		}
 
 		// Validate binary input
-		if len(input) != 27 || strings.Trim(input, "01") != "" {
-			fmt.Print("Invalid input. Please enter a 27-bit binary instruction.\n> ")
+		if len(input) != 32 || strings.Trim(input, "01") != "" {
+			fmt.Print("Invalid input. Please enter a 32-bit binary instruction.\n> ")
 			continue
 		}
 
@@ -88,7 +88,7 @@ func io(wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter 27-bit binary instructions or type EXIT:\n> ")
+	fmt.Print("Enter 32-bit binary instructions or type EXIT:\n> ")
 	for {
 		binaryInstruction, exit := getInput(reader)
 		if exit {

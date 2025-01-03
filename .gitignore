@@ -5,6 +5,8 @@
 !*.* 
 #no ignora los archivos que tengan extension.
 #solo quedan los archivos que no tengan extension
+*.exe
+exe/*
 
 !LICENSE
-exe/*
+!Makefile

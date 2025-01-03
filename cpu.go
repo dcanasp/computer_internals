@@ -7,13 +7,16 @@ type executionFunc func(signal controlSignal)
 var instructions map[int]executionFunc
 
 func decodeInstruction(instruction int) controlSignal {
-	opcode := (instruction >> 22) & 0b11111     // Extract bits 27-22
-	src1 := (instruction >> 11) & 0b11111111111 // Extract bits 21-11
-	src2 := (instruction) & 0b11111111111       // Extract bits 10-0
+	opcode := (instruction >> 27) & 0b11111       // Extract bits 28-32
+	src1 := (instruction >> 14) & 0b1111111111111 // Extract bits 15-27
+	signSrc2 := (instruction >> 13) & 0b1         // Extract bit 14 el signo de src2
+	src2 := (instruction) & 0b1111111111111       // Extract bits 0-13
+	signSrc2 = 1 - 2*signSrc2                     // deja el signo en -1 o 1
 	return controlSignal{
-		Command: opcode,
-		Src1:    src1,
-		Src2:    src2,
+		Command:  opcode,
+		Src1:     src1,
+		Src2:     src2,
+		SignSrc2: signSrc2,
 	}
 }
 
@@ -34,6 +37,13 @@ func alu(op, regA, regB int) (int, error) {
 		return regA - regB, nil
 	case 0b00111:
 		return regA * regB, nil
+	case 0b01000:
+		if regB == 0 {
+			return 0, fmt.Errorf("division by zero")
+		}
+		return regA / regB, nil
+	case 0b01001:
+		return regA % regB, nil
 	default:
 		fmt.Println("Unknown Operation: ", op)
 		return 0, fmt.Errorf("unknown operation: %d", op)
@@ -62,7 +72,7 @@ func startInstructions() {
 		},
 		0b00001: func(signal controlSignal) { // LOAD
 			if validateRegisterAccess(signal.Src1) {
-				registers[signal.Src1] = signal.Src2
+				registers[signal.Src1] = signal.SignSrc2 * signal.Src2
 			}
 		},
 		0b00010: func(signal controlSignal) { // STORE
@@ -96,6 +106,51 @@ func startInstructions() {
 			if validateRegisterAccess(signal.Src1) {
 				aluMapper(signal)
 			}
+		},
+		0b01000: func(signal controlSignal) { // DIV,
+			if validateRegisterAccess(signal.Src1) {
+				aluMapper(signal)
+			}
+		},
+		0b01001: func(signal controlSignal) { // MOD,
+			if validateRegisterAccess(signal.Src1) {
+				aluMapper(signal)
+			}
+		},
+		0b01010: func(signal controlSignal) { // AND,
+			registers[signal.Src1] = registers[signal.Src1] & registers[signal.Src2]
+		},
+		0b01011: func(signal controlSignal) { // OR,
+			registers[signal.Src1] = registers[signal.Src1] | registers[signal.Src2]
+		},
+		0b01100: func(signal controlSignal) { // XOR,
+			registers[signal.Src1] = registers[signal.Src1] ^ registers[signal.Src2]
+		},
+		0b01101: func(signal controlSignal) { // NOT,
+			registers[signal.Src1] = registers[signal.Src1] ^ 0b1111111111111
+		},
+		0b01110: func(signal controlSignal) { // LEFTSHIFT,
+			registers[signal.Src1] = registers[signal.Src1] << registers[signal.Src2]
+		},
+		0b01111: func(signal controlSignal) { // RightSHIFT,
+			registers[signal.Src1] = registers[signal.Src1] >> registers[signal.Src2]
+		},
+		0b10000: func(signal controlSignal) { // CMP,
+			if registers[signal.Src1] == signal.SignSrc2*signal.Src2 {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b10001: func(signal controlSignal) { // CMPREG,
+			if registers[signal.Src1] == registers[signal.Src2] {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b10010: func(signal controlSignal) { // JUMP,
+			programCounter = signal.Src1
 		},
 	}
 }

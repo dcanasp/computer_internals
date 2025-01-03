@@ -20,9 +20,10 @@ var cpuDone = make(chan bool)
 var memoryDone = make(chan bool)
 
 type controlSignal struct {
-	Command int
-	Src1    int
-	Src2    int
+	Command  int
+	Src1     int
+	Src2     int
+	SignSrc2 int
 }
 
 func main() {
@@ -33,10 +34,10 @@ func main() {
 	go memoryUnit()
 	go operativeSystem()
 
-	var wg2 sync.WaitGroup
-	wg2.Add(1)
-	go preLoadedInstructions(&wg2)
-	wg2.Wait()
+	// var wg2 sync.WaitGroup
+	// wg2.Add(1)
+	// go preLoadedInstructions(&wg2)
+	// wg2.Wait()
 	go printEachCycle()
 	// Start IO in a separate goroutine
 	wg.Add(1)
@@ -46,5 +47,5 @@ func main() {
 
 	// Output final state
 	fmt.Println("Final Registers:", registers)
-	fmt.Println("Final Memory:", dataMemory[:20])
+	fmt.Println("Final Memory:", dataMemory[:100])
 }
