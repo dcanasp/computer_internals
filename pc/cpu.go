@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 type executionFunc func(signal controlSignal)
 
@@ -72,6 +75,9 @@ func startInstructions() {
 				registers[2] = programCounter
 				programCounter = registers[1]
 			}
+		},
+		0b11110: func(signal controlSignal) { // FIN
+			os.Exit(0)
 		},
 		0b00001: func(signal controlSignal) { // LOAD
 			if validateRegisterAccess(signal.Src1) {
@@ -155,6 +161,16 @@ func startInstructions() {
 		0b10010: func(signal controlSignal) { // JUMP,
 			programCounter = signal.Src1
 		},
+		0b10011: func(signal controlSignal) { // JEQ,
+			if registers[3] == 1 {
+				programCounter = signal.Src1
+			}
+		},
+		0b10100: func(signal controlSignal) { // JNE,
+			if registers[3] == 0 {
+				programCounter = signal.Src1
+			}
+		},
 	}
 }
 
@@ -164,6 +180,9 @@ func cpuLogic() {
 	signal := <-readDataBus
 
 	instruction := decodeInstruction(signal)
+	if instruction.Command == 0b10011 {
+		fmt.Println("JUMP")
+	}
 	if instruction.Command == 0b11111 {
 		execute(instruction)
 	}

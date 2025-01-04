@@ -29,8 +29,10 @@ type controlSignal struct {
 	SignSrc2 int
 }
 
-func main() {
+// var inputFile string = `C:\David\nacional\lenguajes\16\pcIN.txt`
 
+func main() {
+	fmt.Println("Starting PC")
 	if len(os.Args) < 2 {
 		fmt.Println("No hay archivo de entrada: ./pc <input_file>")
 		return
@@ -47,10 +49,10 @@ func main() {
 	wg2.Wait()
 	go printEachCycle()
 
-	// var wg sync.WaitGroup
-	// wg.Add(1)
-	// go io(&wg)
-	// wg.Wait()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go io(&wg)
+	wg.Wait()
 
 	// Output final state
 	fmt.Println("Final Registers:", registers)

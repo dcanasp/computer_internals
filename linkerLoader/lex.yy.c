@@ -1,6 +1,6 @@
-#line 2 "assembler/lex.yy.c"
+#line 2 "linkerLoader/lex.yy.c"
 
-#line 4 "assembler/lex.yy.c"
+#line 4 "linkerLoader/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -364,16 +364,13 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[80] =
+static const flex_int16_t yy_accept[48] =
     {   0,
-        0,    0,    9,    7,    1,    2,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    1,
+        0,    0,    9,    7,    6,    5,    7,    7,    7,    7,
+        7,    7,    7,    7,    7,    7,    5,    0,    1,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    3,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    6,    0,    0,    0,    0,    0,    0,    0,
-        5,    0,    0,    4,    0,    0,    0,    0,    0
+        0,    0,    0,    4,    0,    0,    0,    0,    0,    0,
+        0,    0,    3,    0,    3,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -382,16 +379,16 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    4,    1,    1,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    5,    1,    1,
         1,    1,    1,    1,    6,    7,    8,    9,   10,   11,
-       12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
-       22,   23,   24,   25,   26,   27,    1,   28,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+       12,   11,   13,   14,   11,   15,   16,   17,   18,   19,
+       20,   11,   21,   11,   22,   23,   11,   11,   11,   11,
+        1,    1,    1,    1,   11,    1,   11,   11,   11,   11,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,   11,   11,   11,   11,   11,   11,   11,   11,   11,
+       11,   11,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -408,75 +405,69 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[29] =
+static const YY_CHAR yy_meta[24] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1
+        1,    2,    1,    3,    4,    5,    5,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
+        5,    5,    5
     } ;
 
-static const flex_int16_t yy_base[80] =
+static const flex_int16_t yy_base[52] =
     {   0,
-        0,    0,  118,  119,  115,  119,   20,  106,   97,  100,
-       94,   21,   22,   10,   92,   88,   96,    8,   89,  106,
-       98,   97,   93,   83,   76,   93,   79,   90,   81,   87,
-       91,   26,   79,   70,   92,   81,   72,   84,   67,   75,
-       35,  119,   86,   66,   62,   76,   74,   58,   36,   69,
-       58,   61,   41,   69,   43,   65,   42,   47,   52,   66,
-       52,   63,   69,   59,   58,   54,   47,   58,   59,   45,
-       63,   54,   61,   60,   39,   45,   41,   39,  119
+      106,    0,  108,  110,  110,  104,   19,   20,   21,   22,
+       24,   98,   37,   26,   27,   28,  100,   86,  110,   29,
+       31,   34,   35,   43,   41,   46,   50,   57,   52,   55,
+       60,   66,   59,   85,   71,   64,   69,   72,   77,   75,
+       87,   82,    0,   83,    0,   84,  110,   92,   95,   99,
+      102
     } ;
 
-static const flex_int16_t yy_def[80] =
+static const flex_int16_t yy_def[52] =
     {   0,
-       79,    1,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,    0
+       48,   47,   47,   47,   47,   47,   49,   49,   49,   49,
+       49,   49,   49,   49,   49,   49,   47,   49,   47,   49,
+       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
+       49,   49,   49,   49,   49,   49,   49,   49,   47,   49,
+       50,   47,   51,   47,   51,   47,    0,   47,   47,   47,
+       47
     } ;
 
-static const flex_int16_t yy_nxt[148] =
+static const flex_int16_t yy_nxt[134] =
     {   0,
-        4,    5,    6,    4,    4,    7,    8,    9,   10,   11,
-        4,    4,    4,    4,   12,    4,   13,   14,   15,   16,
-        4,    4,   17,   18,    4,    4,    4,   19,   21,   32,
-       27,   30,   37,   38,   35,   33,   53,   49,   22,   28,
-       58,   31,   53,   53,   55,   61,   29,   63,   66,   35,
-       65,   58,   47,   68,   78,   66,   61,   54,   71,   68,
-       35,   73,   74,   35,   74,   74,   77,   71,   76,   75,
-       72,   70,   69,   63,   35,   35,   67,   64,   62,   42,
-       60,   59,   35,   35,   57,   56,   43,   55,   52,   35,
-       35,   51,   50,   49,   43,   48,   46,   45,   44,   43,
+        4,    6,    5,    4,    4,    7,    8,    9,   10,   11,
+       12,   12,   12,   13,   14,   15,   12,   12,   12,   12,
+       16,   12,   12,   19,   19,   19,   19,   20,   19,   21,
+       19,   19,   19,   19,   23,   19,   22,   32,   19,   19,
+       24,   19,   33,   28,   29,   19,   25,   19,   30,   31,
+       19,   34,   32,   26,   19,   35,   19,   32,   27,   19,
+       35,   19,   37,   19,   19,   36,   32,   39,   19,   32,
+       19,   40,   41,   19,   38,   19,   19,   32,   39,   19,
+       42,   32,   35,   44,   44,   42,   46,   46,   41,   19,
+       19,   34,    4,    4,    4,    4,    4,   18,   18,   18,
 
-       43,   42,   35,   41,   40,   35,   35,   20,   39,   36,
-       35,   34,   26,   25,   24,   23,   20,   79,    3,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79
+       43,   17,   19,   43,   45,   17,   45,   47,    5,    3,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+       47,   47,   47
     } ;
 
-static const flex_int16_t yy_chk[148] =
+static const flex_int16_t yy_chk[134] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    7,   14,
-       12,   13,   18,   18,   32,   14,   41,   49,    7,   12,
-       49,   13,   53,   57,   55,   53,   12,   55,   58,   78,
-       57,   58,   32,   61,   77,   66,   61,   41,   66,   68,
-       76,   68,   68,   75,   74,   73,   72,   71,   70,   69,
-       67,   65,   64,   63,   62,   60,   59,   56,   54,   52,
-       51,   50,   48,   47,   46,   45,   44,   43,   40,   39,
-       38,   37,   36,   35,   34,   33,   31,   30,   29,   28,
+        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+        2,    2,    2,    7,    8,    9,   10,    7,   11,    8,
+       14,   15,   16,   20,   10,   21,    9,   20,   22,   23,
+       11,   13,   21,   14,   15,   25,   13,   24,   15,   16,
+       26,   24,   22,   13,   27,   26,   29,   23,   13,   30,
+       25,   28,   28,   33,   31,   27,   31,   32,   36,   30,
+       32,   33,   35,   37,   29,   35,   38,   37,   39,   40,
+       39,   38,   36,   42,   44,   42,   44,   46,   41,   34,
+       18,   40,   48,   48,   48,   48,   48,   49,   49,   49,
 
-       27,   26,   25,   24,   23,   22,   21,   20,   19,   17,
-       16,   15,   11,   10,    9,    8,    5,    3,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79
+       50,   17,   12,   50,   51,    6,   51,    3,    1,   47,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+       47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+       47,   47,   47
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -493,24 +484,99 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "assembler/assembler.l"
-#line 2 "assembler/assembler.l"
+#line 1 "linkerLoader/linkerLoader.l"
+#line 2 "linkerLoader/linkerLoader.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-// Global file pointer for output
-FILE *output_file;
+#define MAX_LABELS 100
+#define MAX_INSTRUCTIONS 1000
+#define MAX_LINE_LENGTH 100
 
-// Function to convert an integer to a binary string
-void int_to_binary(int num, int bits, char *output) {
-    for (int i = bits - 1; i >= 0; i--) {
-        output[bits - 1 - i] = (num & (1 << i)) ? '1' : '0';
+typedef struct {
+    char name[50];
+    int address;
+    int first_jump_location;  // Ubicación del primer salto a esta etiqueta
+} Label;
+
+Label labels[MAX_LABELS];
+int label_count = 0;
+char instructions[MAX_INSTRUCTIONS][MAX_LINE_LENGTH];
+int instruction_count = 0;
+
+// Función mejorada para encontrar la dirección de una etiqueta
+int get_label_address(const char *name) {
+    char clean_name[50];
+    strncpy(clean_name, name, sizeof(clean_name) - 1);
+    clean_name[sizeof(clean_name) - 1] = '\0';
+    
+    char *colon = strchr(clean_name, ':');
+    if (colon) *colon = '\0';
+
+    for (int i = 0; i < label_count; i++) {
+        if (strcmp(labels[i].name, clean_name) == 0) {
+            return labels[i].address;
+        }
     }
-    output[bits] = '\0'; // Null-terminate the string
+    return -1;
 }
-#line 513 "assembler/lex.yy.c"
-#line 514 "assembler/lex.yy.c"
+
+// Función para encontrar una etiqueta por nombre
+Label* find_label(const char *name) {
+    for (int i = 0; i < label_count; i++) {
+        if (strcmp(labels[i].name, name) == 0) {
+            return &labels[i];
+        }
+    }
+    return NULL;
+}
+
+// Función mejorada para resolver las referencias a etiquetas
+void resolve_labels() {
+    for (int i = 0; i < instruction_count; i++) {
+        char line[MAX_LINE_LENGTH];
+        char opcode[20], arg1[20], arg2[20];
+        strcpy(line, instructions[i]);
+        
+        int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
+        
+        if (args >= 2) {
+            if (strcmp(opcode, "JNE") == 0) {
+                Label* label = find_label(arg1);
+                if (label != NULL) {
+                    // Si es la primera vez que vemos este salto, guardamos su ubicación
+                    if (label->first_jump_location == -1) {
+                        label->first_jump_location = i;
+                        sprintf(instructions[i], "JNE %d", label->address);
+                    } else {
+                        // Si es un salto desde dentro del bucle, agregamos un JUMP adicional
+                        sprintf(instructions[i], "JNE %d", label->address);
+                        
+                        // Agregar un JUMP a la instrucción después del primer JNE
+                        // Desplazamos todas las instrucciones una posición
+                        for (int j = instruction_count; j > i + 1; j--) {
+                            strcpy(instructions[j], instructions[j-1]);
+                        }
+                        // Insertamos el JUMP
+                        sprintf(instructions[i + 1], "JUMP %d", label->first_jump_location + 1);
+                        instruction_count++;
+                        i++; // Saltamos la instrucción que acabamos de insertar
+                    }
+                }
+            } else if (strcmp(opcode, "JUMP") == 0 || strcmp(opcode, "JEQ") == 0) {
+                int addr = get_label_address(arg1);
+                if (addr != -1) {
+                    sprintf(instructions[i], "%s %d", opcode, addr);
+                }
+            }
+        }
+    }
+}
+
+#line 579 "linkerLoader/lex.yy.c"
+#line 580 "linkerLoader/lex.yy.c"
 
 #define INITIAL 0
 
@@ -690,6 +756,9 @@ extern int yylex (void);
 #endif
 
 #define YY_RULE_SETUP \
+	if ( yyleng > 0 ) \
+		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \
+				(yytext[yyleng - 1] == '\n'); \
 	YY_USER_ACTION
 
 /** The main scanner function which does all the work.
@@ -727,10 +796,10 @@ YY_DECL
 		}
 
 	{
-#line 25 "assembler/assembler.l"
+#line 99 "linkerLoader/linkerLoader.l"
 
 
-#line 734 "assembler/lex.yy.c"
+#line 803 "linkerLoader/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -745,6 +814,7 @@ YY_DECL
 		yy_bp = yy_cp;
 
 		yy_current_state = (yy_start);
+		yy_current_state += YY_AT_BOL();
 yy_match:
 		do
 			{
@@ -757,13 +827,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 80 )
+				if ( yy_current_state >= 48 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 119 );
+		while ( yy_base[yy_current_state] != 110 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -789,130 +859,67 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "assembler/assembler.l"
-; // Ignore spaces and tabs
+#line 101 "linkerLoader/linkerLoader.l"
+{
+    char *label = strdup(yytext);
+    label[strlen(label)-1] = '\0';
+    strncpy(labels[label_count].name, label, sizeof(labels[label_count].name) - 1);
+    labels[label_count].name[sizeof(labels[label_count].name) - 1] = '\0';
+    labels[label_count].address = instruction_count;
+    labels[label_count].first_jump_location = -1;  // Inicializamos en -1
+    label_count++;
+    free(label);
+}
 	YY_BREAK
 case 2:
-/* rule 2 can match eol */
 YY_RULE_SETUP
-#line 28 "assembler/assembler.l"
-; // Ignore newlines
+#line 112 "linkerLoader/linkerLoader.l"
+{
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
+}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 30 "assembler/assembler.l"
+#line 118 "linkerLoader/linkerLoader.l"
 {
-    const char *output;
-    if (strcmp(yytext, "BEGIN") == 0) {
-        output = "00000000000000000000000000000000\n";
-    } else if (strcmp(yytext, "END") == 0) {
-        output = "11111000000000000000000000000000\n";
-    }
-
-    printf("%s", output);
-    fprintf(output_file, "%s", output);
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 41 "assembler/assembler.l"
+#line 124 "linkerLoader/linkerLoader.l"
 {
-    int reg, value, sign;
-    char reg_bin[14], value_bin[14], sign_bin[2];
-    char opcode[6];
-
-    sscanf(yytext, "%s %d %d", opcode, &reg, &value);
-    sign = (value < 0) ? 1 : 0;
-    value = abs(value);
-
-    int_to_binary(reg, 13, reg_bin);
-    int_to_binary(value, 13, value_bin);
-    int_to_binary(sign, 1, sign_bin);
-
-    char output[34];
-    if (strcmp(opcode, "LOAD") == 0) {
-        sprintf(output, "00001%s%s%s\n", reg_bin, sign_bin, value_bin);
-    } else if (strcmp(opcode, "CMP") == 0) {
-        sprintf(output, "10000%s%s%s\n", reg_bin, sign_bin, value_bin);
-    }
-
-    printf("%s", output);
-    fprintf(output_file, "%s", output);
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 65 "assembler/assembler.l"
-{
-    char op[10];
-    int reg1, reg2, opcode;
-    char reg1_bin[14], reg2_bin[14];
-
-    sscanf(yytext, "%s %d %d", op, &reg1, &reg2);
-    if (strcmp(op, "STORE") == 0) opcode = 2;
-    else if (strcmp(op, "MOVE") == 0) opcode = 3;
-    else if (strcmp(op, "LOADDISK") == 0) opcode = 4;
-    else if (strcmp(op, "ADD") == 0) opcode = 5;
-    else if (strcmp(op, "SUB") == 0) opcode = 6;
-    else if (strcmp(op, "MULT") == 0) opcode = 7;
-    else if (strcmp(op, "DIV") == 0) opcode = 8;
-    else if (strcmp(op, "MOD") == 0) opcode = 9;
-    else if (strcmp(op, "AND") == 0) opcode = 10;
-    else if (strcmp(op, "OR") == 0) opcode = 11;
-    else if (strcmp(op, "XOR") == 0) opcode = 12;
-    else if (strcmp(op, "LEFSHIFT") == 0) opcode = 14;
-    else if (strcmp(op, "RIGHTSHIF") == 0) opcode = 15;
-    else if (strcmp(op, "CMPREG") == 0) opcode = 17;
-
-    int_to_binary(reg1, 13, reg1_bin);
-    int_to_binary(reg2, 13, reg2_bin);
-
-    char opcode_bin[6];
-    int_to_binary(opcode, 5, opcode_bin);
-
-    char output[34];
-    sprintf(output, "%s%s0%s\n", opcode_bin, reg1_bin, reg2_bin);
-    printf("%s", output);
-    fprintf(output_file, "%s", output);
-}
+#line 130 "linkerLoader/linkerLoader.l"
+;
 	YY_BREAK
 case 6:
+/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 98 "assembler/assembler.l"
-{
-    char op[10];
-    int reg,opcode;
-    char reg_bin[14];
-
-    sscanf(yytext, "%s %d", op,&reg);
-    int_to_binary(reg, 13, reg_bin);
-
-    if (strcmp(op, "NOT") == 0) opcode = 13;
-    else if (strcmp(op, "JUMP") == 0) opcode = 18;
-    else if (strcmp(op, "JEQ") == 0) opcode = 19;
-    else if (strcmp(op, "JNE") == 0) opcode = 20;
-
-    char opcode_bin[6];
-    int_to_binary(opcode, 5, opcode_bin);
-
-    char output[34];
-    sprintf(output, "%s%s00000000000000\n", opcode_bin,reg_bin);
-    printf("%s", output);
-    fprintf(output_file, "%s", output);
-}
+#line 131 "linkerLoader/linkerLoader.l"
+;
 	YY_BREAK
 case 7:
-/* rule 7 can match eol */
 YY_RULE_SETUP
-#line 121 "assembler/assembler.l"
-{ fprintf(stderr, "Unrecognized input: %s\n", yytext); }
+#line 132 "linkerLoader/linkerLoader.l"
+;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 123 "assembler/assembler.l"
+#line 134 "linkerLoader/linkerLoader.l"
 ECHO;
 	YY_BREAK
-#line 916 "assembler/lex.yy.c"
+#line 923 "linkerLoader/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1197,6 +1204,7 @@ static int yy_get_next_buffer (void)
 	char *yy_cp;
     
 	yy_current_state = (yy_start);
+	yy_current_state += YY_AT_BOL();
 
 	for ( yy_cp = (yytext_ptr) + YY_MORE_ADJ; yy_cp < (yy_c_buf_p); ++yy_cp )
 		{
@@ -1209,7 +1217,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 80 )
+			if ( yy_current_state >= 48 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1237,11 +1245,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 80 )
+		if ( yy_current_state >= 48 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 79);
+	yy_is_jam = (yy_current_state == 47);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1356,6 +1364,8 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
 
 	return c;
 }
@@ -1917,34 +1927,37 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 123 "assembler/assembler.l"
+#line 134 "linkerLoader/linkerLoader.l"
 
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+        fprintf(stderr, "Uso: %s <archivo_entrada>\n", argv[0]);
         return 1;
     }
 
     FILE *file = fopen(argv[1], "r");
     if (!file) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    output_file = fopen("pcIN.txt", "w");
-    if (!output_file) {
-        perror("Error creating output file");
-        fclose(file);
+        perror("Error al abrir el archivo");
         return 1;
     }
 
     yyin = file;
     yylex();
-
     fclose(file);
-    fclose(output_file);
 
+    resolve_labels();
+
+    FILE *output_file = fopen("assemblerIN.asm", "w");
+    if (!output_file) {
+        perror("Error al crear el archivo de salida");
+        return 1;
+    }
+
+    for (int i = 0; i < instruction_count; i++) {
+        fprintf(output_file, "%s\n", instructions[i]);
+    }
+
+    fclose(output_file);
     return 0;
 }
-

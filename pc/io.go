@@ -33,6 +33,7 @@ func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 		}
 		instructionMemory = append(instructionMemory, int(instruction))
 	}
+	fmt.Println("Instructions:", instructionMemory)
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
@@ -48,7 +49,7 @@ func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 		// Send signal to CPU to start processing
 		controlBus <- 0
 		<-cpuDone
-		// fmt.Println("Registers:", registers)
+		// fmt.Println("Registers:", registers, "PC:", programCounter)
 		// fmt.Println("Memory:", dataMemory[:20])
 
 	}
@@ -62,7 +63,7 @@ func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 func printEachCycle() {
 	for {
 		<-cpuDone
-		fmt.Println("Registers:", registers)
+		fmt.Println("Registers:", registers, "PC:", programCounter)
 		fmt.Println("Memory:", dataMemory[:20])
 		fmt.Print("> ")
 	}

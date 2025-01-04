@@ -95,15 +95,24 @@ SINGLE      [ \t]+{REGISTER}
     fprintf(output_file, "%s", output);
 }
 
-NOT{SINGLE} {
-    int reg;
+(JUMP|JEQ|JNE|NOT){SINGLE} {
+    char op[10];
+    int reg,opcode;
     char reg_bin[14];
 
-    sscanf(yytext, "NOT %d", &reg);
+    sscanf(yytext, "%s %d", op,&reg);
     int_to_binary(reg, 13, reg_bin);
 
+    if (strcmp(op, "NOT") == 0) opcode = 13;
+    else if (strcmp(op, "JUMP") == 0) opcode = 18;
+    else if (strcmp(op, "JEQ") == 0) opcode = 19;
+    else if (strcmp(op, "JNE") == 0) opcode = 20;
+
+    char opcode_bin[6];
+    int_to_binary(opcode, 5, opcode_bin);
+
     char output[34];
-    sprintf(output, "01101%s00000000000000\n", reg_bin);
+    sprintf(output, "%s%s00000000000000\n", opcode_bin,reg_bin);
     printf("%s", output);
     fprintf(output_file, "%s", output);
 }
