@@ -27,12 +27,14 @@ SINGLE      [ \t]+{REGISTER}
 [ \t]+              ; // Ignore spaces and tabs
 \n                  ; // Ignore newlines
 
-(BEGIN|END) {
+(BEGIN|END|FIN) {
     const char *output;
     if (strcmp(yytext, "BEGIN") == 0) {
         output = "00000000000000000000000000000000\n";
     } else if (strcmp(yytext, "END") == 0) {
         output = "11111000000000000000000000000000\n";
+    } else if (strcmp(yytext, "FIN") == 0) {
+        output = "11110000000000000000000000000000\n";
     }
 
     printf("%s", output);

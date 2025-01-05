@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,10 +11,10 @@ import (
 	"time"
 )
 
-func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
+func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath string) {
 	defer wg.Done()
 
-	// Open the file
+	// Open the file only once, before starting the loop
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
@@ -21,7 +22,7 @@ func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 	}
 	defer file.Close()
 
-	// Read instructions from the file
+	// Read instructions from the file into memory
 	var instructionMemory []int
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -33,39 +34,63 @@ func preLoadedInstructions(wg *sync.WaitGroup, filePath string) {
 		}
 		instructionMemory = append(instructionMemory, int(instruction))
 	}
-	fmt.Println("Instructions:", instructionMemory)
-
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
 		return
 	}
 
-	for pos := range instructionMemory {
-		instr := instructionMemory[pos]
-		addressBus <- programCounter
-		writeDataBus <- instr
-		//waits for memory unit to finish writing it
-		<-memoryDone
-		// Send signal to CPU to start processing
-		controlBus <- 0
-		<-cpuDone
-		// fmt.Println("Registers:", registers, "PC:", programCounter)
-		// fmt.Println("Memory:", dataMemory[:20])
-
+	// Process the instructions
+	fmt.Println("Instructions:", instructionMemory)
+	ticker := time.NewTicker(100 * time.Millisecond) // Check for context cancellation every 100ms
+	defer ticker.Stop()
+	for _, instr := range instructionMemory {
+		select {
+		case <-ctx.Done():
+			// Stop the goroutine if context is canceled
+			fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation")
+			return
+		case <-ticker.C:
+			// Send instruction to memory and process
+			addressBus <- programCounter
+			writeDataBus <- instr
+			// Wait for memory unit to finish writing
+			select {
+			case <-memoryDone:
+			case <-ctx.Done():
+				fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation (waiting for memory)")
+				return
+			}
+			// Send signal to CPU to start processing
+			controlBus <- 0
+			// Wait for CPU to finish processing, allowing ctx to interrupt
+			select {
+			case <-cpuDone:
+			case <-ctx.Done():
+				fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation (waiting for CPU)")
+				return
+			}
+		}
 	}
 
+	// Print the preloaded registers and memory state
 	fmt.Println("Preloaded Registers:", registers)
 	fmt.Println("Preloaded Memory:", dataMemory[:20])
-	time.Sleep(1 * time.Second) // Para que alcance a pintar a la pantalla
-
 }
 
-func printEachCycle() {
+func printEachCycle(ctx context.Context) {
 	for {
-		<-cpuDone
-		fmt.Println("Registers:", registers, "PC:", programCounter)
-		fmt.Println("Memory:", dataMemory[:20])
-		fmt.Print("> ")
+		select {
+		case <-cpuDone:
+			// Print the cycle information
+			fmt.Println("Registers:", registers, "PC:", programCounter)
+			fmt.Println("Memory:", dataMemory[:20])
+			fmt.Print("> ")
+
+		case <-ctx.Done():
+			// Context was canceled, so stop the goroutine
+			fmt.Println("Stopping Print Each Cycle goroutine")
+			return
+		}
 	}
 }
 
@@ -76,40 +101,53 @@ func showErrors(text string) {
 	fmt.Printf("%sError: %s%s\n", redColor, text, resetColor)
 }
 
-func getInput(reader *bufio.Reader) (int, bool) {
+func getInput(ctx context.Context, reader *bufio.Reader) (int, bool) {
+	ticker := time.NewTicker(100 * time.Millisecond) // Check for context cancellation every 100ms
+	defer ticker.Stop()
+
 	for {
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
-		if strings.ToLower(input) == "exit" || strings.ToLower(input) == "quit" {
+		select {
+		case <-ctx.Done():
+			// If the context is canceled, stop reading input
+			fmt.Println("Input canceled due to context cancellation")
 			return 0, true
-		}
+		case <-ticker.C:
+			// Every 100ms, check if the context is canceled, and also try reading input
+			input, _ := reader.ReadString('\n')
+			input = strings.TrimSpace(input)
 
-		// Validate binary input
-		if len(input) != 32 || strings.Trim(input, "01") != "" {
-			fmt.Print("Invalid input. Please enter a 32-bit binary instruction.\n> ")
-			continue
-		}
+			// Check for exit commands
+			if strings.ToLower(input) == "exit" || strings.ToLower(input) == "quit" {
+				return 0, true
+			}
 
-		// Convert binary string to integer (for easier manipulation)
-		binaryInstruction, err := strconv.ParseInt(input, 2, 64)
-		if err != nil {
-			fmt.Print("Error parsing binary input:\n> ", err)
-			continue
-		}
+			// Validate binary input
+			if len(input) != 32 || strings.Trim(input, "01") != "" {
+				fmt.Print("Invalid input. Please enter a 32-bit binary instruction.\n> ")
+				continue
+			}
 
-		return int(binaryInstruction), false
+			// Convert binary string to integer (for easier manipulation)
+			binaryInstruction, err := strconv.ParseInt(input, 2, 64)
+			if err != nil {
+				fmt.Print("Error parsing binary input:\n> ", err)
+				continue
+			}
+
+			return int(binaryInstruction), false
+		}
 	}
-
 }
 
-func io(wg *sync.WaitGroup) {
+func io(ctx context.Context, cancel context.CancelFunc, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Enter 32-bit binary instructions or type EXIT:\n> ")
 	for {
-		binaryInstruction, exit := getInput(reader)
+		binaryInstruction, exit := getInput(ctx, reader)
 		if exit {
+			cancel()
 			break
 		}
 

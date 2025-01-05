@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -32,26 +33,28 @@ type controlSignal struct {
 // var inputFile string = `C:\David\nacional\lenguajes\16\pcIN.txt`
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel() // Ensure cancellation when done
 	fmt.Println("Starting PC")
 	if len(os.Args) < 2 {
 		fmt.Println("No hay archivo de entrada: ./pc <input_file>")
 		return
 	}
 
-	go cpu()
-	go memoryUnit()
-	go operativeSystem()
+	go cpu(ctx, cancel)
+	go memoryUnit(ctx)
+	go operativeSystem(ctx)
 
 	inputFile := os.Args[1]
 	var wg2 sync.WaitGroup
 	wg2.Add(1)
-	go preLoadedInstructions(&wg2, inputFile)
+	go preLoadedInstructions(ctx, &wg2, inputFile)
 	wg2.Wait()
-	go printEachCycle()
+	go printEachCycle(ctx)
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go io(&wg)
+	go io(ctx, cancel, &wg)
 	wg.Wait()
 
 	// Output final state

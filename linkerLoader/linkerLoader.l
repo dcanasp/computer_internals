@@ -73,7 +73,7 @@ void resolve_labels() {
                             strcpy(instructions[j], instructions[j-1]);
                         }
                         // Insertamos el JUMP
-                        sprintf(instructions[i + 1], "JUMP %d", label->first_jump_location + 1);
+                        sprintf(instructions[i + 1], "JUMP %d", label->first_jump_location);
                         instruction_count++;
                         i++; // Saltamos la instrucción que acabamos de insertar
                     }
@@ -103,7 +103,7 @@ WHITESPACE  [ \t]+
     label[strlen(label)-1] = '\0';
     strncpy(labels[label_count].name, label, sizeof(labels[label_count].name) - 1);
     labels[label_count].name[sizeof(labels[label_count].name) - 1] = '\0';
-    labels[label_count].address = instruction_count;
+    labels[label_count].address = instruction_count -1;
     labels[label_count].first_jump_location = -1;  // Inicializamos en -1
     label_count++;
     free(label);
@@ -121,7 +121,7 @@ WHITESPACE  [ \t]+
     instruction_count++;
 }
 
-^(BEGIN|END) {
+^(BEGIN|END|FIN) {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;

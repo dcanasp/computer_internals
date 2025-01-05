@@ -1,8 +1,8 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"os"
 )
 
 type executionFunc func(signal controlSignal)
@@ -61,7 +61,7 @@ func aluMapper(signal controlSignal) {
 	registers[signal.Src1] = result
 }
 
-func startInstructions() {
+func startInstructions(cancel context.CancelFunc) {
 	instructions = map[int]executionFunc{
 		0b00000: func(signal controlSignal) { // BEGIN
 			if registers[0] == 0 {
@@ -77,7 +77,8 @@ func startInstructions() {
 			}
 		},
 		0b11110: func(signal controlSignal) { // FIN
-			os.Exit(0)
+			fmt.Println("FIN signal received, stopping all.")
+			cancel()
 		},
 		0b00001: func(signal controlSignal) { // LOAD
 			if validateRegisterAccess(signal.Src1) {
@@ -174,44 +175,64 @@ func startInstructions() {
 	}
 }
 
-func cpuLogic() {
+func cpuLogic(ctx context.Context) bool {
 
-	addressBus <- programCounter
-	signal := <-readDataBus
+	select {
+	case <-ctx.Done():
+		fmt.Println("Stopping CPU Logic")
+		return true
+	case addressBus <- programCounter:
+		signal := <-readDataBus
+		instruction := decodeInstruction(signal)
+		if instruction.Command == 0b10011 {
+			fmt.Println("JUMP")
+		}
+		if instruction.Command == 0b11111 {
+			execute(instruction)
+		}
+		if registers[0] == 0 {
+			execute(instruction)
+		}
+		programCounter++
+		return false
+	}
 
-	instruction := decodeInstruction(signal)
-	if instruction.Command == 0b10011 {
-		fmt.Println("JUMP")
-	}
-	if instruction.Command == 0b11111 {
-		execute(instruction)
-	}
-	if registers[0] == 0 {
-		execute(instruction)
-	}
-	programCounter++
 }
 
-func cpu() {
-	startInstructions()
+func cpu(ctx context.Context, cancel context.CancelFunc) {
+	startInstructions(cancel)
 	first := true
 	for {
 		if !first {
 			cpuDone <- true
 		}
-		<-controlBus
-		first = false
-		cpuLogic()
-		flag := false
-		//ejecutar rutinas
-		for programCounter < registers[2] {
-			cpuLogic()
-			flag = true
-		}
-		if flag {
-			registers[1] = 0
-			registers[2] = 0
+		select {
+		case <-ctx.Done():
+			fmt.Println("Stopping CPU")
+			return
+		case <-controlBus:
+
+			first = false
+			romper := cpuLogic(ctx)
+			if romper {
+				return
+			}
+			flag := false
+			//ejecutar rutinas
+			for programCounter < registers[2] {
+				romper := cpuLogic(ctx)
+				if romper {
+					return
+				}
+				flag = true
+			}
+			if flag {
+				registers[1] = 0
+				registers[2] = 0
+			}
+
 		}
 
 	}
+
 }
