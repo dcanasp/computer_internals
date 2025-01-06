@@ -10,8 +10,10 @@
 
 typedef struct {
     char name[50];
-    int address;
-    int first_jump_location;  // Ubicación del primer salto a esta etiqueta
+    int start_address;         
+    int end_address;          
+    int return_address;       
+    int is_term_marker;        // Changed from is_end_marker to is_term_marker
 } Label;
 
 Label labels[MAX_LABELS];
@@ -19,35 +21,47 @@ int label_count = 0;
 char instructions[MAX_INSTRUCTIONS][MAX_LINE_LENGTH];
 int instruction_count = 0;
 
-// Función mejorada para encontrar la dirección de una etiqueta
-int get_label_address(const char *name) {
-    char clean_name[50];
-    strncpy(clean_name, name, sizeof(clean_name) - 1);
-    clean_name[sizeof(clean_name) - 1] = '\0';
-    
-    char *colon = strchr(clean_name, ':');
-    if (colon) *colon = '\0';
-
-    for (int i = 0; i < label_count; i++) {
-        if (strcmp(labels[i].name, clean_name) == 0) {
-            return labels[i].address;
-        }
-    }
-    return -1;
-}
-
-// Función para encontrar una etiqueta por nombre
-Label* find_label(const char *name) {
-    for (int i = 0; i < label_count; i++) {
-        if (strcmp(labels[i].name, name) == 0) {
-            return &labels[i];
+Label* find_label(const char* name) {
+    for (int j = 0; j < label_count; j++) {
+        if (strcmp(labels[j].name, name) == 0) {
+            return &labels[j];
         }
     }
     return NULL;
 }
 
-// Función mejorada para resolver las referencias a etiquetas
+void process_term_label(const char* term_marker) {
+    char label_name[50];
+    strcpy(label_name, term_marker + 5);  // Skip "TERM_"
+    
+    Label* label = find_label(label_name);
+    if (label != NULL) {
+        label->end_address = instruction_count - 1;
+        label->is_term_marker = 1;
+    }
+}
+
+void insert_instruction(int position, const char* instruction) {
+    for (int i = instruction_count; i > position; i--) {
+        strcpy(instructions[i], instructions[i-1]);
+    }
+    strcpy(instructions[position], instruction);
+    instruction_count++;
+    
+    // Update label addresses
+    for (int i = 0; i < label_count; i++) {
+        if (labels[i].start_address > position) {
+            labels[i].start_address++;
+        }
+        if (labels[i].end_address >= position) {
+            labels[i].end_address++;
+        }
+    }
+}
+
 void resolve_labels() {
+    // First pass: Insert all return jumps to calculate final instruction count
+    int total_jumps_to_insert = 0;
     for (int i = 0; i < instruction_count; i++) {
         char line[MAX_LINE_LENGTH];
         char opcode[20], arg1[20], arg2[20];
@@ -55,39 +69,76 @@ void resolve_labels() {
         
         int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
         
+        if (args >= 2 && strcmp(opcode, "JUMP") == 0) {
+            Label* label = find_label(arg1);
+            if (label != NULL) {
+                total_jumps_to_insert++;
+            }
+        }
+    }
+    
+    // Pre-allocate space for all return jumps
+    for (int i = 0; i < total_jumps_to_insert; i++) {
+        strcpy(instructions[instruction_count + i], "JUMP 0");  // Temporary placeholder
+    }
+    instruction_count += total_jumps_to_insert;
+    
+    // Second pass: Process all jump instructions and update addresses
+    int inserted_jumps = 0;
+    for (int i = 0; i < instruction_count - total_jumps_to_insert; i++) {
+        char line[MAX_LINE_LENGTH];
+        char opcode[20], arg1[20], arg2[20];
+        strcpy(line, instructions[i]);
+        
+        int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
+        
         if (args >= 2) {
-            if (strcmp(opcode, "JNE") == 0) {
-                Label* label = find_label(arg1);
-                if (label != NULL) {
-                    // Si es la primera vez que vemos este salto, guardamos su ubicación
-                    if (label->first_jump_location == -1) {
-                        label->first_jump_location = i;
-                        sprintf(instructions[i], "JNE %d", label->address);
-                    } else {
-                        // Si es un salto desde dentro del bucle, agregamos un JUMP adicional
-                        sprintf(instructions[i], "JNE %d", label->address);
-                        
-                        // Agregar un JUMP a la instrucción después del primer JNE
-                        // Desplazamos todas las instrucciones una posición
-                        for (int j = instruction_count; j > i + 1; j--) {
-                            strcpy(instructions[j], instructions[j-1]);
-                        }
-                        // Insertamos el JUMP
-                        sprintf(instructions[i + 1], "JUMP %d", label->first_jump_location);
-                        instruction_count++;
-                        i++; // Saltamos la instrucción que acabamos de insertar
+            Label* label = find_label(arg1);
+            
+            if (label != NULL) {
+                if (strcmp(opcode, "JUMP") == 0) {
+                    // Calculate target address (decremented by 1)
+                    int target = label->start_address - 1;
+                    
+                    // Update jump instruction
+                    sprintf(instructions[i], "JUMP %d", target);
+                    
+                    // Calculate return position
+                    int return_pos = label->end_address + inserted_jumps;
+                    
+                    // Calculate return target (decremented by 1)
+                    int return_target = i + 1;
+                    
+                    // Move instructions between label end and next label start
+                    for (int j = instruction_count - 1; j > return_pos; j--) {
+                        strcpy(instructions[j], instructions[j-1]);
                     }
+                    
+                    // Insert return jump
+                    sprintf(instructions[return_pos], "JUMP %d", return_target - 1);
+                    inserted_jumps++;
                 }
-            } else if (strcmp(opcode, "JUMP") == 0 || strcmp(opcode, "JEQ") == 0) {
-                int addr = get_label_address(arg1);
-                if (addr != -1) {
-                    sprintf(instructions[i], "%s %d", opcode, addr);
+                else if (strcmp(opcode, "JEQ") == 0 || strcmp(opcode, "JNE") == 0) {
+                    // Update conditional jump target (decremented by 1)
+                    int target = label->start_address - 1;
+                    sprintf(instructions[i], "%s %d", opcode, target);
                 }
             }
         }
     }
+    
+    // Remove TERM_ markers from final output
+    int write_pos = 0;
+    for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
+        if (strncmp(instructions[read_pos], "TERM_", 5) != 0) {
+            if (write_pos != read_pos) {
+                strcpy(instructions[write_pos], instructions[read_pos]);
+            }
+            write_pos++;
+        }
+    }
+    instruction_count = write_pos;
 }
-
 %}
 
 %option noyywrap
@@ -95,21 +146,27 @@ void resolve_labels() {
 LABEL       [A-Za-z_][A-Za-z0-9_]*
 NUMBER      [0-9]+
 WHITESPACE  [ \t]+
+INSTRUCTION [A-Za-z]+
+SIGN_NUMBER [-+]?{NUMBER}
+TERM_LABEL  TERM_{LABEL}
 
 %%
 
 ^{LABEL}:   {
     char *label = strdup(yytext);
-    label[strlen(label)-1] = '\0';
+    label[strlen(label)-1] = '\0';  // Remove colon
     strncpy(labels[label_count].name, label, sizeof(labels[label_count].name) - 1);
     labels[label_count].name[sizeof(labels[label_count].name) - 1] = '\0';
-    labels[label_count].address = instruction_count -1;
-    labels[label_count].first_jump_location = -1;  // Inicializamos en -1
+    labels[label_count].start_address = instruction_count;
+    labels[label_count].end_address = -1;
+    labels[label_count].return_address = -1;
+    labels[label_count].is_term_marker = 0;
     label_count++;
     free(label);
 }
 
-^(LOAD|ADD|SUB|MUL|DIV|CMP|MOVE){WHITESPACE}{NUMBER}{WHITESPACE}{NUMBER} {
+^{TERM_LABEL} {
+    process_term_label(yytext);
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;
@@ -122,6 +179,18 @@ WHITESPACE  [ \t]+
 }
 
 ^(BEGIN|END|FIN) {
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
+}
+
+^{INSTRUCTION}{WHITESPACE}{NUMBER} {
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
+}
+
+^{INSTRUCTION}{WHITESPACE}{NUMBER}{WHITESPACE}{SIGN_NUMBER} {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;
@@ -148,7 +217,6 @@ int main(int argc, char **argv) {
     yyin = file;
     yylex();
     fclose(file);
-
     resolve_labels();
 
     FILE *output_file = fopen("assemblerIN.asm", "w");

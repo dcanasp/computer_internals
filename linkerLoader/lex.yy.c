@@ -355,8 +355,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 8
-#define YY_END_OF_BUFFER 9
+#define YY_NUM_RULES 10
+#define YY_END_OF_BUFFER 11
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -364,13 +364,13 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[50] =
+static const flex_int16_t yy_accept[44] =
     {   0,
-        0,    0,    9,    7,    6,    5,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    5,    0,    1,
-        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    4,    0,    0,    0,    0,
-        0,    0,    0,    0,    3,    0,    3,    2,    0
+        0,    0,   11,    9,    8,    7,    9,    9,    9,    9,
+        9,    9,    9,    7,    0,    0,    1,    0,    0,    0,
+        0,    0,    0,    0,    0,    5,    0,    4,    0,    0,
+        0,    0,    0,    0,    0,    0,    6,    3,    0,    3,
+        2,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -379,16 +379,16 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    4,    4,    4,
-        4,    4,    4,    4,    4,    4,    4,    5,    1,    1,
-        1,    1,    1,    1,    6,    7,    8,    9,   10,   11,
-       12,   13,   14,   15,   13,   16,   17,   18,   19,   20,
-       21,   13,   22,   13,   23,   24,   13,   13,   13,   13,
-        1,    1,    1,    1,   13,    1,   13,   13,   13,   13,
+        1,    1,    4,    1,    4,    1,    1,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    6,    1,    1,
+        1,    1,    1,    1,    7,    8,    7,    9,   10,   11,
+       12,    7,   13,   14,    7,    7,   15,   16,    7,   17,
+       18,   19,    7,   20,   21,    7,    7,    7,    7,    7,
+        1,    1,    1,    1,   22,    1,    7,    7,    7,    7,
 
-       13,   13,   13,   13,   13,   13,   13,   13,   13,   13,
-       13,   13,   13,   13,   13,   13,   13,   13,   13,   13,
-       13,   13,    1,    1,    1,    1,    1,    1,    1,    1,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
+        7,    7,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -405,69 +405,65 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[25] =
+static const YY_CHAR yy_meta[23] =
     {   0,
-        1,    2,    1,    3,    4,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5
+        1,    2,    1,    1,    3,    4,    3,    3,    3,    3,
+        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
+        3,    3
     } ;
 
-static const flex_int16_t yy_base[54] =
+static const flex_int16_t yy_base[51] =
     {   0,
-      111,    0,  113,  115,  115,  110,   20,   21,   22,   23,
-       25,   27,  105,   39,   28,   29,   30,  105,  101,  115,
-       31,   33,   41,   45,   46,   49,   37,   54,   51,   60,
-       55,   58,   65,   71,   66,   90,   73,   72,   76,   77,
-       82,   78,   92,   86,    0,   87,    0,   89,  115,   96,
-       99,  103,  106
+      100,    0,  102,  104,  104,   99,   21,   42,   14,   15,
+       19,   90,   93,   96,   29,   91,  104,   86,   26,   23,
+       29,   31,   85,   27,   36,   48,   41,   84,   55,   46,
+       51,   65,   52,   69,   50,   88,   87,    0,   53,    0,
+       85,   84,  104,   74,   77,   79,   82,   70,   83,   85
     } ;
 
-static const flex_int16_t yy_def[54] =
+static const flex_int16_t yy_def[51] =
     {   0,
-       50,   49,   49,   49,   49,   49,   51,   51,   51,   51,
-       51,   51,   51,   51,   51,   51,   51,   49,   51,   49,
-       51,   51,   51,   51,   51,   51,   51,   51,   51,   51,
-       51,   51,   51,   51,   51,   51,   51,   51,   51,   51,
-       49,   51,   52,   49,   53,   49,   53,   49,    0,   49,
-       49,   49,   49
+       44,   43,   43,   43,   43,   43,   45,   45,    8,    8,
+        8,    8,   46,   43,   43,   46,   43,    8,    8,    8,
+        8,    8,    8,    8,    8,   43,    8,    8,    8,    8,
+        8,   43,    8,   47,    8,   43,   43,   48,   49,   48,
+       50,   50,    0,   43,   43,   43,   43,   43,   43,   43
     } ;
 
-static const flex_int16_t yy_nxt[140] =
+static const flex_int16_t yy_nxt[127] =
     {   0,
-        4,    6,    5,    4,    4,    7,    8,    9,   10,   11,
-       12,   13,   13,   13,   14,   15,   16,   13,   13,   13,
-       13,   17,   13,   13,   20,   20,   20,   20,   21,   20,
-       22,   20,   20,   20,   20,   20,   24,   20,   23,   34,
-       26,   20,   25,   20,   35,   20,   30,   31,   27,   20,
-       20,   32,   33,   20,   36,   20,   28,   37,   20,   20,
-       34,   29,   20,   37,   20,   39,   36,   38,   34,   20,
-       20,   34,   41,   34,   43,   20,   20,   20,   40,   42,
-       20,   20,   20,   41,   34,   44,   34,   46,   46,   44,
-       48,   37,   48,   43,   20,   36,    4,    4,    4,    4,
+        4,    6,    5,    4,    4,    4,    7,    8,    7,    9,
+       10,    7,    7,   11,    7,    7,    7,    7,    7,   12,
+        7,   13,   15,   18,   18,   16,   17,   21,   22,   20,
+       15,   28,   18,   26,   23,   18,   18,   27,   18,   24,
+       18,   30,   16,   15,   28,   18,   16,   17,   29,   32,
+       18,   19,   26,   33,   31,   18,   34,   16,   17,   18,
+       18,   18,   29,   16,   18,   35,   32,   28,   36,   37,
+       34,   39,   40,   26,    4,    4,    4,    4,   18,   18,
+       18,   16,   16,   38,   38,   41,   41,   42,   42,   17,
+       17,   37,   37,   18,   29,   18,   17,   14,   17,   25,
 
-        4,   19,   19,   19,   45,   20,   18,   45,   47,   20,
-       47,   18,   49,    5,    3,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49
+       14,   43,    5,    3,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43
     } ;
 
-static const flex_int16_t yy_chk[140] =
+static const flex_int16_t yy_chk[127] =
     {   0,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    7,    8,    9,   10,    7,   11,
-        8,   12,   15,   16,   17,   21,   10,   22,    9,   21,
-       12,   27,   11,   14,   22,   23,   15,   16,   14,   24,
-       25,   16,   17,   26,   25,   29,   14,   27,   28,   31,
-       23,   14,   32,   28,   30,   30,   26,   29,   24,   33,
-       35,   33,   34,   32,   37,   34,   38,   37,   31,   35,
-       39,   40,   42,   41,   39,   41,   40,   44,   46,   44,
-       46,   38,   48,   43,   36,   42,   50,   50,   50,   50,
+        2,    2,    7,    9,   10,    7,    7,   10,   11,    9,
+       15,   20,   20,   15,   11,   19,   24,   19,   21,   11,
+       22,   24,    7,    8,   21,   25,    8,    8,   22,   26,
+       27,    8,   26,   27,   25,   30,   29,   39,   39,   35,
+       31,   33,   30,    8,   29,   31,   32,   33,   32,   32,
+       34,   35,   48,   34,   44,   44,   44,   44,   45,   45,
+       45,   46,   46,   47,   47,   49,   49,   50,   50,   42,
+       41,   37,   36,   28,   23,   18,   16,   14,   13,   12,
 
-       50,   51,   51,   51,   52,   19,   18,   52,   53,   13,
-       53,    6,    3,    1,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
-       49,   49,   49,   49,   49,   49,   49,   49,   49
+        6,    3,    1,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+       43,   43,   43,   43,   43,   43
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -497,8 +493,10 @@ char *yytext;
 
 typedef struct {
     char name[50];
-    int address;
-    int first_jump_location;  // Ubicación del primer salto a esta etiqueta
+    int start_address;         
+    int end_address;          
+    int return_address;       
+    int is_term_marker;        // Changed from is_end_marker to is_term_marker
 } Label;
 
 Label labels[MAX_LABELS];
@@ -506,35 +504,47 @@ int label_count = 0;
 char instructions[MAX_INSTRUCTIONS][MAX_LINE_LENGTH];
 int instruction_count = 0;
 
-// Función mejorada para encontrar la dirección de una etiqueta
-int get_label_address(const char *name) {
-    char clean_name[50];
-    strncpy(clean_name, name, sizeof(clean_name) - 1);
-    clean_name[sizeof(clean_name) - 1] = '\0';
-    
-    char *colon = strchr(clean_name, ':');
-    if (colon) *colon = '\0';
-
-    for (int i = 0; i < label_count; i++) {
-        if (strcmp(labels[i].name, clean_name) == 0) {
-            return labels[i].address;
-        }
-    }
-    return -1;
-}
-
-// Función para encontrar una etiqueta por nombre
-Label* find_label(const char *name) {
-    for (int i = 0; i < label_count; i++) {
-        if (strcmp(labels[i].name, name) == 0) {
-            return &labels[i];
+Label* find_label(const char* name) {
+    for (int j = 0; j < label_count; j++) {
+        if (strcmp(labels[j].name, name) == 0) {
+            return &labels[j];
         }
     }
     return NULL;
 }
 
-// Función mejorada para resolver las referencias a etiquetas
+void process_term_label(const char* term_marker) {
+    char label_name[50];
+    strcpy(label_name, term_marker + 5);  // Skip "TERM_"
+    
+    Label* label = find_label(label_name);
+    if (label != NULL) {
+        label->end_address = instruction_count - 1;
+        label->is_term_marker = 1;
+    }
+}
+
+void insert_instruction(int position, const char* instruction) {
+    for (int i = instruction_count; i > position; i--) {
+        strcpy(instructions[i], instructions[i-1]);
+    }
+    strcpy(instructions[position], instruction);
+    instruction_count++;
+    
+    // Update label addresses
+    for (int i = 0; i < label_count; i++) {
+        if (labels[i].start_address > position) {
+            labels[i].start_address++;
+        }
+        if (labels[i].end_address >= position) {
+            labels[i].end_address++;
+        }
+    }
+}
+
 void resolve_labels() {
+    // First pass: Insert all return jumps to calculate final instruction count
+    int total_jumps_to_insert = 0;
     for (int i = 0; i < instruction_count; i++) {
         char line[MAX_LINE_LENGTH];
         char opcode[20], arg1[20], arg2[20];
@@ -542,41 +552,78 @@ void resolve_labels() {
         
         int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
         
+        if (args >= 2 && strcmp(opcode, "JUMP") == 0) {
+            Label* label = find_label(arg1);
+            if (label != NULL) {
+                total_jumps_to_insert++;
+            }
+        }
+    }
+    
+    // Pre-allocate space for all return jumps
+    for (int i = 0; i < total_jumps_to_insert; i++) {
+        strcpy(instructions[instruction_count + i], "JUMP 0");  // Temporary placeholder
+    }
+    instruction_count += total_jumps_to_insert;
+    
+    // Second pass: Process all jump instructions and update addresses
+    int inserted_jumps = 0;
+    for (int i = 0; i < instruction_count - total_jumps_to_insert; i++) {
+        char line[MAX_LINE_LENGTH];
+        char opcode[20], arg1[20], arg2[20];
+        strcpy(line, instructions[i]);
+        
+        int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
+        
         if (args >= 2) {
-            if (strcmp(opcode, "JNE") == 0) {
-                Label* label = find_label(arg1);
-                if (label != NULL) {
-                    // Si es la primera vez que vemos este salto, guardamos su ubicación
-                    if (label->first_jump_location == -1) {
-                        label->first_jump_location = i;
-                        sprintf(instructions[i], "JNE %d", label->address);
-                    } else {
-                        // Si es un salto desde dentro del bucle, agregamos un JUMP adicional
-                        sprintf(instructions[i], "JNE %d", label->address);
-                        
-                        // Agregar un JUMP a la instrucción después del primer JNE
-                        // Desplazamos todas las instrucciones una posición
-                        for (int j = instruction_count; j > i + 1; j--) {
-                            strcpy(instructions[j], instructions[j-1]);
-                        }
-                        // Insertamos el JUMP
-                        sprintf(instructions[i + 1], "JUMP %d", label->first_jump_location);
-                        instruction_count++;
-                        i++; // Saltamos la instrucción que acabamos de insertar
+            Label* label = find_label(arg1);
+            
+            if (label != NULL) {
+                if (strcmp(opcode, "JUMP") == 0) {
+                    // Calculate target address (decremented by 1)
+                    int target = label->start_address - 1;
+                    
+                    // Update jump instruction
+                    sprintf(instructions[i], "JUMP %d", target);
+                    
+                    // Calculate return position
+                    int return_pos = label->end_address + inserted_jumps;
+                    
+                    // Calculate return target (decremented by 1)
+                    int return_target = i + 1;
+                    
+                    // Move instructions between label end and next label start
+                    for (int j = instruction_count - 1; j > return_pos; j--) {
+                        strcpy(instructions[j], instructions[j-1]);
                     }
+                    
+                    // Insert return jump
+                    sprintf(instructions[return_pos], "JUMP %d", return_target - 1);
+                    inserted_jumps++;
                 }
-            } else if (strcmp(opcode, "JUMP") == 0 || strcmp(opcode, "JEQ") == 0) {
-                int addr = get_label_address(arg1);
-                if (addr != -1) {
-                    sprintf(instructions[i], "%s %d", opcode, addr);
+                else if (strcmp(opcode, "JEQ") == 0 || strcmp(opcode, "JNE") == 0) {
+                    // Update conditional jump target (decremented by 1)
+                    int target = label->start_address - 1;
+                    sprintf(instructions[i], "%s %d", opcode, target);
                 }
             }
         }
     }
+    
+    // Remove TERM_ markers from final output
+    int write_pos = 0;
+    for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
+        if (strncmp(instructions[read_pos], "TERM_", 5) != 0) {
+            if (write_pos != read_pos) {
+                strcpy(instructions[write_pos], instructions[read_pos]);
+            }
+            write_pos++;
+        }
+    }
+    instruction_count = write_pos;
 }
-
-#line 579 "linkerLoader/lex.yy.c"
-#line 580 "linkerLoader/lex.yy.c"
+#line 626 "linkerLoader/lex.yy.c"
+#line 627 "linkerLoader/lex.yy.c"
 
 #define INITIAL 0
 
@@ -796,10 +843,10 @@ YY_DECL
 		}
 
 	{
-#line 99 "linkerLoader/linkerLoader.l"
+#line 153 "linkerLoader/linkerLoader.l"
 
 
-#line 803 "linkerLoader/lex.yy.c"
+#line 850 "linkerLoader/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -827,13 +874,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 50 )
+				if ( yy_current_state >= 44 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 115 );
+		while ( yy_base[yy_current_state] != 104 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -859,22 +906,25 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 101 "linkerLoader/linkerLoader.l"
+#line 155 "linkerLoader/linkerLoader.l"
 {
     char *label = strdup(yytext);
-    label[strlen(label)-1] = '\0';
+    label[strlen(label)-1] = '\0';  // Remove colon
     strncpy(labels[label_count].name, label, sizeof(labels[label_count].name) - 1);
     labels[label_count].name[sizeof(labels[label_count].name) - 1] = '\0';
-    labels[label_count].address = instruction_count -1;
-    labels[label_count].first_jump_location = -1;  // Inicializamos en -1
+    labels[label_count].start_address = instruction_count;
+    labels[label_count].end_address = -1;
+    labels[label_count].return_address = -1;
+    labels[label_count].is_term_marker = 0;
     label_count++;
     free(label);
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 112 "linkerLoader/linkerLoader.l"
+#line 168 "linkerLoader/linkerLoader.l"
 {
+    process_term_label(yytext);
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;
@@ -882,7 +932,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 118 "linkerLoader/linkerLoader.l"
+#line 175 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -891,7 +941,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 124 "linkerLoader/linkerLoader.l"
+#line 181 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -900,26 +950,44 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 130 "linkerLoader/linkerLoader.l"
-;
+#line 187 "linkerLoader/linkerLoader.l"
+{
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
+}
 	YY_BREAK
 case 6:
-/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 131 "linkerLoader/linkerLoader.l"
-;
+#line 193 "linkerLoader/linkerLoader.l"
+{
+    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
+    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
+    instruction_count++;
+}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 132 "linkerLoader/linkerLoader.l"
+#line 199 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 8:
+/* rule 8 can match eol */
 YY_RULE_SETUP
-#line 134 "linkerLoader/linkerLoader.l"
+#line 200 "linkerLoader/linkerLoader.l"
+;
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+#line 201 "linkerLoader/linkerLoader.l"
+;
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 203 "linkerLoader/linkerLoader.l"
 ECHO;
 	YY_BREAK
-#line 923 "linkerLoader/lex.yy.c"
+#line 991 "linkerLoader/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1217,7 +1285,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 50 )
+			if ( yy_current_state >= 44 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1245,11 +1313,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 50 )
+		if ( yy_current_state >= 44 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 49);
+	yy_is_jam = (yy_current_state == 43);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1927,7 +1995,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 134 "linkerLoader/linkerLoader.l"
+#line 203 "linkerLoader/linkerLoader.l"
 
 
 int main(int argc, char **argv) {
@@ -1945,7 +2013,6 @@ int main(int argc, char **argv) {
     yyin = file;
     yylex();
     fclose(file);
-
     resolve_labels();
 
     FILE *output_file = fopen("assemblerIN.asm", "w");

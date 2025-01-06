@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-// Global file pointer for output
+#define MAX_LINE_LENGTH 100
+
 FILE *output_file;
 
 // Function to convert an integer to a binary string
@@ -11,23 +13,21 @@ void int_to_binary(int num, int bits, char *output) {
     for (int i = bits - 1; i >= 0; i--) {
         output[bits - 1 - i] = (num & (1 << i)) ? '1' : '0';
     }
-    output[bits] = '\0'; // Null-terminate the string
+    output[bits] = '\0';
 }
+
 %}
 
 %option noyywrap
 
-REGISTER    [0-9]+
-REGISTERS   [ \t]+{REGISTER}[ \t]+{REGISTER}
-SIGNED      -?[0-9]+
-REG_SIGNED [ \t]+{REGISTER}[ \t]+{SIGNED}
-SINGLE      [ \t]+{REGISTER}
+NUMBER      [0-9]+
+WHITESPACE  [ \t]+
+INSTRUCTION [A-Za-z]+
+SIGN_NUMBER [-+]?{NUMBER}
+
 %%
 
-[ \t]+              ; // Ignore spaces and tabs
-\n                  ; // Ignore newlines
-
-(BEGIN|END|FIN) {
+^(BEGIN|END|FIN) {
     const char *output;
     if (strcmp(yytext, "BEGIN") == 0) {
         output = "00000000000000000000000000000000\n";
@@ -36,16 +36,15 @@ SINGLE      [ \t]+{REGISTER}
     } else if (strcmp(yytext, "FIN") == 0) {
         output = "11110000000000000000000000000000\n";
     }
-
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
-(LOAD|CMP){REG_SIGNED} {
+
+^(LOAD|CMP){WHITESPACE}{NUMBER}{WHITESPACE}{SIGN_NUMBER} {
+    char instruction[20];
     int reg, value, sign;
     char reg_bin[14], value_bin[14], sign_bin[2];
-    char opcode[6];
-
-    sscanf(yytext, "%s %d %d", opcode, &reg, &value);
+    
+    sscanf(yytext, "%s %d %d", instruction, &reg, &value);
     sign = (value < 0) ? 1 : 0;
     value = abs(value);
 
@@ -54,36 +53,37 @@ SINGLE      [ \t]+{REGISTER}
     int_to_binary(sign, 1, sign_bin);
 
     char output[34];
-    if (strcmp(opcode, "LOAD") == 0) {
+    if (strcmp(instruction, "LOAD") == 0) {
         sprintf(output, "00001%s%s%s\n", reg_bin, sign_bin, value_bin);
-    } else if (strcmp(opcode, "CMP") == 0) {
+    } else if (strcmp(instruction, "CMP") == 0) {
         sprintf(output, "10000%s%s%s\n", reg_bin, sign_bin, value_bin);
     }
 
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
 
-(STORE|MOVE|LOADDISK|ADD|SUB|MULT|DIV|MOD|AND|OR|XOR|CMPREG|LEFSHIFT|RIGHTSHIF){REGISTERS} {
-    char op[10];
+^(STORE|MOVE|LOADDISK|ADD|SUB|MULT|DIV|MOD|AND|OR|XOR|CMPREG|LEFSHIFT|RIGHTSHIF){WHITESPACE}{NUMBER}{WHITESPACE}{NUMBER} {
+    char instruction[20];
     int reg1, reg2, opcode;
     char reg1_bin[14], reg2_bin[14];
 
-    sscanf(yytext, "%s %d %d", op, &reg1, &reg2);
-    if (strcmp(op, "STORE") == 0) opcode = 2;
-    else if (strcmp(op, "MOVE") == 0) opcode = 3;
-    else if (strcmp(op, "LOADDISK") == 0) opcode = 4;
-    else if (strcmp(op, "ADD") == 0) opcode = 5;
-    else if (strcmp(op, "SUB") == 0) opcode = 6;
-    else if (strcmp(op, "MULT") == 0) opcode = 7;
-    else if (strcmp(op, "DIV") == 0) opcode = 8;
-    else if (strcmp(op, "MOD") == 0) opcode = 9;
-    else if (strcmp(op, "AND") == 0) opcode = 10;
-    else if (strcmp(op, "OR") == 0) opcode = 11;
-    else if (strcmp(op, "XOR") == 0) opcode = 12;
-    else if (strcmp(op, "LEFSHIFT") == 0) opcode = 14;
-    else if (strcmp(op, "RIGHTSHIF") == 0) opcode = 15;
-    else if (strcmp(op, "CMPREG") == 0) opcode = 17;
+    sscanf(yytext, "%s %d %d", instruction, &reg1, &reg2);
+    
+    // Opcode mapping
+    if (strcmp(instruction, "STORE") == 0) opcode = 2;
+    else if (strcmp(instruction, "MOVE") == 0) opcode = 3;
+    else if (strcmp(instruction, "LOADDISK") == 0) opcode = 4;
+    else if (strcmp(instruction, "ADD") == 0) opcode = 5;
+    else if (strcmp(instruction, "SUB") == 0) opcode = 6;
+    else if (strcmp(instruction, "MULT") == 0) opcode = 7;
+    else if (strcmp(instruction, "DIV") == 0) opcode = 8;
+    else if (strcmp(instruction, "MOD") == 0) opcode = 9;
+    else if (strcmp(instruction, "AND") == 0) opcode = 10;
+    else if (strcmp(instruction, "OR") == 0) opcode = 11;
+    else if (strcmp(instruction, "XOR") == 0) opcode = 12;
+    else if (strcmp(instruction, "LEFSHIFT") == 0) opcode = 14;
+    else if (strcmp(instruction, "RIGHTSHIF") == 0) opcode = 15;
+    else if (strcmp(instruction, "CMPREG") == 0) opcode = 17;
 
     int_to_binary(reg1, 13, reg1_bin);
     int_to_binary(reg2, 13, reg2_bin);
@@ -93,34 +93,36 @@ SINGLE      [ \t]+{REGISTER}
 
     char output[34];
     sprintf(output, "%s%s0%s\n", opcode_bin, reg1_bin, reg2_bin);
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
 
-(JUMP|JEQ|JNE|NOT){SINGLE} {
-    char op[10];
-    int reg,opcode;
+^(JUMP|JEQ|JNE|NOT){WHITESPACE}{NUMBER} {
+    char instruction[20];
+    int reg, opcode;
     char reg_bin[14];
 
-    sscanf(yytext, "%s %d", op,&reg);
-    int_to_binary(reg, 13, reg_bin);
+    sscanf(yytext, "%s %d", instruction, &reg);
+    
+    if (strcmp(instruction, "NOT") == 0) opcode = 13;
+    else if (strcmp(instruction, "JUMP") == 0) opcode = 18;
+    else if (strcmp(instruction, "JEQ") == 0) opcode = 19;    
+    else if (strcmp(instruction, "JNE") == 0) opcode = 20;
 
-    if (strcmp(op, "NOT") == 0) opcode = 13;
-    else if (strcmp(op, "JUMP") == 0) opcode = 18;
-    else if (strcmp(op, "JEQ") == 0) opcode = 19;
-    else if (strcmp(op, "JNE") == 0) opcode = 20;
-
+     int_to_binary(reg, 13, reg_bin);
+    
     char opcode_bin[6];
     int_to_binary(opcode, 5, opcode_bin);
-
+    
     char output[34];
-    sprintf(output, "%s%s00000000000000\n", opcode_bin,reg_bin);
-    printf("%s", output);
+    sprintf(output, "%s%s00000000000000\n", opcode_bin, reg_bin);
     fprintf(output_file, "%s", output);
 }
 
-
-.|\n { fprintf(stderr, "Unrecognized input: %s\n", yytext); }
+^[\t ]+ ;    // Ignore leading whitespace
+\n      ;    // Ignore newlines
+.       {
+    fprintf(stderr, "Unrecognized input: %s\n", yytext);
+}
 
 %%
 
@@ -130,24 +132,23 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "r");
-    if (!file) {
-        perror("Error opening file");
+    FILE *input_file = fopen(argv[1], "r");
+    if (!input_file) {
+        perror("Error opening input file");
         return 1;
     }
 
     output_file = fopen("pcIN.txt", "w");
     if (!output_file) {
         perror("Error creating output file");
-        fclose(file);
+        fclose(input_file);
         return 1;
     }
 
-    yyin = file;
+    yyin = input_file;
     yylex();
 
-    fclose(file);
+    fclose(input_file);
     fclose(output_file);
-
     return 0;
 }

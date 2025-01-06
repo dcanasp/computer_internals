@@ -366,14 +366,14 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[82] =
     {   0,
-        0,    0,    9,    7,    1,    2,    7,    7,    7,    7,
+        0,    0,    9,    7,    6,    5,    7,    7,    7,    7,
         7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        1,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        5,    0,    0,    0,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    3,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    1,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    6,    0,    0,    0,    0,    0,
-        0,    0,    5,    0,    0,    4,    0,    0,    0,    0,
+        0,    0,    0,    0,    4,    0,    0,    0,    0,    0,
+        0,    0,    3,    0,    0,    2,    0,    0,    0,    0,
         0
     } ;
 
@@ -383,7 +383,7 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    4,    1,    1,    5,    5,    5,
+        1,    1,    4,    1,    4,    1,    1,    5,    5,    5,
         5,    5,    5,    5,    5,    5,    5,    1,    1,    1,
         1,    1,    1,    1,    6,    7,    8,    9,   10,   11,
        12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
@@ -416,22 +416,22 @@ static const YY_CHAR yy_meta[29] =
         1,    1,    1,    1,    1,    1,    1,    1
     } ;
 
-static const flex_int16_t yy_base[82] =
+static const flex_int16_t yy_base[83] =
     {   0,
-        0,    0,  120,  121,  117,  121,   20,  108,   99,  102,
-       96,  100,   21,   22,   10,   93,   89,   97,    8,   90,
-      107,   99,   98,   94,   84,   77,   94,   83,   79,   90,
-       81,   87,   91,   26,   79,   70,   92,   81,   72,   84,
-       67,   75,   35,  121,   86,   66,   62,   76,   74,   58,
-       36,   69,   58,   61,   41,   69,   43,   65,   42,   47,
-       52,   66,   52,   63,   69,   59,   58,   54,   47,   58,
-       59,   45,   63,   54,   61,   60,   39,   45,   41,   39,
-      121
+      119,    0,  121,  123,  123,  118,   20,  109,  100,  103,
+       97,  101,   21,   22,   10,   94,   90,   98,    8,   91,
+      108,  100,   99,   95,   85,   78,   95,   84,   80,   91,
+       82,   88,   92,   26,   80,   71,   93,   82,   73,   85,
+       68,   76,   35,  123,   87,   67,   63,   77,   75,   59,
+       36,   70,   59,   62,   41,   70,   43,   66,   42,   47,
+       53,   67,   52,   64,   70,   60,   59,   54,   48,   58,
+       60,   46,   64,   55,   62,   61,   40,   48,   47,   44,
+      123,   49
     } ;
 
-static const flex_int16_t yy_def[82] =
+static const flex_int16_t yy_def[83] =
     {   0,
-       81,    1,   81,   81,   81,   81,   81,   81,   81,   81,
+       82,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
@@ -439,47 +439,49 @@ static const flex_int16_t yy_def[82] =
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
-        0
+        0,   81
     } ;
 
-static const flex_int16_t yy_nxt[150] =
+static const flex_int16_t yy_nxt[152] =
     {   0,
-        4,    5,    6,    4,    4,    7,    8,    9,   10,   11,
+        4,    6,    5,    4,    4,    7,    8,    9,   10,   11,
        12,    4,    4,    4,   13,    4,   14,   15,   16,   17,
         4,    4,   18,   19,    4,    4,    4,   20,   22,   34,
        29,   32,   39,   40,   37,   35,   55,   51,   23,   30,
-       60,   33,   55,   55,   57,   63,   31,   65,   68,   37,
-       67,   60,   49,   70,   80,   68,   63,   56,   73,   70,
-       37,   75,   76,   37,   76,   76,   79,   73,   78,   77,
-       74,   72,   71,   65,   37,   37,   69,   66,   64,   44,
-       62,   61,   37,   37,   59,   58,   45,   57,   54,   37,
-       37,   53,   52,   51,   45,   50,   48,   47,   46,   45,
+       60,   33,   55,   55,   57,   63,   31,   65,   68,    4,
+       67,   60,   49,   70,   37,   68,   63,   56,   73,   70,
+       80,   75,   76,   37,   37,   76,   76,   79,   73,   78,
+       77,   74,   72,   71,   65,   37,   37,   69,   66,   64,
+       44,   62,   61,   37,   37,   59,   58,   45,   57,   54,
+       37,   37,   53,   52,   51,   45,   50,   48,   47,   46,
 
-       45,   44,   44,   37,   43,   42,   37,   37,   21,   41,
-       38,   37,   36,   28,   27,   26,   25,   24,   21,   81,
-        3,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+       45,   45,   44,   44,   37,   43,   42,   37,   37,   21,
+       41,   38,   37,   36,   28,   27,   26,   25,   24,   21,
+       81,    5,    3,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
-       81,   81,   81,   81,   81,   81,   81,   81,   81
+       81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
+       81
     } ;
 
-static const flex_int16_t yy_chk[150] =
+static const flex_int16_t yy_chk[152] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    7,   15,
+        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+        2,    2,    2,    2,    2,    2,    2,    2,    7,   15,
        13,   14,   19,   19,   34,   15,   43,   51,    7,   13,
-       51,   14,   55,   59,   57,   55,   13,   57,   60,   80,
-       59,   60,   34,   63,   79,   68,   63,   43,   68,   70,
-       78,   70,   70,   77,   76,   75,   74,   73,   72,   71,
-       69,   67,   66,   65,   64,   62,   61,   58,   56,   54,
-       53,   52,   50,   49,   48,   47,   46,   45,   42,   41,
-       40,   39,   38,   37,   36,   35,   33,   32,   31,   30,
+       51,   14,   55,   59,   57,   55,   13,   57,   60,   82,
+       59,   60,   34,   63,   80,   68,   63,   43,   68,   70,
+       79,   70,   70,   78,   77,   76,   75,   74,   73,   72,
+       71,   69,   67,   66,   65,   64,   62,   61,   58,   56,
+       54,   53,   52,   50,   49,   48,   47,   46,   45,   42,
+       41,   40,   39,   38,   37,   36,   35,   33,   32,   31,
 
-       29,   28,   27,   26,   25,   24,   23,   22,   21,   20,
-       18,   17,   16,   12,   11,   10,    9,    8,    5,    3,
+       30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
+       20,   18,   17,   16,   12,   11,   10,    9,    8,    6,
+        3,    1,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
        81,   81,   81,   81,   81,   81,   81,   81,   81,   81,
-       81,   81,   81,   81,   81,   81,   81,   81,   81
+       81
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -501,8 +503,10 @@ char *yytext;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
-// Global file pointer for output
+#define MAX_LINE_LENGTH 100
+
 FILE *output_file;
 
 // Function to convert an integer to a binary string
@@ -510,10 +514,11 @@ void int_to_binary(int num, int bits, char *output) {
     for (int i = bits - 1; i >= 0; i--) {
         output[bits - 1 - i] = (num & (1 << i)) ? '1' : '0';
     }
-    output[bits] = '\0'; // Null-terminate the string
+    output[bits] = '\0';
 }
-#line 516 "assembler/lex.yy.c"
-#line 517 "assembler/lex.yy.c"
+
+#line 521 "assembler/lex.yy.c"
+#line 522 "assembler/lex.yy.c"
 
 #define INITIAL 0
 
@@ -693,6 +698,9 @@ extern int yylex (void);
 #endif
 
 #define YY_RULE_SETUP \
+	if ( yyleng > 0 ) \
+		YY_CURRENT_BUFFER_LVALUE->yy_at_bol = \
+				(yytext[yyleng - 1] == '\n'); \
 	YY_USER_ACTION
 
 /** The main scanner function which does all the work.
@@ -730,10 +738,10 @@ YY_DECL
 		}
 
 	{
-#line 25 "assembler/assembler.l"
+#line 28 "assembler/assembler.l"
 
 
-#line 737 "assembler/lex.yy.c"
+#line 745 "assembler/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -748,6 +756,7 @@ YY_DECL
 		yy_bp = yy_cp;
 
 		yy_current_state = (yy_start);
+		yy_current_state += YY_AT_BOL();
 yy_match:
 		do
 			{
@@ -766,7 +775,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 121 );
+		while ( yy_base[yy_current_state] != 123 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -792,17 +801,6 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "assembler/assembler.l"
-; // Ignore spaces and tabs
-	YY_BREAK
-case 2:
-/* rule 2 can match eol */
-YY_RULE_SETUP
-#line 28 "assembler/assembler.l"
-; // Ignore newlines
-	YY_BREAK
-case 3:
-YY_RULE_SETUP
 #line 30 "assembler/assembler.l"
 {
     const char *output;
@@ -813,20 +811,18 @@ YY_RULE_SETUP
     } else if (strcmp(yytext, "FIN") == 0) {
         output = "11110000000000000000000000000000\n";
     }
-
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
 	YY_BREAK
-case 4:
+case 2:
 YY_RULE_SETUP
-#line 43 "assembler/assembler.l"
+#line 42 "assembler/assembler.l"
 {
+    char instruction[20];
     int reg, value, sign;
     char reg_bin[14], value_bin[14], sign_bin[2];
-    char opcode[6];
-
-    sscanf(yytext, "%s %d %d", opcode, &reg, &value);
+    
+    sscanf(yytext, "%s %d %d", instruction, &reg, &value);
     sign = (value < 0) ? 1 : 0;
     value = abs(value);
 
@@ -835,39 +831,40 @@ YY_RULE_SETUP
     int_to_binary(sign, 1, sign_bin);
 
     char output[34];
-    if (strcmp(opcode, "LOAD") == 0) {
+    if (strcmp(instruction, "LOAD") == 0) {
         sprintf(output, "00001%s%s%s\n", reg_bin, sign_bin, value_bin);
-    } else if (strcmp(opcode, "CMP") == 0) {
+    } else if (strcmp(instruction, "CMP") == 0) {
         sprintf(output, "10000%s%s%s\n", reg_bin, sign_bin, value_bin);
     }
 
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
 	YY_BREAK
-case 5:
+case 3:
 YY_RULE_SETUP
-#line 67 "assembler/assembler.l"
+#line 65 "assembler/assembler.l"
 {
-    char op[10];
+    char instruction[20];
     int reg1, reg2, opcode;
     char reg1_bin[14], reg2_bin[14];
 
-    sscanf(yytext, "%s %d %d", op, &reg1, &reg2);
-    if (strcmp(op, "STORE") == 0) opcode = 2;
-    else if (strcmp(op, "MOVE") == 0) opcode = 3;
-    else if (strcmp(op, "LOADDISK") == 0) opcode = 4;
-    else if (strcmp(op, "ADD") == 0) opcode = 5;
-    else if (strcmp(op, "SUB") == 0) opcode = 6;
-    else if (strcmp(op, "MULT") == 0) opcode = 7;
-    else if (strcmp(op, "DIV") == 0) opcode = 8;
-    else if (strcmp(op, "MOD") == 0) opcode = 9;
-    else if (strcmp(op, "AND") == 0) opcode = 10;
-    else if (strcmp(op, "OR") == 0) opcode = 11;
-    else if (strcmp(op, "XOR") == 0) opcode = 12;
-    else if (strcmp(op, "LEFSHIFT") == 0) opcode = 14;
-    else if (strcmp(op, "RIGHTSHIF") == 0) opcode = 15;
-    else if (strcmp(op, "CMPREG") == 0) opcode = 17;
+    sscanf(yytext, "%s %d %d", instruction, &reg1, &reg2);
+    
+    // Opcode mapping
+    if (strcmp(instruction, "STORE") == 0) opcode = 2;
+    else if (strcmp(instruction, "MOVE") == 0) opcode = 3;
+    else if (strcmp(instruction, "LOADDISK") == 0) opcode = 4;
+    else if (strcmp(instruction, "ADD") == 0) opcode = 5;
+    else if (strcmp(instruction, "SUB") == 0) opcode = 6;
+    else if (strcmp(instruction, "MULT") == 0) opcode = 7;
+    else if (strcmp(instruction, "DIV") == 0) opcode = 8;
+    else if (strcmp(instruction, "MOD") == 0) opcode = 9;
+    else if (strcmp(instruction, "AND") == 0) opcode = 10;
+    else if (strcmp(instruction, "OR") == 0) opcode = 11;
+    else if (strcmp(instruction, "XOR") == 0) opcode = 12;
+    else if (strcmp(instruction, "LEFSHIFT") == 0) opcode = 14;
+    else if (strcmp(instruction, "RIGHTSHIF") == 0) opcode = 15;
+    else if (strcmp(instruction, "CMPREG") == 0) opcode = 17;
 
     int_to_binary(reg1, 13, reg1_bin);
     int_to_binary(reg2, 13, reg2_bin);
@@ -877,47 +874,58 @@ YY_RULE_SETUP
 
     char output[34];
     sprintf(output, "%s%s0%s\n", opcode_bin, reg1_bin, reg2_bin);
-    printf("%s", output);
     fprintf(output_file, "%s", output);
 }
 	YY_BREAK
-case 6:
+case 4:
 YY_RULE_SETUP
-#line 100 "assembler/assembler.l"
+#line 99 "assembler/assembler.l"
 {
-    char op[10];
-    int reg,opcode;
+    char instruction[20];
+    int reg, opcode;
     char reg_bin[14];
 
-    sscanf(yytext, "%s %d", op,&reg);
-    int_to_binary(reg, 13, reg_bin);
+    sscanf(yytext, "%s %d", instruction, &reg);
+    
+    if (strcmp(instruction, "NOT") == 0) opcode = 13;
+    else if (strcmp(instruction, "JUMP") == 0) opcode = 18;
+    else if (strcmp(instruction, "JEQ") == 0) opcode = 19;    
+    else if (strcmp(instruction, "JNE") == 0) opcode = 20;
 
-    if (strcmp(op, "NOT") == 0) opcode = 13;
-    else if (strcmp(op, "JUMP") == 0) opcode = 18;
-    else if (strcmp(op, "JEQ") == 0) opcode = 19;
-    else if (strcmp(op, "JNE") == 0) opcode = 20;
-
+     int_to_binary(reg, 13, reg_bin);
+    
     char opcode_bin[6];
     int_to_binary(opcode, 5, opcode_bin);
-
+    
     char output[34];
-    sprintf(output, "%s%s00000000000000\n", opcode_bin,reg_bin);
-    printf("%s", output);
+    sprintf(output, "%s%s00000000000000\n", opcode_bin, reg_bin);
     fprintf(output_file, "%s", output);
 }
 	YY_BREAK
+case 5:
+YY_RULE_SETUP
+#line 121 "assembler/assembler.l"
+;    // Ignore leading whitespace
+	YY_BREAK
+case 6:
+/* rule 6 can match eol */
+YY_RULE_SETUP
+#line 122 "assembler/assembler.l"
+;    // Ignore newlines
+	YY_BREAK
 case 7:
-/* rule 7 can match eol */
 YY_RULE_SETUP
 #line 123 "assembler/assembler.l"
-{ fprintf(stderr, "Unrecognized input: %s\n", yytext); }
+{
+    fprintf(stderr, "Unrecognized input: %s\n", yytext);
+}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 125 "assembler/assembler.l"
+#line 127 "assembler/assembler.l"
 ECHO;
 	YY_BREAK
-#line 921 "assembler/lex.yy.c"
+#line 929 "assembler/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1202,6 +1210,7 @@ static int yy_get_next_buffer (void)
 	char *yy_cp;
     
 	yy_current_state = (yy_start);
+	yy_current_state += YY_AT_BOL();
 
 	for ( yy_cp = (yytext_ptr) + YY_MORE_ADJ; yy_cp < (yy_c_buf_p); ++yy_cp )
 		{
@@ -1361,6 +1370,8 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = (c == '\n');
 
 	return c;
 }
@@ -1922,7 +1933,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 125 "assembler/assembler.l"
+#line 127 "assembler/assembler.l"
 
 
 int main(int argc, char **argv) {
@@ -1931,25 +1942,23 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "r");
-    if (!file) {
-        perror("Error opening file");
+    FILE *input_file = fopen(argv[1], "r");
+    if (!input_file) {
+        perror("Error opening input file");
         return 1;
     }
 
     output_file = fopen("pcIN.txt", "w");
     if (!output_file) {
         perror("Error creating output file");
-        fclose(file);
+        fclose(input_file);
         return 1;
     }
 
-    yyin = file;
+    yyin = input_file;
     yylex();
 
-    fclose(file);
+    fclose(input_file);
     fclose(output_file);
-
     return 0;
 }
-
