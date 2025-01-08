@@ -1,4 +1,6 @@
 full: linker assembler pc
+faster: linker assembler
+	./pc/pc ./pcIN.txt
 assembler:
 	flex -o assembler/lex.yy.c assembler/assembler.l
 	gcc assembler/lex.yy.c -o assembler/assembler
@@ -10,8 +12,8 @@ linker:
 	flex -o linkerLoader/lex.yy.c linkerLoader/linkerLoader.l
 	gcc linkerLoader/lex.yy.c -o linkerLoader/linkerLoader
 	./linkerLoader/linkerLoader ./linkerLoader/linkerIN.txt
-go:
-	go run -C ./pc .
+goBuild:
+	go build -C ./pc -o pc  .
 
-.PHONY: assembler pc full linker go
+.PHONY: assembler pc full linker faster
 

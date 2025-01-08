@@ -496,7 +496,7 @@ typedef struct {
     int start_address;         
     int end_address;          
     int return_address;       
-    int is_term_marker;        // Changed from is_end_marker to is_term_marker
+    int is_term_marker;        
 } Label;
 
 Label labels[MAX_LABELS];
@@ -519,7 +519,7 @@ void process_term_label(const char* term_marker) {
     
     Label* label = find_label(label_name);
     if (label != NULL) {
-        label->end_address = instruction_count - 1;
+        label->end_address = instruction_count ;
         label->is_term_marker = 1;
     }
 }
@@ -543,6 +543,11 @@ void insert_instruction(int position, const char* instruction) {
 }
 
 void resolve_labels() {
+printf("Initial instruction count: %d\n", instruction_count);
+    printf("Initial instructions:\n");
+    for (int i = 0; i < instruction_count; i++) {
+        printf("[%d]: '%s'\n", i, instructions[i]);
+    }
     // First pass: Insert all return jumps to calculate final instruction count
     int total_jumps_to_insert = 0;
     for (int i = 0; i < instruction_count; i++) {
@@ -552,7 +557,9 @@ void resolve_labels() {
         
         int args = sscanf(line, "%s %s %s", opcode, arg1, arg2);
         
-        if (args >= 2 && strcmp(opcode, "JUMP") == 0) {
+        if (args >= 2 && (strcmp(opcode, "JUMP") == 0 || 
+                         strcmp(opcode, "JEQ") == 0 || 
+                         strcmp(opcode, "JNE") == 0)) {
             Label* label = find_label(arg1);
             if (label != NULL) {
                 total_jumps_to_insert++;
@@ -578,38 +585,38 @@ void resolve_labels() {
         if (args >= 2) {
             Label* label = find_label(arg1);
             
-            if (label != NULL) {
-                if (strcmp(opcode, "JUMP") == 0) {
-                    // Calculate target address (decremented by 1)
-                    int target = label->start_address - 1;
-                    
-                    // Update jump instruction
-                    sprintf(instructions[i], "JUMP %d", target);
-                    
-                    // Calculate return position
-                    int return_pos = label->end_address + inserted_jumps;
-                    
-                    // Calculate return target (decremented by 1)
-                    int return_target = i + 1;
-                    
-                    // Move instructions between label end and next label start
-                    for (int j = instruction_count - 1; j > return_pos; j--) {
-                        strcpy(instructions[j], instructions[j-1]);
-                    }
-                    
-                    // Insert return jump
-                    sprintf(instructions[return_pos], "JUMP %d", return_target - 1);
-                    inserted_jumps++;
+            if (label != NULL && (strcmp(opcode, "JUMP") == 0 || 
+                                strcmp(opcode, "JEQ") == 0 || 
+                                strcmp(opcode, "JNE") == 0)) {
+                // Calculate target address (decremented by 1)
+                int target = label->start_address - 1;
+                
+                // Update jump instruction
+                sprintf(instructions[i], "%s %d", opcode, target);
+                
+                // Calculate return position
+                int return_pos = label->end_address + inserted_jumps;
+                
+                // Calculate return target (decremented by 1)
+                int return_target = i + 1;
+                
+                // Move instructions between label end and next label start
+                for (int j = instruction_count - 1; j > return_pos; j--) {
+                    strcpy(instructions[j], instructions[j-1]);
                 }
-                else if (strcmp(opcode, "JEQ") == 0 || strcmp(opcode, "JNE") == 0) {
-                    // Update conditional jump target (decremented by 1)
-                    int target = label->start_address - 1;
-                    sprintf(instructions[i], "%s %d", opcode, target);
-                }
+                
+                // Insert return jump
+                sprintf(instructions[return_pos], "JUMP %d", return_target - 1);
+                inserted_jumps++;
             }
         }
     }
     
+ printf("Before TERM removal:\n");
+    for (int i = 0; i < instruction_count; i++) {
+        printf("[%d]: '%s'\n", i, instructions[i]);
+    }
+
     // Remove TERM_ markers from final output
     int write_pos = 0;
     for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
@@ -621,9 +628,13 @@ void resolve_labels() {
         }
     }
     instruction_count = write_pos;
+     printf("Final instructions:\n");
+    for (int i = 0; i < instruction_count; i++) {
+        printf("[%d]: '%s'\n", i, instructions[i]);
+    }
 }
-#line 626 "linkerLoader/lex.yy.c"
-#line 627 "linkerLoader/lex.yy.c"
+#line 637 "linkerLoader/lex.yy.c"
+#line 638 "linkerLoader/lex.yy.c"
 
 #define INITIAL 0
 
@@ -843,10 +854,10 @@ YY_DECL
 		}
 
 	{
-#line 153 "linkerLoader/linkerLoader.l"
+#line 164 "linkerLoader/linkerLoader.l"
 
 
-#line 850 "linkerLoader/lex.yy.c"
+#line 861 "linkerLoader/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -906,7 +917,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 155 "linkerLoader/linkerLoader.l"
+#line 166 "linkerLoader/linkerLoader.l"
 {
     char *label = strdup(yytext);
     label[strlen(label)-1] = '\0';  // Remove colon
@@ -922,7 +933,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 168 "linkerLoader/linkerLoader.l"
+#line 179 "linkerLoader/linkerLoader.l"
 {
     process_term_label(yytext);
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
@@ -932,7 +943,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 175 "linkerLoader/linkerLoader.l"
+#line 186 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -941,7 +952,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 181 "linkerLoader/linkerLoader.l"
+#line 192 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -950,7 +961,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 187 "linkerLoader/linkerLoader.l"
+#line 198 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -959,7 +970,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 193 "linkerLoader/linkerLoader.l"
+#line 204 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -968,26 +979,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 199 "linkerLoader/linkerLoader.l"
+#line 210 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 200 "linkerLoader/linkerLoader.l"
+#line 211 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 201 "linkerLoader/linkerLoader.l"
+#line 212 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 203 "linkerLoader/linkerLoader.l"
+#line 214 "linkerLoader/linkerLoader.l"
 ECHO;
 	YY_BREAK
-#line 991 "linkerLoader/lex.yy.c"
+#line 1002 "linkerLoader/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1995,7 +2006,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 203 "linkerLoader/linkerLoader.l"
+#line 214 "linkerLoader/linkerLoader.l"
 
 
 int main(int argc, char **argv) {
