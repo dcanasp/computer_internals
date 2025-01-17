@@ -1,0 +1,3 @@
+Inicio del programa.
+INCLUDERE <"testlib.txt">
+Fin del programa.

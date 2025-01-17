@@ -1,0 +1,6 @@
+Inicio del programa.
+010110{15}
+010001010101
+001010001010
+110101{2}
+Fin del programa.

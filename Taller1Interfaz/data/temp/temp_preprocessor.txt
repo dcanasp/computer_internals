@@ -1,0 +1,3 @@
+Inicio del programa.
+INCLUDERE <"amongos.txt">
+Fin del programa.
