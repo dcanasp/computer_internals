@@ -15,6 +15,7 @@ typedef struct {
     int return_address;       
     int is_term_marker;        
 } Label;
+int InitialJumps=0;
 
 Label labels[MAX_LABELS];
 int label_count = 0;
@@ -254,15 +255,22 @@ TERM_LABEL  TERM_{LABEL}
 %%
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
+    if (argc < 2) {
         fprintf(stderr, "Uso: %s <archivo_entrada>\n", argv[0]);
         return 1;
     }
-
     FILE *file = fopen(argv[1], "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return 1;
+    }
+
+    if (argv[2]!=NULL) {
+        InitialJumps = atoi(argv[2]); 
+    }
+    for (int i=0; i<InitialJumps; i++){
+        strcpy(instructions[instruction_count], "00001000000000010000000000000000");
+        instruction_count++;
     }
 
     yyin = file;

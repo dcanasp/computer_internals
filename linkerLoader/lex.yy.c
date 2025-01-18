@@ -503,6 +503,7 @@ typedef struct {
     int return_address;       
     int is_term_marker;        
 } Label;
+int InitialJumps=0;
 
 Label labels[MAX_LABELS];
 int label_count = 0;
@@ -692,8 +693,8 @@ void resolve_labels() {
         printf("[%d]: '%s'\n", i, instructions[i]);
     }
 }
-#line 696 "linkerLoader/lex.yy.c"
 #line 697 "linkerLoader/lex.yy.c"
+#line 698 "linkerLoader/lex.yy.c"
 
 #define INITIAL 0
 
@@ -913,10 +914,10 @@ YY_DECL
 		}
 
 	{
-#line 216 "linkerLoader/linkerLoader.l"
+#line 217 "linkerLoader/linkerLoader.l"
 
 
-#line 920 "linkerLoader/lex.yy.c"
+#line 921 "linkerLoader/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -976,7 +977,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 218 "linkerLoader/linkerLoader.l"
+#line 219 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -985,7 +986,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 224 "linkerLoader/linkerLoader.l"
+#line 225 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -994,7 +995,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 230 "linkerLoader/linkerLoader.l"
+#line 231 "linkerLoader/linkerLoader.l"
 {
     char *label = strdup(yytext);
     label[strlen(label)-1] = '\0';  // Remove colon
@@ -1010,7 +1011,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 243 "linkerLoader/linkerLoader.l"
+#line 244 "linkerLoader/linkerLoader.l"
 {
     process_term_label(yytext);
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
@@ -1020,26 +1021,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 250 "linkerLoader/linkerLoader.l"
+#line 251 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 251 "linkerLoader/linkerLoader.l"
+#line 252 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 252 "linkerLoader/linkerLoader.l"
+#line 253 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 254 "linkerLoader/linkerLoader.l"
+#line 255 "linkerLoader/linkerLoader.l"
 ECHO;
 	YY_BREAK
-#line 1043 "linkerLoader/lex.yy.c"
+#line 1044 "linkerLoader/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2047,19 +2048,26 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 254 "linkerLoader/linkerLoader.l"
+#line 255 "linkerLoader/linkerLoader.l"
 
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
+    if (argc < 2) {
         fprintf(stderr, "Uso: %s <archivo_entrada>\n", argv[0]);
         return 1;
     }
-
     FILE *file = fopen(argv[1], "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return 1;
+    }
+
+    if (argv[2]!=NULL) {
+        InitialJumps = atoi(argv[2]); 
+    }
+    for (int i=0; i<InitialJumps; i++){
+        strcpy(instructions[instruction_count], "00001000000000010000000000000000");
+        instruction_count++;
     }
 
     yyin = file;

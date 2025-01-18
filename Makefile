@@ -8,7 +8,7 @@ assembler:
 linker:
 	flex -o linkerLoader/lex.yy.c linkerLoader/linkerLoader.l
 	gcc linkerLoader/lex.yy.c -o linkerLoader/linkerLoader
-	./linkerLoader/linkerLoader ./linkerIN.txt
+	./linkerLoader/linkerLoader ./linkerIN.txt 
 pc:
 	go build -C ./pc -o pc  .
 	./pc/pc ./pcIN.txt
