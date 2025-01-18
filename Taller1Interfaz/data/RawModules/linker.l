@@ -253,7 +253,7 @@ int main(int argc, char **argv) {
     resolve_labels();
 
     // Mostrar solo las instrucciones finales
-    for (int i = 0; i < instruction_count; i++) {
+    for (int i = InitialJumps; i < instruction_count; i++) {
         printf("%s\n", instructions[i]);
     }
 

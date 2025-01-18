@@ -1,3 +1,5 @@
+import java.util.List;
+import java.util.ArrayList;
 import g4p_controls.*;
 import javax.swing.JFileChooser;
 import java.io.*;
@@ -6,16 +8,18 @@ import java.awt.datatransfer.StringSelection;
 
 // Campos de texto para entrada/salida de módulos
 GTextArea preprocessorInput, preprocessorOutput, lexicalOutput;
-GTextArea assemblerInput, assemblerOutput, linkerOutput, pcOutput;
+GTextArea assemblerInput, assemblerOutput, linkerOutput, computerOutput;
 
 GButton copyPreprocessorInputButton, copyAssemblerInputButton, copyPreprocessorOutputButton, 
-        copyLexicalOutputButton, copyAssemblerOutputButton, copyLinkerOutputButton;
+        copyLexicalOutputButton, copyAssemblerOutputButton, copyLinkerOutputButton, copyComputerOutputButton;
 
 GButton runPreprocessorButton, runLexicalAnalyzerButton, runAssemblerButton, runLinkerButton, runComputerButton;
 
 // Botones auxiliares
 GButton clearAllButton, loadExample1Button, loadExample2Button, loadExample3Button;
 GButton uploadPreprocessorButton, uploadAssemblerButton;
+
+GTextField numericInput;
 
 // Estado del sistema
 String status = "Todo listo!";
@@ -47,17 +51,22 @@ void setup() {
   assemblerInput = createTextArea(50, 500, 250, 350, "Assembler Input", true);
   assemblerOutput = createTextArea(350, 500, 250, 350, "Assembler Output", false);
   linkerOutput = createTextArea(650, 500, 250, 350, "Linker Output", false);
-  pcOutput = createTextArea(950, 500, 250, 350, "pc Output", false);
+  computerOutput = createTextArea(950, 500, 250, 350, "Computer Output", false);
 
-  runAssemblerButton = createButton(">", 50, 710, "runAssembler");
-  runLinkerButton = createButton(">", 550, 710, "runLinker");
-  runComputerButton = createButton(">", 750, 710, "runComputer");
+  runAssemblerButton = createButton(">", 310, 670, "runAssembler");
+  runLinkerButton = createButton(">", 610, 670, "runLinker");
+  runComputerButton = createButton(">", 910, 670, "runComputer");
 
   // *** Botones inferiores ***
-  loadExample1Button = createSquareButton("Ejemplo 1", width - 300, height - 320, "loadExample1");
-  loadExample2Button = createSquareButton("Ejemplo 2", width - 300, height - 270, "loadExample2");
-  loadExample3Button = createSquareButton("Ejemplo 3", width - 300, height - 220, "loadExample3");
-  clearAllButton = createSquareButton("Limpiar todo", width - 300, height - 170, "clearAll");
+  loadExample1Button = createSquareButton("Ejemplo 1", width - 300, height - 250, "loadExample1");
+  loadExample2Button = createSquareButton("Ejemplo 2", width - 300, height - 200, "loadExample2");
+  loadExample3Button = createSquareButton("Ejemplo 3", width - 300, height - 150, "loadExample3");
+  clearAllButton = createSquareButton("Limpiar todo", width - 300, height - 100, "clearAll");
+  
+  // Crear un campo de texto para números
+  numericInput = new GTextField(this, 500, 475, 100, 20);
+  numericInput.setLocalColorScheme(GCScheme.BLUE_SCHEME);
+  numericInput.setPromptText("#");
 
 }
 
@@ -108,7 +117,11 @@ GTextArea createTextArea(int x, int y, int width, int height, String label, bool
   } else if (label.equals("Linker Output")) {
     copyLinkerOutputButton = copyButton;
     copyButton.addEventHandler(this, "copyToClipboardLinkerOutput");
+  }  else if (label.equals("Computer Output")) {
+    copyLinkerOutputButton = copyButton;
+    copyButton.addEventHandler(this, "copyToClipboardComputerOutput");
   }
+
 
   // Etiqueta para el cuadro
   fill(50);
@@ -123,68 +136,78 @@ GTextArea createTextArea(int x, int y, int width, int height, String label, bool
 void copyToClipboardPreprocessor(GButton button, GEvent event) {
   String text = preprocessorInput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la entrada del preprocesador.";
+    status = "No hay texto para copiar \nen la entrada del preprocesador.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la entrada del preprocesador!";
+  status = "Texto copiado al portapapeles desde \nla entrada del preprocesador!";
 }
 
 // Evento para copiar texto al portapapeles del ensamblador
 void copyToClipboardAssembler(GButton button, GEvent event) {
   String text = assemblerInput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la entrada del ensamblador.";
+    status = "No hay texto para copiar \nen la entrada del ensamblador.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la entrada del ensamblador!";
+  status = "Texto copiado al portapapeles desde \nla entrada del ensamblador!";
 }
 
 // Evento para copiar texto del preprocesador a su salida
 void copyToClipboardPreprocessorOutput(GButton button, GEvent event) {
   String text = preprocessorOutput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la salida del preprocesador.";
+    status = "No hay texto para copiar en \nla salida del preprocesador.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la salida del preprocesador!";
+  status = "Texto copiado al portapapeles desde \nla salida del preprocesador!";
 }
 
 // Evento para copiar texto del analizador léxico a su salida
 void copyToClipboardLexicalOutput(GButton button, GEvent event) {
   String text = lexicalOutput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la salida del analizador léxico.";
+    status = "No hay texto para copiar en \nla salida del analizador léxico.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la salida del analizador léxico!";
+  status = "Texto copiado al portapapeles desde \nla salida del analizador léxico!";
 }
 
 // Evento para copiar texto del ensamblador a su salida
 void copyToClipboardAssemblerOutput(GButton button, GEvent event) {
   String text = assemblerOutput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la salida del ensamblador.";
+    status = "No hay texto para copiar en \nla salida del ensamblador.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la salida del ensamblador!";
+  status = "Texto copiado al portapapeles desde \nla salida del ensamblador!";
 }
 
 // Evento para copiar texto del Linker a su salida
 void copyToClipboardLinkerOutput(GButton button, GEvent event) {
   String text = linkerOutput.getText();
   if (text.isEmpty()) {
-    status = "No hay texto para copiar en la salida del Linker.";
+    status = "No hay texto para copiar en \nla salida del Linker.";
     return;
   }
   Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
-  status = "Texto copiado al portapapeles desde la salida del Linker!";
+  status = "Texto copiado al portapapeles desde \nla salida del Linker!";
 }
 
+// Evento para copiar texto del pc a su salida
+void copyToClipboardComputerOutput(GButton button, GEvent event) {
+  String text = computerOutput.getText();
+  if (text.isEmpty()) {
+    status = "No hay texto para copiar en \nla salida del Linker.";
+    return;
+  }
+  Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
+  status = "Texto copiado al portapapeles desde \nla salida del computador!";
+}
 
 GButton createButton(String label, int x, int y, String action) {
   GButton button = new GButton(this, x, y, 30, 30);
@@ -224,14 +247,14 @@ void drawComponents() {
 
   // Sección inferior
   text("Ensamblador", 50, 490);
-  text("Linker", 350, 490);
+  text("Enlazador     -     Offset:", 350, 490);
   text("Computador", 650, 490);
   text("Resultado", 950, 490);
 
   // Estado del sistema
-  textAlign(LEFT);
+  textAlign(CENTER);
   textSize(18);
-  text(status, 50, height - 50);
+  text(status, width - 200, height / 2 + 120);
   
   textAlign(CENTER);
   textSize(16);
@@ -261,68 +284,124 @@ void drawComponents() {
 
 void runPreprocessor(GButton button, GEvent event) {
   if (preprocessorInput.getText().trim().isEmpty()) {
-    status = "Entrada del preprocesador vacía. Proporcione datos válidos.";
+    status = "Entrada del preprocesador vacía. \nProporcione datos válidos.";
     return;
   }
   // Llamar a la función processFile para procesar el archivo de entrada con el módulo 'preprocessor'
-  processFile(preprocessorInput, preprocessorOutput, "preprocessor");
+  processFile(preprocessorInput, preprocessorOutput, "preprocessor", "\"" + libsPath + "\"");
   status = "Preprocesador ejecutado correctamente!";
 }
 
 void runLexicalAnalyzer(GButton button, GEvent event) {
   if (preprocessorOutput.getText().trim().isEmpty()) {
-    status = "Salida del preprocesador vacía. Ejecute primero el preprocesador.";
+    status = "Salida del preprocesador vacía.\n Ejecute primero el preprocesador.";
     return;
   }
   // Llamar a la función processFile para procesar el archivo de salida del preprocesador con el módulo 'lexicalAnalyzer'
-  processFile(preprocessorOutput, lexicalOutput, "lexicalAnalyzer");
+  processFile(preprocessorOutput, lexicalOutput, "lexicalAnalyzer", null);
   status = "Analizador léxico ejecutado correctamente!";
 }
 
 void runAssembler(GButton button, GEvent event) {
   if (assemblerInput.getText().trim().isEmpty()) {
-    status = "Entrada del ensamblador vacía. Proporcione datos válidos.";
+    status = "Entrada del ensamblador vacía. \nProporcione datos válidos.";
     return;
   }
   // Llamar a la función processFile para procesar el archivo de entrada con el módulo 'assembler'
-  processFile(assemblerInput, assemblerOutput, "assembler");
+  processFile(assemblerInput, assemblerOutput, "assembler", null);
   status = "Ensamblador ejecutado correctamente!";
 }
 
 void runLinker(GButton button, GEvent event) {
   if (assemblerOutput.getText().trim().isEmpty()) {
-    status = "Salida del ensamblador vacía. Ejecute primero el ensamblador.";
+    status = "Salida del ensamblador vacía. \nEjecute primero el ensamblador.";
     return;
   }
-  // Llamar a la función processFile para procesar el archivo de salida del ensamblador con el módulo 'linker'
-  processFile(assemblerOutput, linkerOutput, "linker");
-  status = "Vinculador ejecutado correctamente!";
+
+  // Obtener el valor del campo de texto y validarlo
+  String inputText = numericInput.getText().trim();
+  int number = -1;
+
+  try {
+    number = Integer.parseInt(inputText); // Intentar convertir el texto a número
+    if (number < 0 || number > 1024) {
+      status = "El offset debe estar entre 0 y 1024.";
+       numericInput.setText("0");
+      return; // No hacer nada si el número es inválido
+    }
+  } catch (NumberFormatException e) {
+    status = "Offset inválido. \nSolo se permiten números.";
+     numericInput.setText("0");
+    return; // No hacer nada si la entrada no es un número
+  }
+  // Convertir el número a String
+  String numberAsString = String.valueOf(number);
+
+  // Llamar a la función processFile con el número validado como String
+  processFile(assemblerOutput, linkerOutput, "linker", numberAsString);
+  status = "Enlazador ejecutado correctamente!";
 }
 
-void processFile(GTextArea inputField, GTextArea outputField, String moduleName) {
+
+void runComputer(GButton button, GEvent event) {
+  if (linkerOutput.getText().trim().isEmpty()) {
+    status = "Salida del enlazador vacía. \nEjecute primero el enlazador.";
+    return;
+  }
+  
+    // Obtener el valor del campo de texto y validarlo
+  String inputText = numericInput.getText().trim();
+  int number = -1;
+
+  try {
+    number = Integer.parseInt(inputText); // Intentar convertir el texto a número
+    if (number < 0 || number > 1024) {
+      status = "El offset debe estar entre 0 y 1024.";
+       numericInput.setText("0");
+      return; // No hacer nada si el número es inválido
+    }
+  } catch (NumberFormatException e) {
+    status = "Offset inválido. \nSolo se permiten números.";
+     numericInput.setText("0");
+    return; // No hacer nada si la entrada no es un número
+  }
+  // Convertir el número a String
+  String numberAsString = String.valueOf(number);
+  
+  // Llamar a la función processFile para procesar el archivo de salida del enlazador dentro del computador
+  processFile(linkerOutput, computerOutput, "computer", numberAsString);
+  status = "Instrucciones procesadas en el computador!";
+}
+
+void processFile(GTextArea inputField, GTextArea outputField, String moduleName, String extraParam) {
   try {
 
     // Obtén el texto de entrada y guárdalo en un archivo temporal
     String inputText = inputField.getText().trim();
 
     // Crear archivo temporal para la entrada
-    String tempInputFilePath = basePath + "/temp/" + "temp_" + moduleName + ".txt";
+    String tempInputFilePath = basePath + "\\temp\\" + "temp_" + moduleName + ".txt";
     FileWriter fileWriter = new FileWriter(tempInputFilePath);
     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
     bufferedWriter.write(inputText);
     bufferedWriter.close();
 
     // Definir la ruta al ejecutable del módulo
-    String execPath = basePath + "/Execs/" + moduleName;
+    String execPath = basePath + "\\Execs\\" + moduleName;
     
-    String[] commandArray;
-    
-    if (!moduleName.equals("preprocessor")) { 
-      commandArray = new String[] { "\"" + execPath + "\"", "\"" + tempInputFilePath + "\"" };
-    } else {
-      commandArray = new String[] { "\"" + execPath + "\"", "\"" + tempInputFilePath + "\"", "\"" + libsPath + "\"" };
+    // Construir el comando
+    List<String> commandList = new ArrayList<>();
+    commandList.add("\"" + execPath + "\"");
+    commandList.add("\"" + tempInputFilePath + "\"");
+
+    // Agregar el parámetro opcional si existe
+    if (extraParam != null) {
+      commandList.add("\"" + extraParam + "\"");
     }
-    
+
+    // Convertir la lista a un arreglo
+    String[] commandArray = commandList.toArray(new String[0]);
+
     // Imprimir los detalles del comando para depuración
     System.out.println("Command: " + String.join(" ", commandArray));
 
@@ -357,7 +436,6 @@ void processFile(GTextArea inputField, GTextArea outputField, String moduleName)
     status = "Error al procesar el archivo!";
   }
 }
-
 
 // *** Métodos para cargar entradas ***
 void uploadFileToField(GButton button, GEvent event) {
@@ -421,6 +499,7 @@ void clearAll(GButton button, GEvent event) {
   assemblerInput.setText("");
   assemblerOutput.setText("");
   linkerOutput.setText("");
+  computerOutput.setText("");
   status = "Todos los campos han sido limpiados.";
 }
 
@@ -429,6 +508,7 @@ void clearOutputs() {
   lexicalOutput.setText("");
   assemblerOutput.setText("");
   linkerOutput.setText("");
+  computerOutput.setText("");
 }
 
 void loadFileToField(GTextArea textArea) {
