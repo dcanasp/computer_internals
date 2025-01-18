@@ -269,7 +269,7 @@ int main(int argc, char **argv) {
         InitialJumps = atoi(argv[2]); 
     }
     for (int i=0; i<InitialJumps; i++){
-        strcpy(instructions[instruction_count], "00001000000000010000000000000000");
+        // strcpy(instructions[instruction_count], "00001000000000010000000000000000");
         instruction_count++;
     }
 
@@ -285,6 +285,9 @@ int main(int argc, char **argv) {
     }
 
     for (int i = 0; i < instruction_count; i++) {
+        if (instructions[i][0] == '\0'){
+            continue;
+        }
         fprintf(output_file, "%s\n", instructions[i]);
     }
 

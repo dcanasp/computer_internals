@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"sync"
 )
 
@@ -41,6 +42,15 @@ func main() {
 		return
 	}
 
+	useless := 0
+	if len(os.Args) > 2 {
+		var err error
+		useless, err = strconv.Atoi(os.Args[2])
+		if err != nil {
+			useless = 0
+		}
+	}
+
 	go cpu(ctx, cancel)
 	go memoryUnit(ctx)
 	go operativeSystem(ctx)
@@ -48,7 +58,7 @@ func main() {
 	inputFile := os.Args[1]
 	var wg2 sync.WaitGroup
 	wg2.Add(1)
-	go preLoadedInstructions(ctx, &wg2, inputFile)
+	go preLoadedInstructions(ctx, &wg2, inputFile, useless)
 	wg2.Wait()
 	go printEachCycle(ctx)
 

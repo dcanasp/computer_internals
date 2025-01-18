@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath string) {
+func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath string, useless int) {
 	defer wg.Done()
 
 	// Open the file only once, before starting the loop
@@ -24,6 +24,12 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 
 	// Read instructions from the file into memory
 	var instructionMemory []int
+	//
+	for i := 0; i < useless; i++ {
+		instructionMemory = append(instructionMemory, 0b00001000000000010000000000000000)
+	}
+
+	//
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
