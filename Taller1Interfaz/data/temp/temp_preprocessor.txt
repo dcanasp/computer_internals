@@ -1,4 +1,5 @@
 INCLUDERE <"testlib.txt">
 FUNZIONE calcular
 SE x > 10
+INCLUDERE <"testlib.txt">
 ALTRIMENTI x = x + 1

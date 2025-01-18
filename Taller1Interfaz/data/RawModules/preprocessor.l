@@ -5,6 +5,7 @@
 
 char input_path[256]; // Ruta completa del archivo de entrada
 char libs_path[256];  // Ruta a la carpeta de librerías
+int processing_libraries = 1; // Indicador para saber si estamos en la sección de librerías
 
 void include_file(const char* filename);
 %}
@@ -12,8 +13,12 @@ void include_file(const char* filename);
 %option noyywrap
 
 %%
+^[[:space:]]*INCLUDERE[[:space:]]<\"([^\"]+)\">[[:space:]]* {
+    if (!processing_libraries) {
+        fprintf(stderr, "Error: 'INCLUDERE' encontrado fuera de la seccion de librerías.\n");
+        exit(1);
+    }
 
-INCLUDERE[[:space:]]<\"([^\"]+)\"> {
     // Extraer el nombre del archivo dentro de las comillas
     char file_name[256];
     sscanf(yytext, "INCLUDERE <\"%[^\"]\">", file_name);
@@ -26,17 +31,21 @@ INCLUDERE[[:space:]]<\"([^\"]+)\"> {
     include_file(full_path);
 }
 
-.|\n { // Emitir cualquier otra cosa sin cambios
-    printf("%s", yytext);
+.* {
+    if (processing_libraries) {
+        // Cuando aparece cualquier línea que no sea una directiva válida de librería
+        processing_libraries = 0;
+        printf("****FIN LIBRERIAS****\n"); // Separador de sección
+    }
+    printf("%s", yytext); // Imprimir la línea tal cual
 }
-
 %%
 
 void include_file(const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
         fprintf(stderr, "Error: No se pudo abrir el archivo %s\n", filename);
-        return;
+        exit(1);
     }
 
     char line[1024];
