@@ -6,19 +6,16 @@ import java.awt.datatransfer.StringSelection;
 
 // Campos de texto para entrada/salida de módulos
 GTextArea preprocessorInput, preprocessorOutput, lexicalOutput;
-GTextArea assemblerInput, assemblerOutput, linkerOutput;
+GTextArea assemblerInput, assemblerOutput, linkerOutput, pcOutput;
 
 GButton copyPreprocessorInputButton, copyAssemblerInputButton, copyPreprocessorOutputButton, 
         copyLexicalOutputButton, copyAssemblerOutputButton, copyLinkerOutputButton;
 
-GButton runPreprocessorButton, runLexicalAnalyzerButton, runAssemblerButton, runLinkerButton;
+GButton runPreprocessorButton, runLexicalAnalyzerButton, runAssemblerButton, runLinkerButton, runComputerButton;
 
 // Botones auxiliares
 GButton clearAllButton, loadExample1Button, loadExample2Button, loadExample3Button;
 GButton uploadPreprocessorButton, uploadAssemblerButton;
-
-GButton toggleInfoButton;
-boolean showInfo = false;
 
 // Estado del sistema
 String status = "Todo listo!";
@@ -39,27 +36,28 @@ void setup() {
   libsPath = basePath + "/Libs/";
 
   // *** Sección Superior: Preprocessor y Lexical Analyzer ***
-  preprocessorInput = createTextArea(50, 100, 450, 200, "Preprocessor Input", true);
-  preprocessorOutput = createTextArea(550, 100, 450, 200, "Preprocessor Output", false);
-  lexicalOutput = createTextArea(1050, 100, 450, 200, "Lexical Output", false);
+  preprocessorInput = createTextArea(50, 100, 250, 350, "Preprocessor Input", true);
+  preprocessorOutput = createTextArea(350, 100, 250, 350, "Preprocessor Output", false);
+  lexicalOutput = createTextArea(650, 100, 250, 350, "Lexical Output", false);
 
-  runPreprocessorButton = createButton("Run Preprocessor", 50, 310, "runPreprocessor");
-  runLexicalAnalyzerButton = createButton("Run Lexical Analyzer", 550, 310, "runLexicalAnalyzer");
+  runPreprocessorButton = createButton(">", 310, 270, "runPreprocessor");
+  runLexicalAnalyzerButton = createButton(">", 610, 270, "runLexicalAnalyzer");
 
   // *** Sección Inferior: Assembler y Linker ***
-  assemblerInput = createTextArea(50, 500, 450, 200, "Assembler Input", true);
-  assemblerOutput = createTextArea(550, 500, 450, 200, "Assembler Output", false);
-  linkerOutput = createTextArea(1050, 500, 450, 200, "Linker Output", false);
+  assemblerInput = createTextArea(50, 500, 250, 350, "Assembler Input", true);
+  assemblerOutput = createTextArea(350, 500, 250, 350, "Assembler Output", false);
+  linkerOutput = createTextArea(650, 500, 250, 350, "Linker Output", false);
+  pcOutput = createTextArea(950, 500, 250, 350, "pc Output", false);
 
-  runAssemblerButton = createButton("Run Assembler", 50, 710, "runAssembler");
-  runLinkerButton = createButton("Run Linker", 550, 710, "runLinker");
+  runAssemblerButton = createButton(">", 50, 710, "runAssembler");
+  runLinkerButton = createButton(">", 550, 710, "runLinker");
+  runComputerButton = createButton(">", 750, 710, "runComputer");
 
   // *** Botones inferiores ***
-  loadExample1Button = createSquareButton("Ex1", 1000, 820, "loadExample1");
-  loadExample2Button = createSquareButton("Ex2", 1100, 820, "loadExample2");
-  loadExample3Button = createSquareButton("Ex3", 1200, 820, "loadExample3");
-  clearAllButton = createSquareButton("Clear", 1300, 820, "clearAll");
-  toggleInfoButton = createSquareButton("Info", 1400, 820, "toggleInfo");
+  loadExample1Button = createSquareButton("Ejemplo 1", width - 300, height - 320, "loadExample1");
+  loadExample2Button = createSquareButton("Ejemplo 2", width - 300, height - 270, "loadExample2");
+  loadExample3Button = createSquareButton("Ejemplo 3", width - 300, height - 220, "loadExample3");
+  clearAllButton = createSquareButton("Limpiar todo", width - 300, height - 170, "clearAll");
 
 }
 
@@ -189,14 +187,14 @@ void copyToClipboardLinkerOutput(GButton button, GEvent event) {
 
 
 GButton createButton(String label, int x, int y, String action) {
-  GButton button = new GButton(this, x, y, 450, 40);
+  GButton button = new GButton(this, x, y, 30, 30);
   button.setText(label);
   button.addEventHandler(this, action);
   return button;
 }
 
 GButton createSquareButton(String label, int x, int y, String action) {
-  GButton button = new GButton(this, x, y, 80, 40); // Tamaño cuadrado pequeño
+  GButton button = new GButton(this, x, y, 200, 40); // Tamaño cuadrado pequeño
   button.setText(label);
   button.addEventHandler(this, action);
   return button;
@@ -209,15 +207,8 @@ void draw() {
   textAlign(CENTER);
   textSize(18);
   fill(50);
-  text("TALLER 1 - SISTEMA DE PROCESAMIENTO DE LENGUAJE", width / 2, 40);
+  drawComponents();
 
-  // Mostrar información si el toggle está activo
-  if (showInfo) {
-    displayInformation();
-  } else {
-    // Renderizar componentes solo si el toggle está desactivado
-    drawComponents();
-  }
 }
 
 
@@ -227,29 +218,28 @@ void drawComponents() {
   textAlign(LEFT);
 
   // Sección superior
-  text("Entrada del Preprocesador", 50, 90);
-  text("Salida del Preprocesador (Entrada del Analizador Léxico)", 550, 90);
-  text("Salida del Analizador Léxico", 1050, 90);
+  text("Preprocesador", 50, 90);
+  text("Analizador Léxico", 350, 90);
+  text("Salida", 650, 90);
 
   // Sección inferior
-  text("Entrada del Ensamblador", 50, 490);
-  text("Salida del Ensamblador (Entrada del Linker)", 550, 490);
-  text("Salida del Linker", 1050, 490);
+  text("Ensamblador", 50, 490);
+  text("Linker", 350, 490);
+  text("Computador", 650, 490);
+  text("Resultado", 950, 490);
 
   // Estado del sistema
   textAlign(LEFT);
   textSize(18);
   text(status, 50, height - 50);
-}
-
-// *** Función para mostrar la información del equipo ***
-void displayInformation() {
+  
   textAlign(CENTER);
   textSize(16);
   fill(50);
 
   // Información de texto
   String info = 
+    "TALLER 1 - SISTEMA DE PROCESAMIENTO DE LENGUAJE \n\n" +
     "Integrantes: \n\n" +
     "David Alfonso Cañas Palomino\n" +
     "Esteban Lopez Barreto\n" +
@@ -265,48 +255,9 @@ void displayInformation() {
     "Bogotá, D.C. Colombia\n" +
     "2024 - 2S";
 
-  text(info, width / 2, height / 2 - 140);
+  text(info, width - 350 , 110);
 }
 
-void toggleInfo(GButton button, GEvent event) {
-  showInfo = !showInfo; // Alternar estado
-  toggleInfoButton.setText(showInfo ? "Hide Info" : "Info"); // Actualizar texto del botón
-  
-  // Mostrar/ocultar componentes
-  setComponentsVisibility(!showInfo);
-}
-
-void setComponentsVisibility(boolean visible) {
-  // Establecer la visibilidad de todos los componentes de G4P
-  preprocessorInput.setVisible(visible);
-  preprocessorOutput.setVisible(visible);
-  lexicalOutput.setVisible(visible);
-  assemblerInput.setVisible(visible);
-  assemblerOutput.setVisible(visible);
-  linkerOutput.setVisible(visible);
-
-  // Establecer visibilidad de los botones de copiar
-  copyPreprocessorInputButton.setVisible(visible);
-  copyAssemblerInputButton.setVisible(visible);
-  copyPreprocessorOutputButton.setVisible(visible);
-  copyLexicalOutputButton.setVisible(visible);
-  copyAssemblerOutputButton.setVisible(visible);
-  copyLinkerOutputButton.setVisible(visible);
-
-  // Botones principales
-  runPreprocessorButton.setVisible(visible);
-  runLexicalAnalyzerButton.setVisible(visible);
-  runAssemblerButton.setVisible(visible);
-  runLinkerButton.setVisible(visible);
-
-  // Botones inferiores
-  clearAllButton.setVisible(visible);
-  loadExample1Button.setVisible(visible);
-  loadExample2Button.setVisible(visible);
-  loadExample3Button.setVisible(visible);
-  uploadPreprocessorButton.setVisible(visible);
-  uploadAssemblerButton.setVisible(visible);
-}
 
 void runPreprocessor(GButton button, GEvent event) {
   if (preprocessorInput.getText().trim().isEmpty()) {

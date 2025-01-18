@@ -1,3 +1,4 @@
-Inicio del programa.
 INCLUDERE <"testlib.txt">
-Fin del programa.
+FUNZIONE calcular
+SE x > 10
+ALTRIMENTI x = x + 1
