@@ -24,6 +24,8 @@ NUMBER      [0-9]+
 WHITESPACE  [ \t]+
 INSTRUCTION [A-Za-z]+
 SIGN_NUMBER [-+]?{NUMBER}
+LABEL       [A-Za-z_][A-Za-z0-9_]*
+TERM_LABEL  TERM_{LABEL}
 
 %%
 
@@ -96,7 +98,7 @@ SIGN_NUMBER [-+]?{NUMBER}
     fprintf(output_file, "%s", output);
 }
 
-^(JUMP|JEQ|JNE|NOT){WHITESPACE}{NUMBER} {
+^NOT{WHITESPACE}{NUMBER} {
     char instruction[20];
     int reg, opcode;
     char reg_bin[14];
@@ -104,18 +106,48 @@ SIGN_NUMBER [-+]?{NUMBER}
     sscanf(yytext, "%s %d", instruction, &reg);
     
     if (strcmp(instruction, "NOT") == 0) opcode = 13;
-    else if (strcmp(instruction, "JUMP") == 0) opcode = 18;
-    else if (strcmp(instruction, "JEQ") == 0) opcode = 19;    
-    else if (strcmp(instruction, "JNE") == 0) opcode = 20;
 
-     int_to_binary(reg, 13, reg_bin);
+    int_to_binary(reg, 13, reg_bin);
     
     char opcode_bin[6];
     int_to_binary(opcode, 5, opcode_bin);
     
-    char output[34];
+    char output[35];
     sprintf(output, "%s%s00000000000000\n", opcode_bin, reg_bin);
     fprintf(output_file, "%s", output);
+}
+
+^(JUMP|JEQ|JNE){WHITESPACE}{LABEL} {
+    char instruction[6];
+    int opcode;
+    char label[80];
+    sscanf(yytext, "%5s %79s", instruction, label);
+    
+    if (strcmp(instruction, "JUMP") == 0) opcode = 18;
+    else if (strcmp(instruction, "JEQ") == 0) opcode = 19;    
+    else if (strcmp(instruction, "JNE") == 0) opcode = 20;
+
+    char opcode_bin[6];
+    int_to_binary(opcode, 5, opcode_bin);
+    char output[150];
+    snprintf(output, sizeof(output), "%s8%s900000000000000\n", opcode_bin, label);
+    fprintf(output_file, "%s", output);
+}
+^{LABEL}: {
+    char instruction[80];  // Reduced from 100 since original warning suggested it was too large
+    char output[100];
+    sscanf(yytext, "%79s", instruction);  // Added length limit
+    snprintf(output, sizeof(output), "%s\n", instruction);
+    fprintf(output_file, "%s", output);
+
+}
+^{TERM_LABEL} {
+    char instruction[80];  // Reduced from 100
+    char output[100];
+    sscanf(yytext, "%79s", instruction);  // Added length limit
+    snprintf(output, sizeof(output), "%s\n", instruction);
+    fprintf(output_file, "%s", output);
+
 }
 
 ^[\t ]+ ;    // Ignore leading whitespace
@@ -138,7 +170,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    output_file = fopen("pcIN.txt", "w");
+    output_file = fopen("linkerIN.txt", "w");
     if (!output_file) {
         perror("Error creating output file");
         fclose(input_file);
