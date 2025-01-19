@@ -13,7 +13,7 @@ GTextArea assemblerInput, assemblerOutput, linkerOutput, computerOutput;
 GButton copyPreprocessorInputButton, copyAssemblerInputButton, copyPreprocessorOutputButton, 
         copyLexicalOutputButton, copyAssemblerOutputButton, copyLinkerOutputButton, copyComputerOutputButton;
 
-GButton runPreprocessorButton, runLexicalAnalyzerButton, runAssemblerButton, runLinkerButton, runComputerButton;
+GButton runPreprocessorButton, runLexicalAnalyzerButton, runAssemblerButton, runLinkerButton;
 
 // Botones auxiliares
 GButton clearAllButton, loadExample1Button, loadExample2Button, loadExample3Button;
@@ -55,8 +55,7 @@ void setup() {
 
   runAssemblerButton = createButton(">", 310, 670, "runAssembler");
   runLinkerButton = createButton(">", 610, 670, "runLinker");
-  runComputerButton = createButton(">", 910, 670, "runComputer");
-
+  
   // *** Botones inferiores ***
   loadExample1Button = createSquareButton("Ejemplo 1", width - 300, height - 250, "loadExample1");
   loadExample2Button = createSquareButton("Ejemplo 2", width - 300, height - 200, "loadExample2");
@@ -339,36 +338,8 @@ void runLinker(GButton button, GEvent event) {
 
   // Llamar a la función processFile con el número validado como String
   processFile(assemblerOutput, linkerOutput, "linker", numberAsString);
-  status = "Enlazador ejecutado correctamente!";
-}
-
-
-void runComputer(GButton button, GEvent event) {
-  if (linkerOutput.getText().trim().isEmpty()) {
-    status = "Salida del enlazador vacía. \nEjecute primero el enlazador.";
-    return;
-  }
   
-    // Obtener el valor del campo de texto y validarlo
-  String inputText = numericInput.getText().trim();
-  int number = -1;
-
-  try {
-    number = Integer.parseInt(inputText); // Intentar convertir el texto a número
-    if (number < 0 || number > 1024) {
-      status = "El offset debe estar entre 0 y 1024.";
-       numericInput.setText("0");
-      return; // No hacer nada si el número es inválido
-    }
-  } catch (NumberFormatException e) {
-    status = "Offset inválido. \nSolo se permiten números.";
-     numericInput.setText("0");
-    return; // No hacer nada si la entrada no es un número
-  }
-  // Convertir el número a String
-  String numberAsString = String.valueOf(number);
-  
-  // Llamar a la función processFile para procesar el archivo de salida del enlazador dentro del computador
+   // Llamar a la función processFile para procesar el archivo de salida del enlazador dentro del computador
   processFile(linkerOutput, computerOutput, "computer", numberAsString);
   status = "Instrucciones procesadas en el computador!";
 }
