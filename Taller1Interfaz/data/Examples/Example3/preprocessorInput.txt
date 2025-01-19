@@ -1,1 +1,11 @@
-ej3 preproc input
+FUNZIONE suma
+    SE x + y == 10
+        RESTITUIRE x * y
+    ALTRIMENTI
+        RESTITUIRE x + y
+INCLUDERE <"testlib.txt">
+FUNZIONE logico
+    SE x NON y
+        RESTITUIRE VERO
+    ALTRIMENTI
+        RESTITUIRE FALSO

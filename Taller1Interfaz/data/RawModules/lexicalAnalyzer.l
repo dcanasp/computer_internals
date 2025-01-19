@@ -6,45 +6,52 @@
 /* TOKENS */
 
 #define KW              300
-#define FUNZIONE        400   /*Function, para definir una funcion*/
-#define SE              410   /*If*/
-#define ALTRIMENTI      420   /*Else*/
-#define MENTRE          430   /*While*/
-#define PER             440   /*For*/
-#define RESTITUIRE      450   /*Return, para definir final de una funcion (o no)*/
-#define INTERROMPERE    460   /*Break, para romper un ciclo*/
-#define CONTINUARE      470   /*Continue, para saltarse un ciclo*/
-#define IMPORTA         490   /*Import*/
+#define FUNZIONE        400
+#define SE              410
+#define ALTRIMENTI      420
+#define MENTRE          430
+#define PER             440
+#define RESTITUIRE      450
+#define INTERROMPERE    460
+#define CONTINUARE      470
+#define IMPORTA         490
 
-#define ARITOP    700     /* Operadores aritméticos */
-#define ADD       710     /* + */
-#define SUB       720     /* - */
-#define MUL       730     /* * */
-#define DIV       740     /* / */
-#define MOD       750     /* % */
+#define LOGOP           500
+#define E               510
+#define O               560
+#define NON             570
+#define VERO            580
+#define FALSO           590
 
-#define LOGOP     500     /* Operadores logicos */
-#define E         510     /* And */
-#define O         560     /* Or */ 
-#define NON       570     /* Not */
-#define VERO      580     /* True */
-#define FALSO     590     /* False */
+#define RELOP           600
+#define LT              610
+#define LE              620
+#define EQ              630
+#define NE              640
+#define GT              650
+#define GE              660
+#define IG              670
 
-#define RELOP     600     /* Operadores relacionales */
-#define LT        610     /* <  */
-#define LE        620     /* <= */
-#define EQ        630     /* == */
-#define NE        640     /* != */
-#define GT        650     /* >  */
-#define GE        660     /* >= */
+#define ARITOP          700
+#define ADD             710
+#define SUB             720
+#define MUL             730
+#define DIV             740
+#define MOD             750
 
-#define ID        800
-#define NUMBER    900
-#define STRING    1000
-#define COMMENT   1100
+#define DELIM           800
+#define CL              810
+#define CR              820
+#define PL              830
+#define PR              840
+#define SC              850
 
+#define ID              900
+#define NUMBER          1000
+#define STRING          1100
+#define COMMENT         1200
 
-#define MAX_TABLE_SIZE 100
+#define MAX_TABLE_SIZE  100
 
 typedef union {
     char* str;
@@ -78,62 +85,73 @@ int installComment();
 void printSymbolTables();
 char* processString();
 void processComments(const char* text);
+
+int flagBarrera = 0;
+
 %}
 
 /* Expresiones regulares */
-delim      [ \t\n]+
+space      [ \t\n]+
 letter     [A-Za-z_]
 digit      [0-9]
 id         {letter}({letter}|{digit})*
 number     {digit}+(\.{digit}+)?(E[+-]?{digit}+)? 
 string     \"([^"\\]|\\.|\\\\)*\"                
-comment    "//".*                                
+comment    "//".*  
+delim      [\{\}\(\);]                            
 
 %%
 
-{delim}      {/* Ignorar espacios */} 
+{space}      {/* Ignorar espacios */} 
 
-"FUNZIONE"      { printf("PALABRA RESERVADA: 'funzione'\n"); return FUNZIONE; }
-"SE"            { printf("PALABRA RESERVADA: 'se'\n"); return SE; }
-"ALTRIMENTI"    { printf("PALABRA RESERVADA: 'altrimenti'\n"); return ALTRIMENTI; }
-"MENTRE"        { printf("PALABRA RESERVADA: 'mentre'\n"); return MENTRE; }
-"PER"           { printf("PALABRA RESERVADA: 'per'\n"); return PER; }
-"RESTITUIRE"    { printf("PALABRA RESERVADA: 'restituire'\n"); return RESTITUIRE; }
-"INTERROMPERE"  { printf("PALABRA RESERVADA: 'interrompere'\n"); return INTERROMPERE; }
-"CONTINUARE"    { printf("PALABRA RESERVADA: 'continuare'\n"); return CONTINUARE; }
-"IMPORTA"       { printf("PALABRA RESERVADA: 'importa'\n"); return IMPORTA; }
+"****FIN LIBRERIAS****" { flagBarrera = 1; }
 
-"+"             { printf("OPERADOR ARITMETICO: '+'\n"); return ADD; }
-"-"             { printf("OPERADOR ARITMETICO: '-'\n"); return SUB; }
-"*"             { printf("OPERADOR ARITMETICO: '*'\n"); return MUL; }
-"/"             { printf("OPERADOR ARITMETICO: '/'\n"); return DIV; }
-"%"             { printf("OPERADOR ARITMETICO: '%'\n"); return MOD; }
+"Error"        { printf("ERROR DETECTADO. Terminando ejecucion.\n"); exit(1); } 
 
-"E"             { printf("OPERADOR LOGICO: 'e'\n"); return E; }
-"O"             { printf("OPERADOR LOGICO: 'o'\n"); return O; }
-"NON"           { printf("OPERADOR LOGICO: 'non'\n"); return NON; }
-"VERO"          { printf("BOOLEANO: 'VERDADERO'\n"); return VERO; }
-"FALSO"         { printf("BOOLEANO: 'FALSO'\n"); return FALSO; }
+"FUNZIONE"      { if(flagBarrera) { printf("PALABRA RESERVADA: 'funzione'\n"); return FUNZIONE; } }
+"SE"            { if(flagBarrera) { printf("PALABRA RESERVADA: 'se'\n"); return SE; } }
+"ALTRIMENTI"    { if(flagBarrera) { printf("PALABRA RESERVADA: 'altrimenti'\n"); return ALTRIMENTI; } }
+"MENTRE"        { if(flagBarrera) { printf("PALABRA RESERVADA: 'mentre'\n"); return MENTRE; } }
+"PER"           { if(flagBarrera) { printf("PALABRA RESERVADA: 'per'\n"); return PER; } }
+"RESTITUIRE"    { if(flagBarrera) { printf("PALABRA RESERVADA: 'restituire'\n"); return RESTITUIRE; } }
+"INTERROMPERE"  { if(flagBarrera) { printf("PALABRA RESERVADA: 'interrompere'\n"); return INTERROMPERE; } }
+"CONTINUARE"    { if(flagBarrera) { printf("PALABRA RESERVADA: 'continuare'\n"); return CONTINUARE; } }
+"IMPORTA"       { if(flagBarrera) { printf("PALABRA RESERVADA: 'importa'\n"); return IMPORTA; } }
 
-"<"             { printf("OPERADOR RELACIONAL: '<'\n"); return LT; }
-"<="            { printf("OPERADOR RELACIONAL: '<='\n"); return LE; }
-"=="            { printf("OPERADOR RELACIONAL: '=='\n"); return EQ; }
-"!="            { printf("OPERADOR RELACIONAL: '!='\n"); return NE; }
-">"             { printf("OPERADOR RELACIONAL: '>'\n"); return GT; }
-">="            { printf("OPERADOR RELACIONAL: '>='\n"); return GE; }
+"+"             { if(flagBarrera) { printf("OPERADOR ARITMETICO: '+'\n"); return ADD; } }
+"-"             { if(flagBarrera) { printf("OPERADOR ARITMETICO: '-'\n"); return SUB; } }
+"*"             { if(flagBarrera) { printf("OPERADOR ARITMETICO: '*'\n"); return MUL; } }
+"/"             { if(flagBarrera) { printf("OPERADOR ARITMETICO: '/'\n"); return DIV; } }
+"%"             { if(flagBarrera) { printf("OPERADOR ARITMETICO: '%'\n"); return MOD; } }
 
+"E"             { if(flagBarrera) { printf("OPERADOR LOGICO: 'e'\n"); return E; } }
+"O"             { if(flagBarrera) { printf("OPERADOR LOGICO: 'o'\n"); return O; } }
+"NON"           { if(flagBarrera) { printf("OPERADOR LOGICO: 'non'\n"); return NON; } }
+"VERO"          { if(flagBarrera) { printf("BOOLEANO: 'VERDADERO'\n"); return VERO; } }
+"FALSO"         { if(flagBarrera) { printf("BOOLEANO: 'FALSO'\n"); return FALSO; } }
 
-{id}       { strcpy(yylval.lexeme, yytext); installID(); return ID; }
+"<"             { if(flagBarrera) { printf("OPERADOR RELACIONAL: '<'\n"); return LT; } }
+"<="            { if(flagBarrera) { printf("OPERADOR RELACIONAL: '<='\n"); return LE; } }
+"=="            { if(flagBarrera) { printf("OPERADOR RELACIONAL: '=='\n"); return EQ; } }
+"!="            { if(flagBarrera) { printf("OPERADOR RELACIONAL: '!='\n"); return NE; } }
+">"             { if(flagBarrera) { printf("OPERADOR RELACIONAL: '>'\n"); return GT; } }
+">="            { if(flagBarrera) { printf("OPERADOR RELACIONAL: '>='\n"); return GE; } }
+"="             { if(flagBarrera) { printf("OPERADOR RELACIONAL: '='\n"); return IG; } }
 
-{number}   { yylval.intval = atoi(yytext); installNum(); return NUMBER; } /* Solo ENTEROOOOOS odio los float */
+[\{\}\(\)\;]   { if(flagBarrera) { printf("DELIMITADOR: '%s'\n", yytext); } }
 
-{string}   { char* processed = processString(yytext); installStr(processed); free(processed); return STRING; }
+{id}       { if(flagBarrera) { strcpy(yylval.lexeme, yytext); installID(); return ID; } }
 
-{comment}  { processComments(yytext); return COMMENT; }
+{number}   { if(flagBarrera) { yylval.intval = atoi(yytext); installNum(); return NUMBER; } }
+
+{string}   { if(flagBarrera) { char* processed = processString(yytext); installStr(processed); free(processed); return STRING; } }
+
+{comment}  { if(flagBarrera) { processComments(yytext); return COMMENT; } }
 
 %%
 
 /* FUNCIONES */
+
 int installID() {
     for (int i = 0; i < idCount; i++) {
         if (strcmp(idTable[i].lexeme, yylval.lexeme) == 0) {

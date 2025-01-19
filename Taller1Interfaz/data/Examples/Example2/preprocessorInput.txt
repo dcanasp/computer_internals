@@ -1,1 +1,7 @@
-ej2 preproc input
+FUNZIONE mi_func() {
+    SE (x > 10) {
+        RESTITUIRE VERO;
+    } ALTRIMENTI {
+        RESTITUIRE FALSO;
+    }
+}

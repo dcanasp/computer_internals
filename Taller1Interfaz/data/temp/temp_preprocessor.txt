@@ -1,5 +1,7 @@
-INCLUDERE <"testlib.txt">
-FUNZIONE calcular
-SE x > 10
-INCLUDERE <"testlib.txt">
-ALTRIMENTI x = x + 1
+FUNZIONE mi_func() {
+    SE (x > 10) {
+        RESTITUIRE VERO;
+    } ALTRIMENTI {
+        RESTITUIRE FALSO;
+    }
+}
