@@ -75,6 +75,8 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 				fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation (waiting for CPU)")
 				return
 			}
+			fmt.Println("Debug registers: ", registers[:9], "PC:", programCounter)
+
 		}
 	}
 

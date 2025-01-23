@@ -31,6 +31,19 @@ Label* find_label(const char* name) {
     return NULL;
 }
 
+char *strrchr_last(const char *str, int c) {
+    char *last_occurrence = NULL;
+
+    while (*str) {
+        if (*str == (char)c) {
+            last_occurrence = (char *)str;
+        }
+        str++;
+    }
+
+    return last_occurrence;
+}
+
 void process_term_label(const char* term_marker) {
     char label_name[50];
     strcpy(label_name, term_marker + 5);  // Skip "TERM_"
@@ -77,7 +90,7 @@ void resolve_labels() {
                 strncmp(instructions[i], "10100", 5) == 0) { // JNE
                 
                 char* start = strchr(instructions[i], '8');
-                char* end = strchr(instructions[i], '9');
+                char* end = strrchr_last(instructions[i], '8');
                 
                 if (start && end && start < end) {
                     char label_name[50] = {0};
@@ -115,7 +128,7 @@ void resolve_labels() {
                 strcmp(jump_type, "10100") == 0) { // JNE
                 
                 char* start = strchr(instructions[i], '8');
-                char* end = strchr(instructions[i], '9');
+                char* end = strrchr_last(instructions[i], '8');
                 
                 if (start && end && start < end) {
                     char label_name[50] = {0};
@@ -210,7 +223,7 @@ void resolve_labels() {
 %option noyywrap
 
 BINARY      [01]{32}
-JUMP_MARKER [01]{5}*8[A-Za-z_][A-Za-z0-9_]*9[01]*
+JUMP_MARKER [01]{5}8[A-Za-z_][A-Za-z0-9_]*8[01]*
 LABEL       [A-Za-z_][A-Za-z0-9_]*
 TERM_LABEL  TERM_{LABEL}
 

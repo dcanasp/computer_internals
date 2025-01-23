@@ -172,6 +172,62 @@ func startInstructions(cancel context.CancelFunc) {
 				programCounter = signal.Src1
 			}
 		},
+		0b10101: func(signal controlSignal) { // CMPG,
+			if registers[signal.Src1] > signal.SignSrc2*signal.Src2 {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b10110: func(signal controlSignal) { // CMPL,
+			if registers[signal.Src1] < signal.SignSrc2*signal.Src2 {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b10111: func(signal controlSignal) { // CMPGE,
+			if registers[signal.Src1] >= signal.SignSrc2*signal.Src2 {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b11000: func(signal controlSignal) { // CMPLE,
+			if registers[signal.Src1] <= signal.SignSrc2*signal.Src2 {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b11001: func(signal controlSignal) { // CMPGREG,
+			if registers[signal.Src1] > registers[signal.Src2] {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b11010: func(signal controlSignal) { // CMPLREG,
+			if registers[signal.Src1] < registers[signal.Src2] {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b11011: func(signal controlSignal) { // CMPGEREG,
+			if registers[signal.Src1] >= registers[signal.Src2] {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
+		0b11100: func(signal controlSignal) { // CMPLEREG,
+			if registers[signal.Src1] <= registers[signal.Src2] {
+				registers[3] = 1
+			} else {
+				registers[3] = 0
+			}
+		},
 	}
 }
 
@@ -184,9 +240,6 @@ func cpuLogic(ctx context.Context) bool {
 	case addressBus <- programCounter:
 		signal := <-readDataBus
 		instruction := decodeInstruction(signal)
-		if instruction.Command == 0b10011 {
-			fmt.Println("JUMP")
-		}
 		if instruction.Command == 0b11111 {
 			execute(instruction)
 		}
