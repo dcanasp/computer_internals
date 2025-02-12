@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -10,6 +11,13 @@ import (
 	"sync"
 	"time"
 )
+
+type IterationData struct {
+	Iter      int   `json:"iter"`
+	PC        int   `json:"PC"`
+	Registros []int `json:"registros"` // Assuming registers are integers
+	Memoria   []int `json:"memoria"`   // Assuming dataMemory is integers
+}
 
 func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath string, useless int) {
 	defer wg.Done()
@@ -49,7 +57,18 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 	fmt.Println("Instructions:", instructionMemory)
 	ticker := time.NewTicker(100 * time.Millisecond) // Check for context cancellation every 100ms
 	defer ticker.Stop()
-	for _, instr := range instructionMemory {
+
+	//open file
+	jsonFile, err := os.OpenFile("./iterPc.json", os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
+	var iterations []IterationData
+	decoder := json.NewDecoder(file)
+	_ = decoder.Decode(&iterations)
+
+	for num, instr := range instructionMemory {
 		select {
 		case <-ctx.Done():
 			// Stop the goroutine if context is canceled
@@ -72,19 +91,38 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 			select {
 			case <-cpuDone:
 			case <-ctx.Done():
+				jsonWritter(jsonFile, iterations)
 				fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation (waiting for CPU)")
 				return
 			}
-			fmt.Println("Debug registers: ", registers[:9], "PC:", programCounter)
+			data := IterationData{
+				Iter:      num + 1, // Assuming num is the iteration count
+				PC:        programCounter,
+				Registros: registers,       // Assuming registers is a slice of int
+				Memoria:   dataMemory[:20], // Assuming dataMemory is a slice of int
+			}
+
+			// Append to slice
+			iterations = append(iterations, data)
 
 		}
 	}
-
+	jsonWritter(jsonFile, iterations)
+	fmt.Println("Preloaded instructions processed")
 	// Print the preloaded registers and memory state
-	fmt.Println("Preloaded Registers:", registers)
-	fmt.Println("Preloaded Memory:", dataMemory[:20])
 }
 
+func jsonWritter(jsonFile *os.File, iterations []IterationData) {
+
+	jsonFile.Seek(0, 0) // Reset jsonFile position before writing
+	jsonFile.Truncate(0)
+	encoder := json.NewEncoder(jsonFile)
+	encoder.SetIndent("", "  ") // Pretty format
+	err := encoder.Encode(iterations)
+	if err != nil {
+		panic(err)
+	}
+}
 func printEachCycle(ctx context.Context) {
 	for {
 		select {
