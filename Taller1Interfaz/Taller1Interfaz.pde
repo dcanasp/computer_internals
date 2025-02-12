@@ -35,9 +35,9 @@ void setup() {
   
   // Directorio base
   basePath = sketchPath("data");
-  examplesPath = basePath + "/Examples/";
-  tempPath = basePath + "/temp/";
-  libsPath = basePath + "/Libs/";
+  examplesPath = basePath + "\\Examples/";
+  tempPath = basePath + "\\temp/";
+  libsPath = basePath + "\\Libs/";
 
   // *** Sección Superior: Preprocessor y Lexical Analyzer ***
   preprocessorInput = createTextArea(50, 100, 250, 350, "Preprocessor Input", true);
@@ -287,7 +287,7 @@ void runPreprocessor(GButton button, GEvent event) {
     return;
   }
   // Llamar a la función processFile para procesar el archivo de entrada con el módulo 'preprocessor'
-  processFile(preprocessorInput, preprocessorOutput, "preprocessor", "\"" + libsPath + "\"");
+  processFile(preprocessorInput, preprocessorOutput, "preprocessor", libsPath );
   status = "Preprocesador ejecutado correctamente!";
 }
 

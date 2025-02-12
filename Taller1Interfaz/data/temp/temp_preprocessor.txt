@@ -1,7 +1,4 @@
-FUNZIONE mi_func() {
-    SE (x > 10) {
-        RESTITUIRE VERO;
-    } ALTRIMENTI {
-        RESTITUIRE FALSO;
-    }
-}
+INCLUDERE <"testlib.txt">
+FUNZIONE calcular
+SE x > 10
+ALTRIMENTI x = x + 1

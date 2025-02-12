@@ -1,9 +1,8 @@
+010110{15}
+010001010101
+001010001010
+110101{2}
 ****FIN LIBRERIAS****
-// hola
-FUNZIONE mi_func() {
-    SE (x > 10) {
-        RESTITUIRE VERO;
-    } ALTRIMENTI {
-        RESTITUIRE FALSO;
-    }
-}
+FUNZIONE calcular
+SE x > 10
+ALTRIMENTI x = x + 1
