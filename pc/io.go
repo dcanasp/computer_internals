@@ -96,13 +96,11 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 				return
 			}
 			data := IterationData{
-				Iter:      num + 1, // Assuming num is the iteration count
+				Iter:      num + 1,
 				PC:        programCounter,
-				Registros: registers,       // Assuming registers is a slice of int
-				Memoria:   dataMemory[:20], // Assuming dataMemory is a slice of int
+				Registros: append([]int{}, registers...),  // Copy registers
+				Memoria:   append([]int{}, dataMemory...), // Copy dataMemory
 			}
-
-			// Append to slice
 			iterations = append(iterations, data)
 
 		}
@@ -117,7 +115,7 @@ func jsonWritter(jsonFile *os.File, iterations []IterationData) {
 	jsonFile.Seek(0, 0) // Reset jsonFile position before writing
 	jsonFile.Truncate(0)
 	encoder := json.NewEncoder(jsonFile)
-	encoder.SetIndent("", "  ") // Pretty format
+	encoder.SetIndent("", "") // Pretty format
 	err := encoder.Encode(iterations)
 	if err != nil {
 		panic(err)
