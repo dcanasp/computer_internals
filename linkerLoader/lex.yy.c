@@ -355,8 +355,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 8
-#define YY_END_OF_BUFFER 9
+#define YY_NUM_RULES 7
+#define YY_END_OF_BUFFER 8
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -364,14 +364,13 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[56] =
+static const flex_int16_t yy_accept[49] =
     {   0,
-        0,    0,    9,    7,    6,    7,    5,    7,    7,    0,
-        5,    0,    3,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    4,    0,    0,    4,    0,    0,    2,    0,
-        2,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    8,    6,    5,    6,    4,    6,    0,    4,
+        0,    3,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    2,    0,    2,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    1,    0
+        0,    0,    0,    0,    0,    0,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -382,10 +381,10 @@ static const YY_CHAR yy_ec[256] =
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    4,    4,    5,
         5,    5,    5,    5,    5,    6,    5,    7,    1,    1,
-        1,    1,    1,    1,    8,    8,    8,    8,    9,    8,
-        8,    8,    8,    8,    8,    8,   10,    8,    8,    8,
-        8,   11,    8,   12,    8,    8,    8,    8,    8,    8,
-        1,    1,    1,    1,   13,    1,    8,    8,    8,    8,
+        1,    1,    1,    1,    8,    8,    8,    8,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
+        1,    1,    1,    1,    8,    1,    8,    8,    8,    8,
 
         8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
         8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
@@ -406,64 +405,51 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[14] =
+static const YY_CHAR yy_meta[9] =
     {   0,
-        1,    1,    1,    2,    2,    2,    3,    4,    4,    4,
-        4,    4,    4
+        1,    1,    1,    2,    2,    2,    3,    2
     } ;
 
-static const flex_int16_t yy_base[62] =
+static const flex_int16_t yy_base[52] =
     {   0,
-        0,    4,   88,   89,   89,   83,   84,   78,   11,   80,
-       81,   75,   89,   14,   77,   19,   76,   23,   33,   36,
-       75,    0,   71,   73,   70,   68,   70,   67,   40,   68,
-        0,   67,   66,   65,   64,   63,   62,   61,   60,   59,
-       57,   41,   34,   31,   30,   29,   28,   27,   24,   23,
-       20,   19,   18,   89,   89,   46,   49,   52,   15,   55,
-       58
+        0,    3,   54,   55,   55,   49,   50,   44,   46,   47,
+       41,   55,   43,   42,    8,   41,   36,   39,   36,   37,
+       34,   35,   34,    0,   33,   32,   31,   30,   29,   28,
+       27,   26,   25,   24,   23,   22,   21,   20,   19,   18,
+       17,   16,    9,    6,    5,    4,   55,   55,   14,   16,
+        0
     } ;
 
-static const flex_int16_t yy_def[62] =
+static const flex_int16_t yy_def[52] =
     {   0,
-       56,   55,   55,   55,   55,   55,   55,   57,   57,   55,
-       55,   57,   55,   57,   55,   57,   55,   57,   55,   58,
-       55,   59,   60,   55,   61,   60,   55,   61,   61,   55,
-       29,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-       55,   55,   55,   55,    0,   55,   55,   55,   55,   55,
-       55
+       49,   49,   48,   48,   48,   48,   48,   50,   48,   48,
+       50,   48,   48,   48,   48,   48,   48,   48,   51,   48,
+       51,   21,   48,   22,   48,   48,   48,   48,   48,   48,
+       48,   48,   48,   48,   48,   48,   48,   48,   48,   48,
+       48,   48,   48,   48,   48,   48,   48,    0,   48,   48,
+       48
     } ;
 
-static const flex_int16_t yy_nxt[103] =
+static const flex_int16_t yy_nxt[64] =
     {   0,
-       55,   55,    5,    6,    4,    7,    5,    6,    4,    4,
-        4,    8,    8,    8,    8,    9,    8,   13,   25,   14,
-       13,   54,   53,   52,   16,   13,   51,   50,   18,   13,
-       49,   48,   47,   46,   45,   20,   21,   44,   22,   12,
-       12,   12,   13,   31,   43,   29,    4,    4,    4,    4,
-       12,   12,   12,   23,   23,   23,   26,   26,   26,   28,
-       42,   28,   41,   40,   39,   38,   37,   36,   35,   34,
-       33,   32,   29,   30,   13,   29,   27,   13,   24,   19,
-       17,   13,   11,   15,   13,   11,   10,   55,    3,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-
-       55,   55
+       48,   21,    5,    6,    7,    5,    6,   47,   46,   45,
+        8,   16,   44,   17,    4,    4,    4,   11,   11,   43,
+       42,   41,   40,   39,   38,   37,   36,   35,   34,   33,
+       32,   31,   30,   29,   28,   27,   26,   25,   24,   22,
+       23,   22,   20,   19,   18,   15,   14,   12,   10,   13,
+       12,   10,    9,   48,    3,   48,   48,   48,   48,   48,
+       48,   48,   48
     } ;
 
-static const flex_int16_t yy_chk[103] =
+static const flex_int16_t yy_chk[64] =
     {   0,
-        0,    0,    1,    1,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    9,   59,    9,
-       14,   53,   52,   51,   14,   16,   50,   49,   16,   18,
-       48,   47,   46,   45,   44,   18,   19,   43,   19,   20,
-       20,   20,   20,   29,   42,   29,   56,   56,   56,   56,
-       57,   57,   57,   58,   58,   58,   60,   60,   60,   61,
-       41,   61,   40,   39,   38,   37,   36,   35,   34,   33,
-       32,   30,   28,   27,   26,   25,   24,   23,   21,   17,
-       15,   12,   11,   10,    8,    7,    6,    3,   55,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-
-       55,   55
+        0,   51,    1,    1,    2,    2,    2,   46,   45,   44,
+        2,   15,   43,   15,   49,   49,   49,   50,   50,   42,
+       41,   40,   39,   38,   37,   36,   35,   34,   33,   32,
+       31,   30,   29,   28,   27,   26,   25,   23,   22,   21,
+       20,   19,   18,   17,   16,   14,   13,   11,   10,    9,
+        8,    7,    6,    3,   48,   48,   48,   48,   48,   48,
+       48,   48,   48
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -527,17 +513,6 @@ char *strrchr_last(const char *str, int c) {
     return last_occurrence;
 }
 
-void process_term_label(const char* term_marker) {
-    char label_name[50];
-    strcpy(label_name, term_marker + 5);  // Skip "TERM_"
-    
-    Label* label = find_label(label_name);
-    if (label != NULL) {
-        label->end_address = instruction_count;
-        label->is_term_marker = 1;
-    }
-}
-
 void insert_instruction(int position, const char* instruction) {
     for (int i = instruction_count; i > position; i--) {
         strcpy(instructions[i], instructions[i-1]);
@@ -562,10 +537,8 @@ void resolve_labels() {
     for (int i = 0; i < instruction_count; i++) {
         printf("[%d]: '%s'\n", i, instructions[i]);
     }
-    // First pass: Insert all return jumps to calculate final instruction count
-    int total_jumps_to_insert = 0;
     for (int i = 0; i < instruction_count; i++) {
-        // Check for jump instruction markers (not 32-bit binary)
+    
         if (strlen(instructions[i]) != 32) {
             // Check for any of the three jump types
             if (strncmp(instructions[i], "10010", 5) == 0 || // JUMP
@@ -582,47 +555,14 @@ void resolve_labels() {
                         strncpy(label_name, start + 1, label_len);
                         label_name[label_len] = '\0';
                         
+
+                        char jump_type[6] = {0};
+                        strncpy(jump_type, instructions[i], 5);
+                        jump_type[5] = '\0';
+
+
                         Label* label = find_label(label_name);
-                        if (label != NULL) {
-                            total_jumps_to_insert++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // Pre-allocate space for all return jumps
-    for (int i = 0; i < total_jumps_to_insert; i++) {
-        strcpy(instructions[instruction_count + i], "10010000000000000000000000000000");
-    }
-    instruction_count += total_jumps_to_insert;
-    
-    // Second pass: Process all jump instructions and update addresses
-    int inserted_jumps = 0;
-    for (int i = 0; i < instruction_count - total_jumps_to_insert; i++) {
-        if (strlen(instructions[i]) != 32) {
-            char jump_type[6] = {0};
-            strncpy(jump_type, instructions[i], 5);
-            jump_type[5] = '\0';
-            
-            if (strcmp(jump_type, "10010") == 0 || // JUMP
-                strcmp(jump_type, "10011") == 0 || // JEQ
-                strcmp(jump_type, "10100") == 0) { // JNE
-                
-                char* start = strchr(instructions[i], '8');
-                char* end = strrchr_last(instructions[i], '8');
-                
-                if (start && end && start < end) {
-                    char label_name[50] = {0};
-                    int label_len = end - (start + 1);
-                    if (label_len < 50) {
-                        strncpy(label_name, start + 1, label_len);
-                        label_name[label_len] = '\0';
-                        
-                        Label* label = find_label(label_name);
-                        if (label != NULL) {
-                            // Create the binary jump instruction
+                        //aca va el numero de la label y ya
                             char binary_address[14] = {0};
                             // Fill with zeros first
                             memset(binary_address, '0', 13);
@@ -643,66 +583,155 @@ void resolve_labels() {
                             strcat(new_instruction, relleno_1);
                             
                             strcpy(instructions[i], new_instruction);
-                            
-                            // Handle return jump
-                            int return_pos = label->end_address + inserted_jumps;
-                            int return_target = i + 1;
-                            
-                            // Move instructions to make space for return jump
-                            for (int j = instruction_count - 1; j > return_pos; j--) {
-                                strcpy(instructions[j], instructions[j-1]);
-                            }
-                            
-                            // Create return jump instruction (always JUMP type)
-                            char return_binary[14] = {0};
-                            memset(return_binary, '0', 13);
 
-                            // Convert return address to binary
-                            address = return_target - 1;
-                            for (int j = 12; j >= 0 && address > 0; j--) {
-                                return_binary[j] = '0' + (address & 1);
-                                address >>= 1;
-                            }
-                            
-                            // Create the complete return jump
-                            char return_jump[33] = "10010";  // Always JUMP type for returns
-                            char relleno_2[15] = "00000000000000";
-                            strcat(return_jump, return_binary);
-                            strcat(return_jump, relleno_2);
-                            strcpy(instructions[return_pos], return_jump);
-                            
-                            inserted_jumps++;
-                        }
                     }
                 }
             }
         }
     }
-    
-    printf("Before TERM removal:\n");
-    for (int i = 0; i < instruction_count; i++) {
-        printf("[%d]: '%s'\n", i, instructions[i]);
-    }
 
-    // Remove TERM_ markers from final output
-    int write_pos = 0;
-    for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
-        if (strncmp(instructions[read_pos], "TERM_", 5) != 0) {
-            if (write_pos != read_pos) {
-                strcpy(instructions[write_pos], instructions[read_pos]);
-            }
-            write_pos++;
-        }
-    }
-    instruction_count = write_pos;
+
+    // // First pass: Insert all return jumps to calculate final instruction count
+    // int total_jumps_to_insert = 0;
+    // for (int i = 0; i < instruction_count; i++) {
+    //     // Check for jump instruction markers (not 32-bit binary)
+    //     if (strlen(instructions[i]) != 32) {
+    //         // Check for any of the three jump types
+    //         if (strncmp(instructions[i], "10010", 5) == 0 || // JUMP
+    //             strncmp(instructions[i], "10011", 5) == 0 || // JEQ
+    //             strncmp(instructions[i], "10100", 5) == 0) { // JNE
+                
+    //             char* start = strchr(instructions[i], '8');
+    //             char* end = strrchr_last(instructions[i], '8');
+                
+    //             if (start && end && start < end) {
+    //                 char label_name[50] = {0};
+    //                 int label_len = end - (start + 1);
+    //                 if (label_len < 50) {
+    //                     strncpy(label_name, start + 1, label_len);
+    //                     label_name[label_len] = '\0';
+                        
+    //                     Label* label = find_label(label_name);
+    //                     if (label != NULL) {
+    //                         total_jumps_to_insert++;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    
+    // // Pre-allocate space for all return jumps
+    // for (int i = 0; i < total_jumps_to_insert; i++) {
+    //     strcpy(instructions[instruction_count + i], "10010000000000000000000000000000");
+    // }
+    // instruction_count += total_jumps_to_insert;
+    
+    // // Second pass: Process all jump instructions and update addresses
+    // int inserted_jumps = 0;
+    // for (int i = 0; i < instruction_count - total_jumps_to_insert; i++) {
+    //     if (strlen(instructions[i]) != 32) {
+    //         char jump_type[6] = {0};
+    //         strncpy(jump_type, instructions[i], 5);
+    //         jump_type[5] = '\0';
+            
+    //         if (strcmp(jump_type, "10010") == 0 || // JUMP
+    //             strcmp(jump_type, "10011") == 0 || // JEQ
+    //             strcmp(jump_type, "10100") == 0) { // JNE
+                
+    //             char* start = strchr(instructions[i], '8');
+    //             char* end = strrchr_last(instructions[i], '8');
+                
+    //             if (start && end && start < end) {
+    //                 char label_name[50] = {0};
+    //                 int label_len = end - (start + 1);
+    //                 if (label_len < 50) {
+    //                     strncpy(label_name, start + 1, label_len);
+    //                     label_name[label_len] = '\0';
+                        
+    //                     Label* label = find_label(label_name);
+    //                     if (label != NULL) {
+    //                         // Create the binary jump instruction
+    //                         char binary_address[14] = {0};
+    //                         // Fill with zeros first
+    //                         memset(binary_address, '0', 13);
+                            
+    //                         // Convert address to binary (target address - 1)
+    //                         int address = label->start_address - 1;
+    //                         for (int j = 12; j >= 0 && address > 0; j--) {
+    //                             binary_address[j] = '0' + (address & 1);
+    //                             address >>= 1;
+    //                         }
+                            
+
+    //                         // Create the complete jump instruction
+    //                         char new_instruction[33] = {0};
+    //                         char relleno_1[15] = "00000000000000";
+    //                         strcpy(new_instruction, jump_type);
+    //                         strcat(new_instruction, binary_address);
+    //                         strcat(new_instruction, relleno_1);
+                            
+    //                         strcpy(instructions[i], new_instruction);
+                            
+    //                         // Handle return jump
+    //                         int return_pos = label->end_address + inserted_jumps;
+    //                         int return_target = i + 1;
+                            
+    //                         // Move instructions to make space for return jump
+    //                         for (int j = instruction_count - 1; j > return_pos; j--) {
+    //                             strcpy(instructions[j], instructions[j-1]);
+    //                         }
+                            
+    //                         // Create return jump instruction (always JUMP type)
+    //                         char return_binary[14] = {0};
+    //                         memset(return_binary, '0', 13);
+
+    //                         // Convert return address to binary
+    //                         address = return_target - 1;
+    //                         for (int j = 12; j >= 0 && address > 0; j--) {
+    //                             return_binary[j] = '0' + (address & 1);
+    //                             address >>= 1;
+    //                         }
+                            
+    //                         // Create the complete return jump
+    //                         char return_jump[33] = "10010";  // Always JUMP type for returns
+    //                         char relleno_2[15] = "00000000000000";
+    //                         strcat(return_jump, return_binary);
+    //                         strcat(return_jump, relleno_2);
+    //                         strcpy(instructions[return_pos], return_jump);
+                            
+    //                         inserted_jumps++;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    
+    // printf("Before TERM removal:\n");
+    // for (int i = 0; i < instruction_count; i++) {
+    //     printf("[%d]: '%s'\n", i, instructions[i]);
+    // }
+
+    // // Remove TERM_ markers from final output
+    // int write_pos = 0;
+    // for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
+    //     if (strncmp(instructions[read_pos], "TERM_", 5) != 0) {
+    //         if (write_pos != read_pos) {
+    //             strcpy(instructions[write_pos], instructions[read_pos]);
+    //         }
+    //         write_pos++;
+    //     }
+    // }
+    // instruction_count = write_pos;
     
     printf("Final instructions:\n");
     for (int i = 0; i < instruction_count; i++) {
         printf("[%d]: '%s'\n", i, instructions[i]);
     }
 }
-#line 705 "linkerLoader/lex.yy.c"
-#line 706 "linkerLoader/lex.yy.c"
+#line 734 "linkerLoader/lex.yy.c"
+#line 735 "linkerLoader/lex.yy.c"
 
 #define INITIAL 0
 
@@ -922,10 +951,10 @@ YY_DECL
 		}
 
 	{
-#line 230 "linkerLoader/linkerLoader.l"
+#line 272 "linkerLoader/linkerLoader.l"
 
 
-#line 929 "linkerLoader/lex.yy.c"
+#line 958 "linkerLoader/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -953,13 +982,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 56 )
+				if ( yy_current_state >= 49 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 89 );
+		while ( yy_base[yy_current_state] != 55 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -985,7 +1014,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 232 "linkerLoader/linkerLoader.l"
+#line 274 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -994,7 +1023,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 238 "linkerLoader/linkerLoader.l"
+#line 280 "linkerLoader/linkerLoader.l"
 {
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
@@ -1003,7 +1032,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 244 "linkerLoader/linkerLoader.l"
+#line 286 "linkerLoader/linkerLoader.l"
 {
     char *label = strdup(yytext);
     label[strlen(label)-1] = '\0';  // Remove colon
@@ -1019,36 +1048,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 257 "linkerLoader/linkerLoader.l"
-{
-    process_term_label(yytext);
-    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
-    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
-    instruction_count++;
-}
+#line 300 "linkerLoader/linkerLoader.l"
+;
 	YY_BREAK
 case 5:
+/* rule 5 can match eol */
 YY_RULE_SETUP
-#line 264 "linkerLoader/linkerLoader.l"
+#line 301 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 6:
-/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 265 "linkerLoader/linkerLoader.l"
+#line 302 "linkerLoader/linkerLoader.l"
 ;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 266 "linkerLoader/linkerLoader.l"
-;
-	YY_BREAK
-case 8:
-YY_RULE_SETUP
-#line 268 "linkerLoader/linkerLoader.l"
+#line 304 "linkerLoader/linkerLoader.l"
 ECHO;
 	YY_BREAK
-#line 1052 "linkerLoader/lex.yy.c"
+#line 1071 "linkerLoader/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1346,7 +1365,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 56 )
+			if ( yy_current_state >= 49 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1374,11 +1393,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 56 )
+		if ( yy_current_state >= 49 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 55);
+	yy_is_jam = (yy_current_state == 48);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -2056,7 +2075,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 268 "linkerLoader/linkerLoader.l"
+#line 304 "linkerLoader/linkerLoader.l"
 
 
 int main(int argc, char **argv) {

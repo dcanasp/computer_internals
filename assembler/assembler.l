@@ -25,7 +25,6 @@ WHITESPACE  [ \t]+
 INSTRUCCION [A-Za-z]+
 SIGN_NUMBER [-+]?{NUMBER}
 LABEL       [A-Za-z_][A-Za-z0-9_]*
-TERM_LABEL  TERM_{LABEL}
 
 %%
 
@@ -149,15 +148,6 @@ TERM_LABEL  TERM_{LABEL}
     sscanf(yytext, "%79s", instruction);  // Added length limit
     snprintf(output, sizeof(output), "%s\n", instruction);
     fprintf(output_file, "%s", output);
-
-}
-^{TERM_LABEL} {
-    char instruction[80];  // Reduced from 100
-    char output[100];
-    sscanf(yytext, "%79s", instruction);  // Added length limit
-    snprintf(output, sizeof(output), "%s\n", instruction);
-    fprintf(output_file, "%s", output);
-
 }
 
 ^[\t ]+ ;    // Ignore leading whitespace

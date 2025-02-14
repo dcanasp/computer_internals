@@ -44,34 +44,6 @@ char *strrchr_last(const char *str, int c) {
     return last_occurrence;
 }
 
-void process_term_label(const char* term_marker) {
-    char label_name[50];
-    strcpy(label_name, term_marker + 5);  // Skip "TERM_"
-    
-    Label* label = find_label(label_name);
-    if (label != NULL) {
-        label->end_address = instruction_count;
-        label->is_term_marker = 1;
-    }
-}
-
-void insert_instruction(int position, const char* instruction) {
-    for (int i = instruction_count; i > position; i--) {
-        strcpy(instructions[i], instructions[i-1]);
-    }
-    strcpy(instructions[position], instruction);
-    instruction_count++;
-    
-    // Update label addresses
-    for (int i = 0; i < label_count; i++) {
-        if (labels[i].start_address > position) {
-            labels[i].start_address++;
-        }
-        if (labels[i].end_address >= position) {
-            labels[i].end_address++;
-        }
-    }
-}
 
 void resolve_labels() {
     printf("Initial instruction count: %d\n", instruction_count);
@@ -79,10 +51,8 @@ void resolve_labels() {
     for (int i = 0; i < instruction_count; i++) {
         printf("[%d]: '%s'\n", i, instructions[i]);
     }
-    // First pass: Insert all return jumps to calculate final instruction count
-    int total_jumps_to_insert = 0;
     for (int i = 0; i < instruction_count; i++) {
-        // Check for jump instruction markers (not 32-bit binary)
+    
         if (strlen(instructions[i]) != 32) {
             // Check for any of the three jump types
             if (strncmp(instructions[i], "10010", 5) == 0 || // JUMP
@@ -99,47 +69,14 @@ void resolve_labels() {
                         strncpy(label_name, start + 1, label_len);
                         label_name[label_len] = '\0';
                         
+
+                        char jump_type[6] = {0};
+                        strncpy(jump_type, instructions[i], 5);
+                        jump_type[5] = '\0';
+
+
                         Label* label = find_label(label_name);
-                        if (label != NULL) {
-                            total_jumps_to_insert++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // Pre-allocate space for all return jumps
-    for (int i = 0; i < total_jumps_to_insert; i++) {
-        strcpy(instructions[instruction_count + i], "10010000000000000000000000000000");
-    }
-    instruction_count += total_jumps_to_insert;
-    
-    // Second pass: Process all jump instructions and update addresses
-    int inserted_jumps = 0;
-    for (int i = 0; i < instruction_count - total_jumps_to_insert; i++) {
-        if (strlen(instructions[i]) != 32) {
-            char jump_type[6] = {0};
-            strncpy(jump_type, instructions[i], 5);
-            jump_type[5] = '\0';
-            
-            if (strcmp(jump_type, "10010") == 0 || // JUMP
-                strcmp(jump_type, "10011") == 0 || // JEQ
-                strcmp(jump_type, "10100") == 0) { // JNE
-                
-                char* start = strchr(instructions[i], '8');
-                char* end = strrchr_last(instructions[i], '8');
-                
-                if (start && end && start < end) {
-                    char label_name[50] = {0};
-                    int label_len = end - (start + 1);
-                    if (label_len < 50) {
-                        strncpy(label_name, start + 1, label_len);
-                        label_name[label_len] = '\0';
-                        
-                        Label* label = find_label(label_name);
-                        if (label != NULL) {
-                            // Create the binary jump instruction
+                        //aca va el numero de la label y ya
                             char binary_address[14] = {0};
                             // Fill with zeros first
                             memset(binary_address, '0', 13);
@@ -160,59 +97,14 @@ void resolve_labels() {
                             strcat(new_instruction, relleno_1);
                             
                             strcpy(instructions[i], new_instruction);
-                            
-                            // Handle return jump
-                            int return_pos = label->end_address + inserted_jumps;
-                            int return_target = i + 1;
-                            
-                            // Move instructions to make space for return jump
-                            for (int j = instruction_count - 1; j > return_pos; j--) {
-                                strcpy(instructions[j], instructions[j-1]);
-                            }
-                            
-                            // Create return jump instruction (always JUMP type)
-                            char return_binary[14] = {0};
-                            memset(return_binary, '0', 13);
 
-                            // Convert return address to binary
-                            address = return_target - 1;
-                            for (int j = 12; j >= 0 && address > 0; j--) {
-                                return_binary[j] = '0' + (address & 1);
-                                address >>= 1;
-                            }
-                            
-                            // Create the complete return jump
-                            char return_jump[33] = "10010";  // Always JUMP type for returns
-                            char relleno_2[15] = "00000000000000";
-                            strcat(return_jump, return_binary);
-                            strcat(return_jump, relleno_2);
-                            strcpy(instructions[return_pos], return_jump);
-                            
-                            inserted_jumps++;
-                        }
                     }
                 }
             }
         }
     }
-    
-    printf("Before TERM removal:\n");
-    for (int i = 0; i < instruction_count; i++) {
-        printf("[%d]: '%s'\n", i, instructions[i]);
-    }
 
-    // Remove TERM_ markers from final output
-    int write_pos = 0;
-    for (int read_pos = 0; read_pos < instruction_count; read_pos++) {
-        if (strncmp(instructions[read_pos], "TERM_", 5) != 0) {
-            if (write_pos != read_pos) {
-                strcpy(instructions[write_pos], instructions[read_pos]);
-            }
-            write_pos++;
-        }
-    }
-    instruction_count = write_pos;
-    
+
     printf("Final instructions:\n");
     for (int i = 0; i < instruction_count; i++) {
         printf("[%d]: '%s'\n", i, instructions[i]);
@@ -225,7 +117,6 @@ void resolve_labels() {
 BINARY      [01]{32}
 JUMP_MARKER [01]{5}8[A-Za-z_][A-Za-z0-9_]*8[01]*
 LABEL       [A-Za-z_][A-Za-z0-9_]*
-TERM_LABEL  TERM_{LABEL}
 
 %%
 
@@ -254,12 +145,6 @@ TERM_LABEL  TERM_{LABEL}
     free(label);
 }
 
-^{TERM_LABEL} {
-    process_term_label(yytext);
-    strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
-    instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
-    instruction_count++;
-}
 
 ^[\t ]+ ;
 \n      ;
