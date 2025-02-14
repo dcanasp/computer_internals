@@ -6,6 +6,8 @@
 
 #define MAX_LINE_LENGTH 100
 
+FILE *output_file;
+
 // Function to convert an integer to a binary string
 void int_to_binary(int num, int bits, char *output) {
     for (int i = bits - 1; i >= 0; i--) {
@@ -20,10 +22,9 @@ void int_to_binary(int num, int bits, char *output) {
 
 NUMBER      [0-9]+
 WHITESPACE  [ \t]+
-INSTRUCTION [A-Za-z]+
+INSTRUCCION [A-Za-z]+
 SIGN_NUMBER [-+]?{NUMBER}
 LABEL       [A-Za-z_][A-Za-z0-9_]*
-TERM_LABEL  TERM_{LABEL}
 
 %%
 
@@ -36,12 +37,12 @@ TERM_LABEL  TERM_{LABEL}
     } else if (strcmp(yytext, "FIN") == 0) {
         output = "11110000000000000000000000000000\n";
     }
-    printf("%s", output);  // Cambiado a printf para consola
+    fprintf(output_file, "%s", output);
 }
 
-^(LOAD|CMP){WHITESPACE}{NUMBER}{WHITESPACE}{SIGN_NUMBER} {
+^(LOAD|CMP|CMPG|CMPL|CMPGE|CMPLE){WHITESPACE}{NUMBER}{WHITESPACE}{SIGN_NUMBER} {
     char instruction[20];
-    int reg, value, sign;
+    int reg, value, sign, opcode;
     char reg_bin[14], value_bin[14], sign_bin[2];
     
     sscanf(yytext, "%s %d %d", instruction, &reg, &value);
@@ -53,16 +54,22 @@ TERM_LABEL  TERM_{LABEL}
     int_to_binary(sign, 1, sign_bin);
 
     char output[34];
-    if (strcmp(instruction, "LOAD") == 0) {
-        sprintf(output, "00001%s%s%s\n", reg_bin, sign_bin, value_bin);
-    } else if (strcmp(instruction, "CMP") == 0) {
-        sprintf(output, "10000%s%s%s\n", reg_bin, sign_bin, value_bin);
-    }
+    if (strcmp(instruction, "LOAD") == 0) opcode = 1;
+    else if (strcmp(instruction, "CMP") == 0) opcode = 16;
+    else if (strcmp(instruction, "CMPG") == 0) opcode = 21;
+    else if (strcmp(instruction, "CMPL") == 0) opcode = 22;
+    else if (strcmp(instruction, "CMPGE") == 0) opcode = 23;
+    else if (strcmp(instruction, "CMPLE") == 0) opcode = 24;
 
-    printf("%s", output);  // Cambiado a printf para consola
+    char opcode_bin[6];
+
+    int_to_binary(opcode, 5, opcode_bin);
+    sprintf(output, "%s%s%s%s\n", opcode_bin, reg_bin, sign_bin, value_bin);
+
+    fprintf(output_file, "%s", output);
 }
 
-^(STORE|MOVE|LOADDISK|ADD|SUB|MULT|DIV|MOD|AND|OR|XOR|CMPREG|LEFSHIFT|RIGHTSHIF){WHITESPACE}{NUMBER}{WHITESPACE}{NUMBER} {
+^{INSTRUCCION}{WHITESPACE}{NUMBER}{WHITESPACE}{NUMBER} {
     char instruction[20];
     int reg1, reg2, opcode;
     char reg1_bin[14], reg2_bin[14];
@@ -84,6 +91,10 @@ TERM_LABEL  TERM_{LABEL}
     else if (strcmp(instruction, "LEFSHIFT") == 0) opcode = 14;
     else if (strcmp(instruction, "RIGHTSHIF") == 0) opcode = 15;
     else if (strcmp(instruction, "CMPREG") == 0) opcode = 17;
+    else if (strcmp(instruction, "CMPGREG") == 0) opcode = 25;
+    else if (strcmp(instruction, "CMPLREG") == 0) opcode = 26;
+    else if (strcmp(instruction, "CMPGEREG") == 0) opcode = 27;
+    else if (strcmp(instruction, "CMPLEREG") == 0) opcode = 28;
 
     int_to_binary(reg1, 13, reg1_bin);
     int_to_binary(reg2, 13, reg2_bin);
@@ -93,7 +104,7 @@ TERM_LABEL  TERM_{LABEL}
 
     char output[34];
     sprintf(output, "%s%s0%s\n", opcode_bin, reg1_bin, reg2_bin);
-    printf("%s", output);  // Cambiado a printf para consola
+    fprintf(output_file, "%s", output);
 }
 
 ^NOT{WHITESPACE}{NUMBER} {
@@ -112,7 +123,7 @@ TERM_LABEL  TERM_{LABEL}
     
     char output[35];
     sprintf(output, "%s%s00000000000000\n", opcode_bin, reg_bin);
-    printf("%s", output);  // Cambiado a printf para consola
+    fprintf(output_file, "%s", output);
 }
 
 ^(JUMP|JEQ|JNE){WHITESPACE}{LABEL} {
@@ -128,22 +139,15 @@ TERM_LABEL  TERM_{LABEL}
     char opcode_bin[6];
     int_to_binary(opcode, 5, opcode_bin);
     char output[150];
-    snprintf(output, sizeof(output), "%s8%s900000000000000\n", opcode_bin, label);
-    printf("%s", output);  // Cambiado a printf para consola
+    snprintf(output, sizeof(output), "%s8%s800000000000000\n", opcode_bin, label);
+    fprintf(output_file, "%s", output);
 }
 ^{LABEL}: {
     char instruction[80];  // Reduced from 100 since original warning suggested it was too large
     char output[100];
     sscanf(yytext, "%79s", instruction);  // Added length limit
     snprintf(output, sizeof(output), "%s\n", instruction);
-    printf("%s", output);  // Cambiado a printf para consola
-}
-^{TERM_LABEL} {
-    char instruction[80];  // Reduced from 100
-    char output[100];
-    sscanf(yytext, "%79s", instruction);  // Added length limit
-    snprintf(output, sizeof(output), "%s\n", instruction);
-    printf("%s", output);  // Cambiado a printf para consola
+    fprintf(output_file, "%s", output);
 }
 
 ^[\t ]+ ;    // Ignore leading whitespace
@@ -155,8 +159,8 @@ TERM_LABEL  TERM_{LABEL}
 %%
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
         return 1;
     }
 
@@ -166,10 +170,17 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // Ya no se crea el archivo de salida
+    output_file = fopen(argv[2], "w");
+    if (!output_file) {
+        perror("Error creating output file");
+        fclose(input_file);
+        return 1;
+    }
+
     yyin = input_file;
     yylex();
 
     fclose(input_file);
+    fclose(output_file);
     return 0;
 }
