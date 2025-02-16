@@ -88,6 +88,7 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
     else if (strcmp(instruction, "AND") == 0) opcode = 10;
     else if (strcmp(instruction, "OR") == 0) opcode = 11;
     else if (strcmp(instruction, "XOR") == 0) opcode = 12;
+    else if (strcmp(instruction, "STOREREG") == 0) opcode = 13;
     else if (strcmp(instruction, "LEFSHIFT") == 0) opcode = 14;
     else if (strcmp(instruction, "RIGHTSHIF") == 0) opcode = 15;
     else if (strcmp(instruction, "CMPREG") == 0) opcode = 17;
@@ -95,6 +96,7 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
     else if (strcmp(instruction, "CMPLREG") == 0) opcode = 26;
     else if (strcmp(instruction, "CMPGEREG") == 0) opcode = 27;
     else if (strcmp(instruction, "CMPLEREG") == 0) opcode = 28;
+    else if (strcmp(instruction, "LOADDISKREG") == 0) opcode = 29;
 
     int_to_binary(reg1, 13, reg1_bin);
     int_to_binary(reg2, 13, reg2_bin);
@@ -107,24 +109,6 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
     fprintf(output_file, "%s", output);
 }
 
-^NOT{WHITESPACE}{NUMBER} {
-    char instruction[20];
-    int reg, opcode;
-    char reg_bin[14];
-
-    sscanf(yytext, "%s %d", instruction, &reg);
-    
-    if (strcmp(instruction, "NOT") == 0) opcode = 13;
-
-    int_to_binary(reg, 13, reg_bin);
-    
-    char opcode_bin[6];
-    int_to_binary(opcode, 5, opcode_bin);
-    
-    char output[35];
-    sprintf(output, "%s%s00000000000000\n", opcode_bin, reg_bin);
-    fprintf(output_file, "%s", output);
-}
 
 ^(JUMP|JEQ|JNE){WHITESPACE}{LABEL} {
     char instruction[6];

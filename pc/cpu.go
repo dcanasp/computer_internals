@@ -137,8 +137,10 @@ func startInstructions(cancel context.CancelFunc) {
 		0b01100: func(signal controlSignal) { // XOR,
 			registers[signal.Src1] = registers[signal.Src1] ^ registers[signal.Src2]
 		},
-		0b01101: func(signal controlSignal) { // NOT,
-			registers[signal.Src1] = registers[signal.Src1] ^ 0b1111111111111
+		0b01101: func(signal controlSignal) { // STOREREG,
+			addressBus <- registers[signal.Src1]
+			writeDataBus <- registers[signal.Src2]
+			<-memoryDone
 		},
 		0b01110: func(signal controlSignal) { // LEFTSHIFT,
 			registers[signal.Src1] = registers[signal.Src1] << registers[signal.Src2]
@@ -227,6 +229,13 @@ func startInstructions(cancel context.CancelFunc) {
 				registers[3] = 1
 			} else {
 				registers[3] = 0
+			}
+		},
+		0b11101: func(signal controlSignal) { //LOADDISKREG
+			if validateRegisterAccess(signal.Src1) {
+				addressBus <- registers[signal.Src2]
+				data := <-readDataBus
+				registers[signal.Src1] = data
 			}
 		},
 	}

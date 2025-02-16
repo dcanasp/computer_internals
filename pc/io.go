@@ -116,7 +116,7 @@ func jsonWritter(jsonFile *os.File, iterations []iterationData) {
 	jsonFile.Seek(0, 0) // Reset jsonFile position before writing
 	jsonFile.Truncate(0)
 	encoder := json.NewEncoder(jsonFile)
-	encoder.SetIndent("", " ") // Pretty format
+	encoder.SetIndent("", "") // Pretty format
 	err := encoder.Encode(iterations)
 	if err != nil {
 		panic(err)
