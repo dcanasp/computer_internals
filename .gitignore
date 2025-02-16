@@ -1,12 +1,16 @@
-*  
-#ignora todo
-!/**/ 
-#no ignora los directorios
-!*.* 
-#no ignora los archivos que tengan extension.
-#solo quedan los archivos que no tengan extension
+*
+# Ignora todo
+!/**/
+# No ignora los directorios
+!*.*
+# No ignora los archivos que tengan extensión.
+# Solo quedan los archivos que no tengan extensión
 *.exe
 exe/*
 
+# Ignora todo en taller2/nlp_env
+taller2/nlp_env/**
+
+# Excepciones para LICENSE y Makefile
 !LICENSE
 !Makefile

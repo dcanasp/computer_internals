@@ -1,0 +1,4 @@
+INCLUDERE <"testlib.txt">
+FUNZIONE calcular
+SE x > 10
+ALTRIMENTI x = x + 1

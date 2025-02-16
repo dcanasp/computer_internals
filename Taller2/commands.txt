@@ -1,0 +1,6 @@
+nlp_env\Scripts\activate.bat
+
+pyside6-designer
+pyside6-uic Interfaz\gui\main_window.ui -o Interfaz\gui\main_window.py
+
+python Interfaz\main.py

@@ -159,8 +159,8 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
 %%
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
+    if (argc != 3) {
+        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
         return 1;
     }
 
@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    output_file = fopen("linkerIN.txt", "w");
+    output_file = fopen(argv[2], "w");
     if (!output_file) {
         perror("Error creating output file");
         fclose(input_file);
