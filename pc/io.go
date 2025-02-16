@@ -6,17 +6,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
-type IterationData struct {
-	Iter      int   `json:"iter"`
-	PC        int   `json:"PC"`
-	Registros []int `json:"registros"` // Assuming registers are integers
-	Memoria   []int `json:"memoria"`   // Assuming dataMemory is integers
+func runPreloaded(instructionMemory []int) {
+	for _, instr := range instructionMemory {
+		addressBus <- programCounter
+		writeDataBus <- instr
+		<-memoryDone
+		controlBus <- 0
+		<-cpuDone
+	}
 }
 
 func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath string, useless int) {
@@ -34,10 +38,16 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 	var instructionMemory []int
 	//
 	for i := 0; i < useless; i++ {
-		instructionMemory = append(instructionMemory, 0b00001000000000010000000000000000)
+		instructionMemory = append(instructionMemory, 0b00000000000000000000000000000000)
 	}
-
-	//
+	runPreloaded(instructionMemory)
+	instructionMemory = nil
+	iterations = nil
+	registers[0] = 0
+	registers[1] = 0
+	registers[2] = 0
+	registers[3] = 0
+	//read the file
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -58,17 +68,7 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 	ticker := time.NewTicker(100 * time.Millisecond) // Check for context cancellation every 100ms
 	defer ticker.Stop()
 
-	//open file
-	jsonFile, err := os.OpenFile("./iterPc.json", os.O_CREATE|os.O_RDWR, 0644)
-	if err != nil {
-		panic(err)
-	}
-	defer jsonFile.Close()
-	var iterations []IterationData
-	decoder := json.NewDecoder(file)
-	_ = decoder.Decode(&iterations)
-
-	for num, instr := range instructionMemory {
+	for _, instr := range instructionMemory {
 		select {
 		case <-ctx.Done():
 			// Stop the goroutine if context is canceled
@@ -91,31 +91,32 @@ func preLoadedInstructions(ctx context.Context, wg *sync.WaitGroup, filePath str
 			select {
 			case <-cpuDone:
 			case <-ctx.Done():
-				jsonWritter(jsonFile, iterations)
 				fmt.Println("Stopping Preloaded Instructions goroutine due to context cancellation (waiting for CPU)")
 				return
 			}
-			data := IterationData{
-				Iter:      num + 1,
-				PC:        programCounter,
-				Registros: append([]int{}, registers...),  // Copy registers
-				Memoria:   append([]int{}, dataMemory...), // Copy dataMemory
-			}
-			iterations = append(iterations, data)
 
 		}
 	}
-	jsonWritter(jsonFile, iterations)
 	fmt.Println("Preloaded instructions processed")
 	// Print the preloaded registers and memory state
 }
 
-func jsonWritter(jsonFile *os.File, iterations []IterationData) {
+func storeJSON(signal controlSignal) {
+	data := iterationData{
+		PC:            programCounter,
+		Registros:     slices.Clone(registers),  // Copy registers
+		Memoria:       slices.Clone(dataMemory), // Copy dataMemory
+		controlSignal: signal,
+	}
+	iterations = append(iterations, data)
+}
+
+func jsonWritter(jsonFile *os.File, iterations []iterationData) {
 
 	jsonFile.Seek(0, 0) // Reset jsonFile position before writing
 	jsonFile.Truncate(0)
 	encoder := json.NewEncoder(jsonFile)
-	encoder.SetIndent("", "") // Pretty format
+	encoder.SetIndent("", " ") // Pretty format
 	err := encoder.Encode(iterations)
 	if err != nil {
 		panic(err)

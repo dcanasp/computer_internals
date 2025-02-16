@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -25,11 +26,19 @@ var cpuDone = make(chan bool)
 var memoryDone = make(chan bool)
 
 type controlSignal struct {
-	Command  int
-	Src1     int
-	Src2     int
-	SignSrc2 int
+	Command  int `json:"instruction"`
+	Src1     int `json:"input1"`
+	Src2     int `json:"input2"`
+	SignSrc2 int `json:"sign"`
 }
+type iterationData struct {
+	controlSignal
+	PC        int   `json:"PC"`
+	Registros []int `json:"registros"`
+	Memoria   []int `json:"memoria"`
+}
+
+var iterations []iterationData
 
 // var inputFile string = `C:\David\nacional\lenguajes\16\pcIN.txt`
 
@@ -67,6 +76,17 @@ func main() {
 	go io(ctx, cancel, &wg)
 	wg.Wait()
 
+	//open file
+	jsonFile, err := os.OpenFile("./iterPc.json", os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
+
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
+	decoder := json.NewDecoder(jsonFile)
+	_ = decoder.Decode(&iterations)
+
+	jsonWritter(jsonFile, iterations)
 	// Output final state
 	fmt.Println("Final Registers:", registers)
 	fmt.Println("Final Memory:", dataMemory[:100])

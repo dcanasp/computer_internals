@@ -27,6 +27,7 @@ func execute(signal controlSignal) {
 	operation, ok := instructions[signal.Command]
 	if ok {
 		operation(signal)
+		storeJSON(signal)
 	} else {
 		fmt.Printf("Unknown Operation: %05b\n", signal.Command)
 	}
