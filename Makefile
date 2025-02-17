@@ -11,7 +11,7 @@ linker:
 	./linkerLoader/linkerLoader ./linkerIN.txt ./pcIN.txt 0
 pc:
 	go build -C ./pc -o pc  .
-	./pc/pc ./pcIN.txt 0
+	./pc/pc ./pcIN.txt ./iterPc.json 0 
 goBuild:
 	go build -C ./pc -o pc  .
 

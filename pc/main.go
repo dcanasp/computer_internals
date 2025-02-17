@@ -46,19 +46,20 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel() // Ensure cancellation when done
 	fmt.Println("Starting PC")
-	if len(os.Args) < 2 {
-		fmt.Println("No hay archivo de entrada: ./pc <input_file>")
+	if len(os.Args) < 3 {
+		fmt.Println("No hay archivo de entrada o salida: ./pc <input_file> <output_file> offset")
 		return
 	}
 
 	useless := 0
-	if len(os.Args) > 2 {
+	if len(os.Args) > 3 {
 		var err error
-		useless, err = strconv.Atoi(os.Args[2])
+		useless, err = strconv.Atoi(os.Args[3])
 		if err != nil {
 			useless = 0
 		}
 	}
+	jsonFilePath := os.Args[2]
 
 	go cpu(ctx, cancel)
 	go memoryUnit(ctx)
@@ -77,7 +78,7 @@ func main() {
 	wg.Wait()
 
 	//open file
-	jsonFile, err := os.OpenFile("./iterPc.json", os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
+	jsonFile, err := os.OpenFile(jsonFilePath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0644)
 
 	if err != nil {
 		panic(err)
