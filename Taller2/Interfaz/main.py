@@ -1,12 +1,49 @@
-from PySide6.QtWidgets import QTableWidgetItem
+from PySide6.QtWidgets import QTableWidgetItem, QMessageBox
 from gui.main_window import Ui_MainWindow  # Importamos la clase generada
 from PySide6.QtGui import QTextCursor  # Importa QTextCursor
 from PySide6.QtWidgets import QApplication, QMainWindow
 import sys
 import os
 import subprocess
+import json
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Mapa de instrucciones
+instruction_map = {
+    0: "BEGIN",
+    31: "END",
+    30: "FIN",
+    1: "LOAD",
+    2: "STORE",
+    3: "MOVE",
+    4: "LOADDISK",
+    5: "ADD",
+    6: "SUB",
+    7: "MULT",
+    8: "DIV",
+    9: "MOD",
+    10: "AND",
+    11: "OR",
+    12: "XOR",
+    13: "STOREREG",
+    14: "LEFSHIFT",
+    15: "RIGHTSHIF",
+    16: "CMP",
+    17: "CMPREG",
+    18: "JUMP",
+    19: "JEQ",
+    20: "JNE",
+    21: "CMPG",
+    22: "CMPL",
+    23: "CMPGE",
+    24: "CMPLE",
+    25: "CMPGREG",
+    26: "CMPLREG",
+    27: "CMPGEREG",
+    28: "CMPLEREG",
+    29: "LOADDISKREG"
+}
 
 def get_project_root():
     # Si se compiló (por ejemplo, con PyInstaller), sys.frozen es True.
@@ -31,6 +68,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
         # Inicializar memoria y registros
         self.inicializar_memoria_y_registros()
 
+        # Inicializar índice de instrucción
+        self.instruction_index = 0
+        self.iter_pc_data = []
+
     def connect_buttons(self):
         """Conectar señales de los botones a sus funciones"""
         # Botones de procesamiento
@@ -40,16 +81,24 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.button_linker.clicked.connect(self.enlazar_clicked)
 
         # Botones de control de ejecución
-        self.button_siguiente_instruccion.clicked.connect(
-            self.siguiente_instruccion_clicked)
-        self.button_ultima_instruccion.clicked.connect(
-            self.ultima_instruccion_clicked)
+        self.button_siguiente_instruccion.clicked.connect(self.siguiente_instruccion_clicked)
+        self.button_ultima_instruccion.clicked.connect(self.ultima_instruccion_clicked)
         self.button_reiniciar.clicked.connect(self.reiniciar_clicked)
 
         # Botones de carga de ejemplos
         self.button_cargar_ex1.clicked.connect(lambda: self.cargar_ejemplo(1))
         self.button_cargar_ex2.clicked.connect(lambda: self.cargar_ejemplo(2))
         self.button_cargar_ex3.clicked.connect(lambda: self.cargar_ejemplo(3))
+
+        # Botones de conversión de RAM
+        self.button_sel_ram2bin.clicked.connect(self.convert_ram_to_bin)
+        self.button_sel_ram2dec.clicked.connect(self.convert_ram_to_dec)
+        self.button_sel_ram2ascii.clicked.connect(self.convert_ram_to_ascii)
+
+        # Botones de conversión de registros
+        self.button_sel_reg2bin.clicked.connect(self.convert_reg_to_bin)
+        self.button_sel_reg2dec.clicked.connect(self.convert_reg_to_dec)
+        self.button_sel_reg2ascii.clicked.connect(self.convert_reg_to_ascii)
 
     def setup_console(self):
         """Redirige los prints a la consola de salida (textEditPCOutput)"""
@@ -212,9 +261,6 @@ class MainApp(QMainWindow, Ui_MainWindow):
         """Inicializa la RAM, registros de la ALU y unidad de control en cero"""
         self.tamano_ram = 8192  # Definir tamaño de la RAM
         self.ram = ["0"*32] * self.tamano_ram  # Memoria RAM vacía
-        self.registros = {"C": "0", "P": "0", "N": "0", "D": "0"}
-        self.alu = {"1": "0", "2": "0", "3": "0", "4": "0"}
-        self.unidad_control = {"IC": 0, "IC": "0"}  # Unidad de control
 
         # Reflejar en la interfaz
         self.actualizar_tabla_ram()
@@ -293,31 +339,174 @@ class MainApp(QMainWindow, Ui_MainWindow):
             # 6. Verificar colisiones en la RAM
             for i in range(len(binario)):
                 if self.ram[offset + i] != ("0" * 32):
-                    print(f"❌ Error: Colisión en la RAM en la dirección {offset + i}")
+                    print(
+                        f"❌ Error: Colisión en la RAM en la dirección {offset + i}")
                     return
-
-            # 7. Cargar el binario en la RAM y actualizar tabla
-            for i, instruccion in enumerate(binario):
-                self.ram[offset + i] = instruccion
-                item = QTableWidgetItem(instruccion)
-                self.table_ram.setItem(offset + i, 0, item)
 
             # 8. Habilitar botones de ejecución
             self.button_siguiente_instruccion.setEnabled(True)
             self.button_ultima_instruccion.setEnabled(True)
 
-            print(f"✅ Enlazado completado. Código cargado en RAM desde posición {offset}")
+            print(
+                f"✅ Enlazado completado.")
+
+            # 9. Ejecutar el computador
+            computer_exec_path = os.path.join(base, "execs", "computer.exe")
+            try:
+                subprocess.run(
+                    [computer_exec_path, output_path, str(offset)],
+                    check=True,
+                    text=True,
+                    stderr=subprocess.PIPE  # Capturar stderr
+                )
+                print("✅ Computador ejecutado correctamente.")
+            except subprocess.CalledProcessError as e:
+                print(f"❌ Error al ejecutar el computador: {e.stderr.strip()}")
+                return
+
+            # 10. Leer el archivo iterPc.json generado por el computador
+            iter_pc_path = os.path.join(base, "execs",  "iterPc.json")
+            if not os.path.exists(iter_pc_path):
+                print("❌ Error: No se generó el archivo iterPc.json")
+                return
+
+            with open(iter_pc_path, "r", encoding="utf-8") as f:
+                self.iter_pc_data = json.load(f)
+
+            # Inicializar el índice de instrucción
+            self.instruction_index = 0
 
         except Exception as e:
             print(f"❌ Error inesperado: {str(e)}")
-            
     def siguiente_instruccion_clicked(self):
         """Manejador del botón Siguiente Instrucción"""
-        print("Ejecutando siguiente instrucción...")
+        if not self.iter_pc_data:
+            print("❌ Error: No hay datos de iteración cargados.")
+            return
+
+        if self.instruction_index >= len(self.iter_pc_data):
+            print("❌ Error: No hay más instrucciones para ejecutar.")
+            return
+
+        # Obtener la instrucción actual
+        current_instruction = self.iter_pc_data[self.instruction_index]
+
+        # Actualizar los campos de texto
+        self.textEditCurrentInstruction.setPlainText(instruction_map.get(current_instruction["instruction"], "UNKNOWN"))
+        self.textEditArg1.setPlainText(str(current_instruction["input1"]))
+        self.textEditArg2.setPlainText(str(current_instruction["input2"] * current_instruction["sign"]))
+        self.textEdit_ProgramCounter.setPlainText(str(current_instruction["PC"]))
+
+        # Actualizar los registros
+        for i in range(4):
+            self.table_registros.setItem(i, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+        for i in range(4, 32):
+            self.table_alu.setItem(i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+
+        # Actualizar la RAM
+        for i, valor in enumerate(current_instruction["memoria"]):
+            # Convertir el valor de decimal a binario de 32 bits
+            binario = format(valor, '032b')
+            self.ram[i] = binario
+            item = QTableWidgetItem(binario)
+            self.table_ram.setItem(i, 0, item)
+
+        # Seleccionar la instrucción actual en la RAM
+        pc_value = current_instruction["PC"]
+        self.table_ram.selectRow(pc_value)
+
+        # Incrementar el índice de instrucción
+        self.instruction_index += 1
 
     def ultima_instruccion_clicked(self):
         """Manejador del botón Saltar al Final"""
-        print("Saltando a la última instrucción...")
+        if not self.iter_pc_data:
+            print("❌ Error: No hay datos de iteración cargados.")
+            return
+
+        # Ejecutar todas las instrucciones restantes
+        while self.instruction_index < len(self.iter_pc_data)-1:
+            self.siguiente_instruccion_clicked()
+
+    def convert_ram_to_bin(self):
+        """Reinicia la RAM cargando nuevamente la memoria del JSON de la instrucción actual"""
+        if not self.iter_pc_data or self.instruction_index >= len(self.iter_pc_data):
+            print("❌ Error: No hay datos de iteración cargados o el índice de instrucción es inválido.")
+            return
+
+        # Obtener la instrucción actual
+        current_instruction = self.iter_pc_data[self.instruction_index]
+
+        # Actualizar la RAM
+        for i, valor in enumerate(current_instruction["memoria"]):
+            # Convertir el valor de decimal a binario de 32 bits
+            binario = format(valor, '032b')
+            self.ram[i] = binario
+            item = QTableWidgetItem(binario)
+            self.table_ram.setItem(i, 0, item)
+
+        print("✅ RAM reiniciada correctamente.")
+
+    def convert_ram_to_dec(self):
+        """Convierte el contenido de las celdas seleccionadas de la RAM a decimal"""
+        selected_items = self.table_ram.selectedItems()
+        for item in selected_items:
+            value = item.text()
+            if len(value) == 32 and all(c in '01' for c in value):  # Check if the value is a 32-bit binary string
+                dec_value = str(int(value, 2))
+                item.setText(dec_value)
+            else:
+                QMessageBox.critical(self, "Error", "La celda no contiene un valor binario de 32 bits.")
+
+    def convert_ram_to_ascii(self):
+        """Convierte el contenido de las celdas seleccionadas de la RAM a ASCII"""
+        selected_items = self.table_ram.selectedItems()
+        for item in selected_items:
+            value = item.text()
+            if len(value) == 32 and all(c in '01' for c in value):  # Check if the value is a 32-bit binary string
+                ascii_value = ''.join(chr(int(value[i:i+8], 2)) for i in range(0, len(value), 8))
+                item.setText(ascii_value)
+            else:
+                QMessageBox.critical(self, "Error", "La celda no contiene un valor binario de 32 bits.")
+
+    def convert_reg_to_bin(self):
+        """Convierte el contenido de los registros seleccionados a binario"""
+        selected_items = self.table_registros.selectedItems() + self.table_alu.selectedItems()
+        for item in selected_items:
+            value = item.text()
+            if value.isdigit():
+                bin_value = format(int(value), '032b')
+                item.setText(bin_value)
+            else:
+                QMessageBox.critical(self, "Error", "El valor del registro no es un número decimal.")
+
+    def convert_reg_to_dec(self):
+        """Reinicia los registros cargando nuevamente los valores del JSON de la instrucción actual"""
+        if not self.iter_pc_data or self.instruction_index >= len(self.iter_pc_data):
+            print("❌ Error: No hay datos de iteración cargados o el índice de instrucción es inválido.")
+            return
+
+        # Obtener la instrucción actual
+        current_instruction = self.iter_pc_data[self.instruction_index]
+
+        # Actualizar los registros
+        for i in range(4):
+            self.table_registros.setItem(i, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+        for i in range(4, 32):
+            self.table_alu.setItem(i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+
+        print("✅ Registros reiniciados correctamente.")
+
+    def convert_reg_to_ascii(self):
+        """Convierte el contenido de los registros seleccionados a ASCII"""
+        selected_items = self.table_registros.selectedItems() + self.table_alu.selectedItems()
+        for item in selected_items:
+            value = item.text()
+            if all(c in '01' for c in value):  # Check if the value is binary
+                ascii_value = ''.join(chr(int(value[i:i+8], 2)) for i in range(0, len(value), 8))
+                item.setText(ascii_value)
+            else:
+                QMessageBox.critical(self, "Error", "El valor del registro no es un número binario.")
 
     def reiniciar_clicked(self):
         """Reinicia el sistema, limpiando memoria y registros"""
@@ -332,6 +521,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
         # Reestablecer memoria y registros
         self.inicializar_memoria_y_registros()
+
+        # Inicializar índice de instrucción
+        self.instruction_index = 0
+        self.iter_pc_data = []
 
         # Desactivar botones de procesamiento
         self.disable_buttons()

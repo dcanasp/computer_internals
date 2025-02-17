@@ -5,8 +5,15 @@
 #include <ctype.h>
 
 #define MAX_LABELS 100
-#define MAX_INSTRUCTIONS 1000
+#define MAX_INSTRUCTIONS 8192
 #define MAX_LINE_LENGTH 100
+#define MAX_PATH_LENGTH 4096  // Aumentar el tamaño del búfer para las rutas
+
+// Códigos de error
+#define ERROR_OVERFLOW_INSTRUCCIONES 1
+#define ERROR_OVERFLOW_ETIQUETAS 2
+#define ERROR_ARCHIVO_ENTRADA 3
+#define ERROR_ARCHIVO_SALIDA 4
 
 typedef struct {
     char name[50];
@@ -15,7 +22,7 @@ typedef struct {
     int return_address;       
     int is_term_marker;        
 } Label;
-int InitialJumps=0;
+int InitialJumps = 0;
 
 Label labels[MAX_LABELS];
 int label_count = 0;
@@ -44,7 +51,6 @@ char *strrchr_last(const char *str, int c) {
     return last_occurrence;
 }
 
-
 void resolve_labels() {
     printf("Initial instruction count: %d\n", instruction_count);
     printf("Initial instructions:\n");
@@ -52,7 +58,6 @@ void resolve_labels() {
         printf("[%d]: '%s'\n", i, instructions[i]);
     }
     for (int i = 0; i < instruction_count; i++) {
-    
         if (strlen(instructions[i]) != 32) {
             // Check for any of the three jump types
             if (strncmp(instructions[i], "10010", 5) == 0 || // JUMP
@@ -68,42 +73,37 @@ void resolve_labels() {
                     if (label_len < 50) {
                         strncpy(label_name, start + 1, label_len);
                         label_name[label_len] = '\0';
-                        
 
                         char jump_type[6] = {0};
                         strncpy(jump_type, instructions[i], 5);
                         jump_type[5] = '\0';
 
-
                         Label* label = find_label(label_name);
                         //aca va el numero de la label y ya
-                            char binary_address[14] = {0};
-                            // Fill with zeros first
-                            memset(binary_address, '0', 13);
-                            
-                            // Convert address to binary (target address - 1)
-                            int address = label->start_address - 1;
-                            for (int j = 12; j >= 0 && address > 0; j--) {
-                                binary_address[j] = '0' + (address & 1);
-                                address >>= 1;
-                            }
-                            
+                        char binary_address[14] = {0};
+                        // Fill with zeros first
+                        memset(binary_address, '0', 13);
+                        
+                        // Convert address to binary (target address - 1)
+                        int address = label->start_address - 1;
+                        for (int j = 12; j >= 0 && address > 0; j--) {
+                            binary_address[j] = '0' + (address & 1);
+                            address >>= 1;
+                        }
 
-                            // Create the complete jump instruction
-                            char new_instruction[33] = {0};
-                            char relleno_1[15] = "00000000000000";
-                            strcpy(new_instruction, jump_type);
-                            strcat(new_instruction, binary_address);
-                            strcat(new_instruction, relleno_1);
-                            
-                            strcpy(instructions[i], new_instruction);
-
+                        // Create the complete jump instruction
+                        char new_instruction[33] = {0};
+                        char relleno_1[15] = "00000000000000";
+                        strcpy(new_instruction, jump_type);
+                        strcat(new_instruction, binary_address);
+                        strcat(new_instruction, relleno_1);
+                        
+                        strcpy(instructions[i], new_instruction);
                     }
                 }
             }
         }
     }
-
 
     printf("Final instructions:\n");
     for (int i = 0; i < instruction_count; i++) {
@@ -121,18 +121,30 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
 %%
 
 {BINARY} {
+    if (instruction_count >= MAX_INSTRUCTIONS) {
+        fprintf(stderr, "%d\n", ERROR_OVERFLOW_INSTRUCCIONES);  // Código de error
+        exit(ERROR_OVERFLOW_INSTRUCCIONES);  // Terminar ejecución con código de error
+    }
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;
 }
 
 {JUMP_MARKER} {
+    if (instruction_count >= MAX_INSTRUCTIONS) {
+        fprintf(stderr, "%d\n", ERROR_OVERFLOW_INSTRUCCIONES);  // Código de error
+        exit(ERROR_OVERFLOW_INSTRUCCIONES);  // Terminar ejecución con código de error
+    }
     strncpy(instructions[instruction_count], yytext, sizeof(instructions[instruction_count]) - 1);
     instructions[instruction_count][sizeof(instructions[instruction_count]) - 1] = '\0';
     instruction_count++;
 }
 
 ^{LABEL}:   {
+    if (label_count >= MAX_LABELS) {
+        fprintf(stderr, "%d\n", ERROR_OVERFLOW_ETIQUETAS);  // Código de error
+        exit(ERROR_OVERFLOW_ETIQUETAS);  // Terminar ejecución con código de error
+    }
     char *label = strdup(yytext);
     label[strlen(label)-1] = '\0';  // Remove colon
     strncpy(labels[label_count].name, label, sizeof(labels[label_count].name) - 1);
@@ -145,7 +157,6 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
     free(label);
 }
 
-
 ^[\t ]+ ;
 \n      ;
 .       ;
@@ -153,21 +164,37 @@ LABEL       [A-Za-z_][A-Za-z0-9_]*
 %%
 
 int main(int argc, char **argv) {
-    if (argc < 2) {
-        fprintf(stderr, "Uso: %s <archivo_entrada>\n", argv[0]);
+    if (argc != 4) {  // Ahora espera 3 argumentos
+        fprintf(stderr, "Uso: %s <entrada> <salida> <offset>\n", argv[0]);
         return 1;
     }
-    FILE *file = fopen(argv[1], "r");
+    
+    char input_path[MAX_PATH_LENGTH];
+    char output_path[MAX_PATH_LENGTH];
+    strncpy(input_path, argv[1], MAX_PATH_LENGTH - 1);
+    strncpy(output_path, argv[2], MAX_PATH_LENGTH - 1);
+    input_path[MAX_PATH_LENGTH - 1] = '\0';
+    output_path[MAX_PATH_LENGTH - 1] = '\0';
+    
+    printf("Input path: %s\n", input_path);
+    printf("Output path: %s\n", output_path);
+
+    FILE *file = fopen(input_path, "r"); // Archivo entrada (absoluto)
     if (!file) {
-        perror("Error al abrir el archivo");
-        return 1;
+        fprintf(stderr, "%d\n", ERROR_ARCHIVO_ENTRADA);  // Código de error
+        return ERROR_ARCHIVO_ENTRADA;
     }
 
-    if (argv[2]!=NULL) {
-        InitialJumps = atoi(argv[2]); 
+    if (argv[3] != NULL) {
+        InitialJumps = atoi(argv[3]);
     }
-    for (int i=0; i<InitialJumps; i++){
-        // strcpy(instructions[instruction_count], "00001000000000010000000000000000");
+
+    for (int i = 0; i < InitialJumps; i++) {
+        if (instruction_count >= MAX_INSTRUCTIONS) {
+            fprintf(stderr, "%d\n", ERROR_OVERFLOW_INSTRUCCIONES);  // Código de error
+            fclose(file);
+            return ERROR_OVERFLOW_INSTRUCCIONES;
+        }
         instruction_count++;
     }
 
@@ -176,19 +203,19 @@ int main(int argc, char **argv) {
     fclose(file);
     resolve_labels();
 
-    FILE *output_file = fopen("pcIN.txt", "w");
+    FILE *output_file = fopen(output_path, "w"); // Archivo salida (absoluto)
     if (!output_file) {
-        perror("Error al crear el archivo de salida");
-        return 1;
+        fprintf(stderr, "%d\n", ERROR_ARCHIVO_SALIDA);  // Código de error
+        return ERROR_ARCHIVO_SALIDA;
     }
 
+    printf("Writing to output file...\n");
     for (int i = 0; i < instruction_count; i++) {
-        if (instructions[i][0] == '\0'){
-            continue;
-        }
+        if (instructions[i][0] == '\0') continue;
         fprintf(output_file, "%s\n", instructions[i]);
     }
 
     fclose(output_file);
+    printf("Output file written successfully.\n");
     return 0;
 }
