@@ -45,6 +45,7 @@ instruction_map = {
     29: "LOADDISKREG"
 }
 
+
 def get_project_root():
     # Si se compiló (por ejemplo, con PyInstaller), sys.frozen es True.
     if getattr(sys, 'frozen', False):
@@ -81,8 +82,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.button_linker.clicked.connect(self.enlazar_clicked)
 
         # Botones de control de ejecución
-        self.button_siguiente_instruccion.clicked.connect(self.siguiente_instruccion_clicked)
-        self.button_ultima_instruccion.clicked.connect(self.ultima_instruccion_clicked)
+        self.button_siguiente_instruccion.clicked.connect(
+            self.siguiente_instruccion_clicked)
+        self.button_ultima_instruccion.clicked.connect(
+            self.ultima_instruccion_clicked)
         self.button_reiniciar.clicked.connect(self.reiniciar_clicked)
 
         # Botones de carga de ejemplos
@@ -147,6 +150,13 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.button_linker.setEnabled(False)
         self.button_siguiente_instruccion.setEnabled(False)
         self.button_ultima_instruccion.setEnabled(False)
+        # Desactivar botones de conversión
+        self.button_sel_ram2bin.setEnabled(False)
+        self.button_sel_ram2dec.setEnabled(False)
+        self.button_sel_ram2ascii.setEnabled(False)
+        self.button_sel_reg2bin.setEnabled(False)
+        self.button_sel_reg2dec.setEnabled(False)
+        self.button_sel_reg2ascii.setEnabled(False)
 
     def preprocesar_clicked(self):
         """Manejador del botón Preprocesar"""
@@ -376,8 +386,17 @@ class MainApp(QMainWindow, Ui_MainWindow):
             # Inicializar el índice de instrucción
             self.instruction_index = 0
 
+            # Desactivar botones de conversión al inicio
+            self.button_sel_ram2bin.setEnabled(False)
+            self.button_sel_ram2dec.setEnabled(False)
+            self.button_sel_ram2ascii.setEnabled(False)
+            self.button_sel_reg2bin.setEnabled(False)
+            self.button_sel_reg2dec.setEnabled(False)
+            self.button_sel_reg2ascii.setEnabled(False)
+
         except Exception as e:
             print(f"❌ Error inesperado: {str(e)}")
+
     def siguiente_instruccion_clicked(self):
         """Manejador del botón Siguiente Instrucción"""
         if not self.iter_pc_data:
@@ -392,16 +411,21 @@ class MainApp(QMainWindow, Ui_MainWindow):
         current_instruction = self.iter_pc_data[self.instruction_index]
 
         # Actualizar los campos de texto
-        self.textEditCurrentInstruction.setPlainText(instruction_map.get(current_instruction["instruction"], "UNKNOWN"))
+        self.textEditCurrentInstruction.setPlainText(
+            instruction_map.get(current_instruction["instruction"], "UNKNOWN"))
         self.textEditArg1.setPlainText(str(current_instruction["input1"]))
-        self.textEditArg2.setPlainText(str(current_instruction["input2"] * current_instruction["sign"]))
-        self.textEdit_ProgramCounter.setPlainText(str(current_instruction["PC"]))
+        self.textEditArg2.setPlainText(
+            str(current_instruction["input2"] * current_instruction["sign"]))
+        self.textEdit_ProgramCounter.setPlainText(
+            str(current_instruction["PC"]))
 
         # Actualizar los registros
         for i in range(4):
-            self.table_registros.setItem(i, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+            self.table_registros.setItem(i, 0, QTableWidgetItem(
+                str(current_instruction["registros"][i])))
         for i in range(4, 32):
-            self.table_alu.setItem(i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+            self.table_alu.setItem(
+                i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
 
         # Actualizar la RAM
         for i, valor in enumerate(current_instruction["memoria"]):
@@ -418,6 +442,15 @@ class MainApp(QMainWindow, Ui_MainWindow):
         # Incrementar el índice de instrucción
         self.instruction_index += 1
 
+        # Activar botones de conversión si se llega a la última instrucción
+        if self.instruction_index >= len(self.iter_pc_data):
+            self.button_sel_ram2bin.setEnabled(True)
+            self.button_sel_ram2dec.setEnabled(True)
+            self.button_sel_ram2ascii.setEnabled(True)
+            self.button_sel_reg2bin.setEnabled(True)
+            self.button_sel_reg2dec.setEnabled(True)
+            self.button_sel_reg2ascii.setEnabled(True)
+
     def ultima_instruccion_clicked(self):
         """Manejador del botón Saltar al Final"""
         if not self.iter_pc_data:
@@ -425,17 +458,17 @@ class MainApp(QMainWindow, Ui_MainWindow):
             return
 
         # Ejecutar todas las instrucciones restantes
-        while self.instruction_index < len(self.iter_pc_data)-1:
+        while self.instruction_index < len(self.iter_pc_data):
             self.siguiente_instruccion_clicked()
 
     def convert_ram_to_bin(self):
-        """Reinicia la RAM cargando nuevamente la memoria del JSON de la instrucción actual"""
-        if not self.iter_pc_data or self.instruction_index >= len(self.iter_pc_data):
-            print("❌ Error: No hay datos de iteración cargados o el índice de instrucción es inválido.")
+        """Reinicia la RAM cargando nuevamente la memoria del JSON de la última instrucción"""
+        if not self.iter_pc_data:
+            print("❌ Error: No hay datos de iteración cargados.")
             return
 
-        # Obtener la instrucción actual
-        current_instruction = self.iter_pc_data[self.instruction_index]
+        # Obtener la última instrucción
+        current_instruction = self.iter_pc_data[-1]
 
         # Actualizar la RAM
         for i, valor in enumerate(current_instruction["memoria"]):
@@ -452,61 +485,67 @@ class MainApp(QMainWindow, Ui_MainWindow):
         selected_items = self.table_ram.selectedItems()
         for item in selected_items:
             value = item.text()
-            if len(value) == 32 and all(c in '01' for c in value):  # Check if the value is a 32-bit binary string
+            # Check if the value is a 32-bit binary string
+            if len(value) == 32 and all(c in '01' for c in value):
                 dec_value = str(int(value, 2))
                 item.setText(dec_value)
             else:
-                QMessageBox.critical(self, "Error", "La celda no contiene un valor binario de 32 bits.")
+                print("La celda no contiene un valor binario de 32 bits.")
 
     def convert_ram_to_ascii(self):
         """Convierte el contenido de las celdas seleccionadas de la RAM a ASCII"""
         selected_items = self.table_ram.selectedItems()
         for item in selected_items:
             value = item.text()
-            if len(value) == 32 and all(c in '01' for c in value):  # Check if the value is a 32-bit binary string
-                ascii_value = ''.join(chr(int(value[i:i+8], 2)) for i in range(0, len(value), 8))
+            # Check if the value is a 32-bit binary string
+            if len(value) == 32 and all(c in '01' for c in value):
+                ascii_value = chr(int(value, 2))
                 item.setText(ascii_value)
             else:
-                QMessageBox.critical(self, "Error", "La celda no contiene un valor binario de 32 bits.")
+                print("La celda no contiene un valor binario de 32 bits.")
 
     def convert_reg_to_bin(self):
         """Convierte el contenido de los registros seleccionados a binario"""
-        selected_items = self.table_registros.selectedItems() + self.table_alu.selectedItems()
+        selected_items = self.table_registros.selectedItems() + \
+            self.table_alu.selectedItems()
         for item in selected_items:
             value = item.text()
             if value.isdigit():
                 bin_value = format(int(value), '032b')
                 item.setText(bin_value)
             else:
-                QMessageBox.critical(self, "Error", "El valor del registro no es un número decimal.")
+                print("El valor del registro no es un número decimal.")
 
     def convert_reg_to_dec(self):
-        """Reinicia los registros cargando nuevamente los valores del JSON de la instrucción actual"""
-        if not self.iter_pc_data or self.instruction_index >= len(self.iter_pc_data):
-            print("❌ Error: No hay datos de iteración cargados o el índice de instrucción es inválido.")
+        """Reinicia los registros cargando nuevamente los valores del JSON de la última instrucción"""
+        if not self.iter_pc_data:
+            print("❌ Error: No hay datos de iteración cargados.")
             return
 
-        # Obtener la instrucción actual
-        current_instruction = self.iter_pc_data[self.instruction_index]
+        # Obtener la última instrucción
+        current_instruction = self.iter_pc_data[-1]
 
         # Actualizar los registros
         for i in range(4):
-            self.table_registros.setItem(i, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+            self.table_registros.setItem(i, 0, QTableWidgetItem(
+                str(current_instruction["registros"][i])))
         for i in range(4, 32):
-            self.table_alu.setItem(i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
+            self.table_alu.setItem(
+                i - 4, 0, QTableWidgetItem(str(current_instruction["registros"][i])))
 
         print("✅ Registros reiniciados correctamente.")
 
     def convert_reg_to_ascii(self):
         """Convierte el contenido de los registros seleccionados a ASCII"""
-        selected_items = self.table_registros.selectedItems() + self.table_alu.selectedItems()
+        selected_items = self.table_registros.selectedItems() + \
+            self.table_alu.selectedItems()
         for item in selected_items:
             value = item.text()
-            if all(c in '01' for c in value):  # Check if the value is binary
-                ascii_value = ''.join(chr(int(value[i:i+8], 2)) for i in range(0, len(value), 8))
+            if value.isdigit():
+                ascii_value = chr(int(value))
                 item.setText(ascii_value)
             else:
-                QMessageBox.critical(self, "Error", "El valor del registro no es un número binario.")
+                print("El valor del registro no es un número binario.")
 
     def reiniciar_clicked(self):
         """Reinicia el sistema, limpiando memoria y registros"""

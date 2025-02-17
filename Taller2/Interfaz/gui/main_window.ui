@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1334</width>
-    <height>896</height>
+    <height>840</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -108,7 +108,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>250</height>
+            <height>180</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -204,7 +204,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>250</height>
+            <height>180</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -316,7 +316,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>250</height>
+            <height>180</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -396,7 +396,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>250</height>
+            <height>180</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -467,7 +467,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>250</height>
+            <height>180</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -9437,13 +9437,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="button_sel_ram2bin">
-              <property name="text">
-               <string>Binario</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="button_sel_ram2dec">
               <property name="text">
                <string>Decimal</string>
@@ -9454,6 +9447,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <widget class="QPushButton" name="button_sel_ram2ascii">
               <property name="text">
                <string>ASCII</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="button_sel_ram2bin">
+              <property name="text">
+               <string>Reiniciar</string>
               </property>
              </widget>
             </item>
@@ -9479,16 +9479,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="button_sel_reg2dec">
+             <widget class="QPushButton" name="button_sel_reg2ascii">
               <property name="text">
-               <string>Decimal</string>
+               <string>ASCII</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="button_sel_reg2ascii">
+             <widget class="QPushButton" name="button_sel_reg2dec">
               <property name="text">
-               <string>ASCII</string>
+               <string>Reiniciar</string>
               </property>
              </widget>
             </item>

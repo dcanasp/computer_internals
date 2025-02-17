@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(1334, 896)
+        MainWindow.resize(1334, 840)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.textEditCodigoFuente.sizePolicy().hasHeightForWidth())
         self.textEditCodigoFuente.setSizePolicy(sizePolicy3)
-        self.textEditCodigoFuente.setMinimumSize(QSize(0, 250))
+        self.textEditCodigoFuente.setMinimumSize(QSize(0, 180))
         self.textEditCodigoFuente.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoFuente.setFrameShape(QFrame.Shape.StyledPanel)
         self.textEditCodigoFuente.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
@@ -132,7 +132,7 @@ class Ui_MainWindow(object):
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.textEditCodigoFuenteModificado.sizePolicy().hasHeightForWidth())
         self.textEditCodigoFuenteModificado.setSizePolicy(sizePolicy4)
-        self.textEditCodigoFuenteModificado.setMinimumSize(QSize(0, 250))
+        self.textEditCodigoFuenteModificado.setMinimumSize(QSize(0, 180))
         self.textEditCodigoFuenteModificado.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoFuenteModificado.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
@@ -179,7 +179,7 @@ class Ui_MainWindow(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.textEditCodigoASM.sizePolicy().hasHeightForWidth())
         self.textEditCodigoASM.setSizePolicy(sizePolicy5)
-        self.textEditCodigoASM.setMinimumSize(QSize(0, 250))
+        self.textEditCodigoASM.setMinimumSize(QSize(0, 180))
         self.textEditCodigoASM.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoASM.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
@@ -217,7 +217,7 @@ class Ui_MainWindow(object):
         self.textEditCodigoReloc.setObjectName(u"textEditCodigoReloc")
         sizePolicy5.setHeightForWidth(self.textEditCodigoReloc.sizePolicy().hasHeightForWidth())
         self.textEditCodigoReloc.setSizePolicy(sizePolicy5)
-        self.textEditCodigoReloc.setMinimumSize(QSize(0, 250))
+        self.textEditCodigoReloc.setMinimumSize(QSize(0, 180))
         self.textEditCodigoReloc.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoReloc.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
@@ -250,7 +250,7 @@ class Ui_MainWindow(object):
         self.textEditCodigoLib.setObjectName(u"textEditCodigoLib")
         sizePolicy5.setHeightForWidth(self.textEditCodigoLib.sizePolicy().hasHeightForWidth())
         self.textEditCodigoLib.setSizePolicy(sizePolicy5)
-        self.textEditCodigoLib.setMinimumSize(QSize(0, 250))
+        self.textEditCodigoLib.setMinimumSize(QSize(0, 180))
         self.textEditCodigoLib.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoLib.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
 
@@ -622,11 +622,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.label_13)
 
-        self.button_sel_ram2bin = QPushButton(self.centralwidget)
-        self.button_sel_ram2bin.setObjectName(u"button_sel_ram2bin")
-
-        self.verticalLayout.addWidget(self.button_sel_ram2bin)
-
         self.button_sel_ram2dec = QPushButton(self.centralwidget)
         self.button_sel_ram2dec.setObjectName(u"button_sel_ram2dec")
 
@@ -636,6 +631,11 @@ class Ui_MainWindow(object):
         self.button_sel_ram2ascii.setObjectName(u"button_sel_ram2ascii")
 
         self.verticalLayout.addWidget(self.button_sel_ram2ascii)
+
+        self.button_sel_ram2bin = QPushButton(self.centralwidget)
+        self.button_sel_ram2bin.setObjectName(u"button_sel_ram2bin")
+
+        self.verticalLayout.addWidget(self.button_sel_ram2bin)
 
 
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -653,15 +653,15 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.button_sel_reg2bin)
 
-        self.button_sel_reg2dec = QPushButton(self.centralwidget)
-        self.button_sel_reg2dec.setObjectName(u"button_sel_reg2dec")
-
-        self.verticalLayout_2.addWidget(self.button_sel_reg2dec)
-
         self.button_sel_reg2ascii = QPushButton(self.centralwidget)
         self.button_sel_reg2ascii.setObjectName(u"button_sel_reg2ascii")
 
         self.verticalLayout_2.addWidget(self.button_sel_reg2ascii)
+
+        self.button_sel_reg2dec = QPushButton(self.centralwidget)
+        self.button_sel_reg2dec.setObjectName(u"button_sel_reg2dec")
+
+        self.verticalLayout_2.addWidget(self.button_sel_reg2dec)
 
 
         self.horizontalLayout.addLayout(self.verticalLayout_2)
@@ -931,13 +931,13 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; color:#aaaa00;\">Cambio de formato</span></p></body></html>", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Ram seleccionada", None))
-        self.button_sel_ram2bin.setText(QCoreApplication.translate("MainWindow", u"Binario", None))
         self.button_sel_ram2dec.setText(QCoreApplication.translate("MainWindow", u"Decimal", None))
         self.button_sel_ram2ascii.setText(QCoreApplication.translate("MainWindow", u"ASCII", None))
+        self.button_sel_ram2bin.setText(QCoreApplication.translate("MainWindow", u"Reiniciar", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Registros Seleccionados", None))
         self.button_sel_reg2bin.setText(QCoreApplication.translate("MainWindow", u"Binario", None))
-        self.button_sel_reg2dec.setText(QCoreApplication.translate("MainWindow", u"Decimal", None))
         self.button_sel_reg2ascii.setText(QCoreApplication.translate("MainWindow", u"ASCII", None))
+        self.button_sel_reg2dec.setText(QCoreApplication.translate("MainWindow", u"Reiniciar", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Sistema de procesamiento de lenguaje\n"
 " \n"
 "David Alfonso Ca\u00f1as Palomino\n"
