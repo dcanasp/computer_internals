@@ -1,11 +1,21 @@
-FUNZIONE suma
-    SE x + y == 10
-        RESTITUIRE x * y
-    ALTRIMENTI
-        RESTITUIRE x + y
-INCLUDERE <"testlib.txt">
-FUNZIONE logico
-    SE x NON y
-        RESTITUIRE VERO
-    ALTRIMENTI
-        RESTITUIRE FALSO
+// Referencias y Operaciones
+// RESULTADO ESPERADO: 8
+
+FUNZIONE main() {
+  a = 10;
+  b = 5;
+  c = 3;
+  resultado = 0;
+
+  se a > b {
+    resultado = a - b;
+  } altrimenti {
+    resultado = b - a;
+  }
+
+  se resultado > c {
+    resultado = resultado + c;
+  } altrimenti {
+    resultado = resultado * c;
+  }
+}

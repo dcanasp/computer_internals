@@ -1,7 +1,14 @@
-FUNZIONE mi_func() {
-    SE (x > 10) {
-        RESTITUIRE VERO;
-    } ALTRIMENTI {
-        RESTITUIRE FALSO;
-    }
+// Librerías
+// RESULTADO ESPERADO: 4
+
+IMPORTA " Math.txt "
+FUNZIONE main() {
+  a = 2;            
+  resultado = 0;
+
+  resultado = pow(a);
+
+  se resultado > 10 {
+    resultado = resultado - 5;
+  }
 }

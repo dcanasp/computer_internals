@@ -45,7 +45,6 @@ instruction_map = {
     29: "LOADDISKREG"
 }
 
-
 def get_project_root():
     # Si se compiló (por ejemplo, con PyInstaller), sys.frozen es True.
     if getattr(sys, 'frozen', False):
@@ -80,6 +79,8 @@ class MainApp(QMainWindow, Ui_MainWindow):
         self.button_compiler.clicked.connect(self.compilar_clicked)
         self.button_assembler.clicked.connect(self.ensamblar_clicked)
         self.button_linker.clicked.connect(self.enlazar_clicked)
+        self.button_verTablaSimbolos.clicked.connect(self.ver_tabla_simbolos_clicked)
+
 
         # Botones de control de ejecución
         self.button_siguiente_instruccion.clicked.connect(
@@ -88,10 +89,19 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.ultima_instruccion_clicked)
         self.button_reiniciar.clicked.connect(self.reiniciar_clicked)
 
+        self.button_saveAsLib.setEnabled(False) # No implementado
+
         # Botones de carga de ejemplos
-        self.button_cargar_ex1.clicked.connect(lambda: self.cargar_ejemplo(1))
-        self.button_cargar_ex2.clicked.connect(lambda: self.cargar_ejemplo(2))
-        self.button_cargar_ex3.clicked.connect(lambda: self.cargar_ejemplo(3))
+        self.button_cargar_ex01.clicked.connect(lambda: self.cargar_ejemplo(1))
+        self.button_cargar_ex02.clicked.connect(lambda: self.cargar_ejemplo(2))
+        self.button_cargar_ex03.clicked.connect(lambda: self.cargar_ejemplo(3))
+        self.button_cargar_ex04.clicked.connect(lambda: self.cargar_ejemplo(4))
+        self.button_cargar_ex05.clicked.connect(lambda: self.cargar_ejemplo(5))
+        self.button_cargar_ex06.clicked.connect(lambda: self.cargar_ejemplo(6))
+        self.button_cargar_ex07.clicked.connect(lambda: self.cargar_ejemplo(7))
+        self.button_cargar_ex08.clicked.connect(lambda: self.cargar_ejemplo(8))
+        self.button_cargar_ex09.clicked.connect(lambda: self.cargar_ejemplo(9))
+        self.button_cargar_ex10.clicked.connect(lambda: self.cargar_ejemplo(10))
 
         # Botones de conversión de RAM
         self.button_sel_ram2bin.clicked.connect(self.convert_ram_to_bin)
@@ -142,21 +152,16 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
     def disable_buttons(self):
         """Desactiva los botones de procesamiento al inicio"""
-        return
-        self.button_preprocessor.setEnabled(True)
-        self.button_verTablaSimbolos.setEnabled(False)
-        self.button_compiler.setEnabled(False)
-        self.button_assembler.setEnabled(False)
-        self.button_linker.setEnabled(False)
         self.button_siguiente_instruccion.setEnabled(False)
         self.button_ultima_instruccion.setEnabled(False)
-        # Desactivar botones de conversión
         self.button_sel_ram2bin.setEnabled(False)
         self.button_sel_ram2dec.setEnabled(False)
         self.button_sel_ram2ascii.setEnabled(False)
         self.button_sel_reg2bin.setEnabled(False)
         self.button_sel_reg2dec.setEnabled(False)
         self.button_sel_reg2ascii.setEnabled(False)
+        self.textEditCodigoLib.setReadOnly(True)
+        self.textEditInput.setEnabled(False)
 
     def preprocesar_clicked(self):
         """Manejador del botón Preprocesar"""
@@ -206,23 +211,103 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.textEditCodigoLib.setPlainText(
                 libraries_code)  # Código de librerías
 
-            # Activar el botón de compilar después de preprocesar
-            self.button_compiler.setEnabled(True)
             print("✅ Preprocesamiento completado.")
 
         except subprocess.CalledProcessError as e:
             print(f"❌ Error al ejecutar el preprocesador: {e}")
+
+    def inicializar_memoria_y_registros(self):
+        """Inicializa la RAM, registros de la ALU y unidad de control en cero"""
+        self.tamano_ram = 8192  # Definir tamaño de la RAM
+        self.ram = ["0"*32] * self.tamano_ram  # Memoria RAM vacía
+
+        # Reflejar en la interfaz
+        self.actualizar_tabla_ram()
+
+        for i in range(4):
+            self.table_registros.setItem(i, 0, QTableWidgetItem(
+                str(0)))
+        for i in range(4, 32):
+            self.table_alu.setItem(
+                i - 4, 0, QTableWidgetItem(0))
+
+    def actualizar_tabla_ram(self):
+        """Actualiza la tabla de RAM en la interfaz gráfica"""
+        self.table_ram.clearContents()
+        for i, valor in enumerate(self.ram):
+            item = QTableWidgetItem(valor)
+            self.table_ram.setItem(i, 0, item)
+        
+        self.table_ram.setVerticalHeaderLabels([str(i) for i in range(self.table_ram.rowCount())])
 
     def compilar_clicked(self):
         """Manejador del botón Compilar"""
         print("¡Compilando código!")
         # Obtener texto del campo de código
         codigo = self.textEditCodigoFuenteModificado.toPlainText()
-        print(f"Código a compilar:\n{codigo}")
+        if not codigo:
+            print("❌ Error: El campo de código fuente modificado está vacío.")
+            return
+
+        base = get_project_root()
+        temp_folder = os.path.join(base, "_temp")
+        input_path = os.path.join(temp_folder, "temp_compiler_input.txt")
+        output_path = os.path.join(temp_folder, "temp_compiler_output.asm")
+        libs_input_path = os.path.join(temp_folder, "temp_libraries_input.txt")
+        parser_error_path = os.path.join(temp_folder, "temp_parser_errors.log")
+        symbol_table_path = os.path.join(temp_folder, "temp_symbol_table.txt")
+        exec_path = os.path.join(base, "execs", "compiler")
+
+        os.makedirs(temp_folder, exist_ok=True)
+
+        # Guardar el código fuente modificado en un archivo temporal
+        with open(input_path, "w", encoding="utf-8") as f:
+            f.write(codigo)
+
+        # Guardar el código de librerías en un archivo temporal
+        libraries_code = self.textEditCodigoLib.toPlainText()
+        with open(libs_input_path, "w", encoding="utf-8") as f:
+            f.write(libraries_code)
+
+        try:
+            subprocess.run(
+                [exec_path, input_path, output_path, libs_input_path, parser_error_path, symbol_table_path],
+                check=True,
+                text=True
+            )
+
+            # Leer el archivo de salida del compilador
+            compiled_code = ""
+            if os.path.exists(output_path):
+                with open(output_path, "r", encoding="utf-8") as f:
+                    compiled_code = f.read()
+                
+                with open(parser_error_path, "r", encoding="utf-8") as f:
+                    parser_errors = f.read()
+                    if parser_errors:
+                        print("❌ Errores de análisis sintáctico:")
+                        print(parser_errors)
+
+            # Actualizar la interfaz con los resultados
+            self.textEditCodigoASM.setPlainText(compiled_code)  # Código assembler
+
+            print("✅ Compilación completada.")
+
+        except subprocess.CalledProcessError as e:
+            print(f"❌ Error al ejecutar el compilador: {e}")
 
         # Activar el botón de ensamblar después de compilar
         self.button_assembler.setEnabled(True)
         self.button_verTablaSimbolos.setEnabled(True)
+
+    def ver_tabla_simbolos_clicked(self):
+        """Manejador del botón Ver Tabla de Símbolos"""
+        base = get_project_root()
+        symbol_table_path = os.path.join(base, "_temp", "temp_symbol_table.txt")
+        if os.path.exists(symbol_table_path):
+            os.startfile(symbol_table_path)
+        else:
+            print(f"❌ Error: No se encontró el archivo de la tabla de símbolos en {symbol_table_path}")
 
     def ensamblar_clicked(self):
         """Manejador del botón Ensamblar"""
@@ -260,27 +345,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
             self.textEditCodigoReloc.setPlainText(
                 assembled_code)  # Código relocalizable
 
-            # Activar el botón de enlazar después de ensamblar
-            self.button_linker.setEnabled(True)
             print("✅ Ensamblado completado.")
 
         except subprocess.CalledProcessError as e:
             print(f"❌ Error al ejecutar el ensamblador: {e}")
-
-    def inicializar_memoria_y_registros(self):
-        """Inicializa la RAM, registros de la ALU y unidad de control en cero"""
-        self.tamano_ram = 8192  # Definir tamaño de la RAM
-        self.ram = ["0"*32] * self.tamano_ram  # Memoria RAM vacía
-
-        # Reflejar en la interfaz
-        self.actualizar_tabla_ram()
-
-    def actualizar_tabla_ram(self):
-        """Actualiza la tabla de RAM en la interfaz gráfica"""
-        self.table_ram.clearContents()
-        for i, valor in enumerate(self.ram):
-            item = QTableWidgetItem(valor)
-            self.table_ram.setItem(i, 0, item)
 
     def enlazar_clicked(self):
         """Manejador del botón Enlazar/Cargar"""
@@ -289,14 +357,12 @@ class MainApp(QMainWindow, Ui_MainWindow):
             base = get_project_root()
             offset = self.spinBox_pos_enlazar.value()
 
+            if(offset < 2000 or offset >= 8192):
+                print("❌ Error: La posición de enlace debe ser mayor o igual a 2000 y menor a 8192")
+                return
+
             # 1. Combinar código relocalizable principal y de librerías
             codigo_reloc = self.textEditCodigoReloc.toPlainText()
-            codigo_lib = self.textEditCodigoLib.toPlainText()
-            combined_code = codigo_reloc + "\n" + codigo_lib
-
-            if not combined_code.strip():
-                print("❌ Error: No hay código relocalizable para enlazar")
-                return
 
             # 2. Guardar en archivo temporal combinado
             temp_folder = os.path.join(base, "_temp")
@@ -307,7 +373,7 @@ class MainApp(QMainWindow, Ui_MainWindow):
             os.makedirs(temp_folder, exist_ok=True)
 
             with open(input_path, "w", encoding="utf-8") as f:
-                f.write(combined_code)
+                f.write(codigo_reloc)
 
             # 3. Ejecutar el linker-loader con offset
             try:
@@ -362,9 +428,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
 
             # 9. Ejecutar el computador
             computer_exec_path = os.path.join(base, "execs", "computer.exe")
+            pc_output_path = os.path.join(temp_folder, "temp_pc_output.txt")
+
             try:
                 subprocess.run(
-                    [computer_exec_path, output_path, str(offset)],
+                    [computer_exec_path, output_path, pc_output_path, str(offset)],
                     check=True,
                     text=True,
                     stderr=subprocess.PIPE  # Capturar stderr
@@ -374,13 +442,11 @@ class MainApp(QMainWindow, Ui_MainWindow):
                 print(f"❌ Error al ejecutar el computador: {e.stderr.strip()}")
                 return
 
-            # 10. Leer el archivo iterPc.json generado por el computador
-            iter_pc_path = os.path.join(base, "execs",  "iterPc.json")
-            if not os.path.exists(iter_pc_path):
+            if not os.path.exists(pc_output_path):
                 print("❌ Error: No se generó el archivo iterPc.json")
                 return
 
-            with open(iter_pc_path, "r", encoding="utf-8") as f:
+            with open(pc_output_path, "r", encoding="utf-8") as f:
                 self.iter_pc_data = json.load(f)
 
             # Inicializar el índice de instrucción
@@ -456,10 +522,10 @@ class MainApp(QMainWindow, Ui_MainWindow):
         if not self.iter_pc_data:
             print("❌ Error: No hay datos de iteración cargados.")
             return
+        
+        self.instruction_index = len(self.iter_pc_data) - 1
 
-        # Ejecutar todas las instrucciones restantes
-        while self.instruction_index < len(self.iter_pc_data):
-            self.siguiente_instruccion_clicked()
+        self.siguiente_instruccion_clicked()
 
     def convert_ram_to_bin(self):
         """Reinicia la RAM cargando nuevamente la memoria del JSON de la última instrucción"""

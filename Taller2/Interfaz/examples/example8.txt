@@ -1,0 +1,19 @@
+// Calcula la suma de los números impares hasta un límite y aplica pow al final.
+
+// RESULTADO ESPERADO: 81
+
+IMPORTA " Math.txt "
+FUNZIONE main() {
+  contador = 0;
+  suma = 0;
+  limite = 6;
+
+  MENTRE contador < limite {
+    se contador % 2 == 1 {
+      suma = suma + contador;
+    }
+    contador = contador + 1;
+  }
+
+  resultado = pow(suma);
+}

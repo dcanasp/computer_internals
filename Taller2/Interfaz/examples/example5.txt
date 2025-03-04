@@ -1,0 +1,19 @@
+// Calcular el máximo común divisor de 48 y 18
+// RESULTADO ESPERADO: 6
+
+FUNZIONE main() {
+  a = 48
+  b = 18
+  mcd = 0
+
+  MENTRE b > 0 {
+    SE a > b {
+      a = a - b
+    } ALTRIMENTI {
+      b = b - a
+    }
+  }
+
+  mcd = a
+  resultado = mcd
+}

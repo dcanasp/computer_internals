@@ -1,0 +1,123 @@
+programa ::= proposiciones
+
+paquete ::= PACCHETTO ID CL paquete_contenido CR  
+
+paquete_contenido ::= definicion_clase paquete_contenido
+                    | proposicion paquete_contenido
+                    | empty
+                    
+
+algoritmo ::= FUNZIONE ID PL PR CL proposiciones CR
+
+definicion_clase ::= CLASSE ID CL clase_contenido CR
+                 | CLASSE ID ESTENDI ID CL clase_contenido CR
+                 
+clase_contenido ::= clase_elemento clase_contenido
+                | clase_elemento
+                | empty
+                
+clase_elemento ::= modificador ATTRIBUTO ID IG NUMBER SC
+               | modificador METODO ID PL PR CL proposiciones CR
+               
+modificador ::= PRIVATO
+            | PUBBLICO
+            | PROTETTO
+            
+proposiciones ::= proposicion proposiciones
+              | proposicion
+              
+proposicion ::= asignacion SC
+            | asignacion
+            | inicializar_variable SC
+            | inicializar_variable
+            | sentencia_si
+            | sentencia_mientras
+            | sentencia_leer SC
+            | sentencia_leer
+            | sentencia_escribir SC
+            | sentencia_escribir
+            | IMPORTA STRING SC
+            | IMPORTA STRING
+            | llamada_modulo SC
+            | llamada_modulo
+            | instancia_objeto SC
+            | instancia_objeto
+            | muestra_campione SC
+            | muestra_campione
+            | algoritmo
+            
+instancia_objeto ::= OGGETTO ID IG NUOVO ID PL PR
+
+muestra_campione ::= CAMPIONE ID
+
+asignacion ::= ID IG exp_aritmetica
+            | ID IG exp_booleana
+            | ID IG NULL
+            | ID IG STRING
+            | ID IG ID
+            | ID IG NUMBER
+            | ID IG llamada_modulo
+            
+inicializar_variable ::= ID IG NUMBER
+                    | ID IG VERO
+                    | ID IG FALSO
+                    | ID IG STRING
+                    
+factor_aritmetico ::= NUMBER
+                  | ID
+                  
+termino_aritmetico ::= PL termino_aritmetico PR
+                    | termino_aritmetico MUL termino_aritmetico
+                    | termino_aritmetico DIV termino_aritmetico
+                    | termino_aritmetico ADD termino_aritmetico
+                    | termino_aritmetico SUB termino_aritmetico
+                    | termino_aritmetico MOD termino_aritmetico
+                    | factor_aritmetico
+                    | SUB factor_aritmetico
+                    
+exp_aritmetica ::= termino_aritmetico
+
+operador_relacional ::= EQ
+                    | NE
+                    | LE
+                    | GE
+                    | LT
+                    | GT
+                    
+factor_relacional ::= PL factor_relacional PR
+                    | exp_aritmetica operador_relacional exp_aritmetica
+                    
+factor_booleano ::= PL exp_booleana PR
+                | VERO
+                | FALSO
+                | factor_relacional
+                | SUB factor_booleano
+factor_booleano_id ::= factor_booleano
+                    | SUB ID
+                    | ID
+                    
+termino_booleano ::= PL termino_booleano PR
+                | SUB termino_booleano
+                | termino_booleano E termino_booleano
+                | termino_booleano O termino_booleano
+                | factor_booleano
+                
+exp_booleana ::= termino_booleano
+                     | exp_booleana E termino_booleano
+                     | exp_booleana O termino_booleano
+                     
+sentencia_si ::= SE exp_booleana CL proposiciones CR ALTRIMENTI CL proposiciones CR
+             | SE exp_booleana CL proposiciones CR
+             
+sentencia_mientras ::= MENTRE exp_booleana CL proposiciones CR
+
+sentencia_hacer_mientras ::= CL proposiciones MENTRE exp_booleana CR
+
+sentencia_leer ::= LEGGERE PL ID PR SC
+
+sentencia_escribir ::= SCRIVERE PL STRING PR SC
+                    | SCRIVERE PL ID PR SC
+                    
+llamada_modulo ::= ID PL ID PR
+                | ID PL NUMBER PR
+                

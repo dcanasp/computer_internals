@@ -1,0 +1,62 @@
+// Simula un sistema de recolección de tesoros en el que el objetivo es maximizar la cantidad de artefactos en función de la energía disponible.
+// RESULTADO ESPERADO: 36 
+
+IMPORTA " Math.txt "
+FUNZIONE main() {
+  dia = 0;
+  artefactos = 20;
+  energia = 10;
+  equipo = 3;
+  max_dias = 3;
+  limite_energia = 5;
+  valor = 0;
+  tesoro = 0;
+  estado = 0;
+  temporal = 0;
+  temporal2 = 0;
+
+  se artefactos > 15 {
+    artefactos = artefactos / 2;
+    energia = energia + 2;
+  } altrimenti {
+    artefactos = artefactos * 2;
+    energia = energia - 1;
+  }
+
+  MENTRE dia < max_dias {
+    MENTRE equipo > 0 {
+      MENTRE energia > limite_energia {
+        temporal = equipo;
+        temporal2 = temporal + 1;
+        valor = artefactos;
+        valor = valor % temporal2;
+        se valor > 1 {
+          artefactos = artefactos + valor;
+          energia = energia - 1;
+        } altrimenti {
+          se equipo < 2 {
+            temporal = energia;
+            temporal2 = temporal / 2;
+            artefactos = artefactos - temporal2;
+          } altrimenti {
+            temporal = energia;
+            temporal2 = temporal % 2;
+            artefactos = artefactos + temporal2;
+          }
+          energia = energia - 2;
+        }
+        equipo = equipo - 1;
+      }
+      se energia < 3 {
+        estado = estado + 1;
+      }
+      equipo = equipo - 1;
+    }
+    dia = dia + 1;
+    equipo = 3;
+    energia = 10;
+    limite_energia = limite_energia + 1;
+  }
+
+  resultado = pow(artefactos);
+}

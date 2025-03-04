@@ -1,0 +1,16 @@
+// Factorial Manual
+// Calcula el factorial de 4 y le suma 2
+// RESULTADO ESPERADO: 26
+
+FUNZIONE main() {
+  contador = 1;
+  factorial = 1;
+
+  MENTRE contador < 5 {
+    factorial = factorial * contador;
+    contador = contador + 1;
+  }
+
+  resultado = factorial;
+  resultado = resultado + 2;
+}

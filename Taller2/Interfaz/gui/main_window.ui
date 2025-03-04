@@ -123,6 +123,9 @@
           <property name="verticalScrollBarPolicy">
            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
           </property>
+          <property name="lineWrapMode">
+           <enum>QTextEdit::LineWrapMode::WidgetWidth</enum>
+          </property>
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -411,15 +414,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_6">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QPushButton" name="button_saveAsLib">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No implementado&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Posición de memoria inicial:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Guardar Como Librería</string>
           </property>
          </widget>
         </item>
@@ -434,7 +434,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>56</height>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -482,6 +482,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </widget>
         </item>
         <item>
+         <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Posición de memoria inicial:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="sizeConstraint">
            <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
@@ -499,6 +512,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <width>16777215</width>
               <height>30</height>
              </size>
+            </property>
+            <property name="minimum">
+             <number>2000</number>
             </property>
             <property name="maximum">
              <number>8192</number>
@@ -540,7 +556,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>18</height>
            </size>
           </property>
          </spacer>
@@ -9119,7 +9135,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
               </property>
               <property name="rowCount">
-               <number>18</number>
+               <number>28</number>
               </property>
               <property name="columnCount">
                <number>1</number>
@@ -9208,6 +9224,56 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <row>
                <property name="text">
                 <string>R19</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R20</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R21</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R22</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R23</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R24</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R25</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R26</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R27</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R28</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>R29</string>
                </property>
               </row>
               <row>
@@ -9716,7 +9782,7 @@ Bogotá, D.C. Colombia
       <item>
        <layout class="QVBoxLayout" name="layexm">
         <item>
-         <spacer name="verticalSpacer">
+         <spacer name="verticalSpacer_8">
           <property name="orientation">
            <enum>Qt::Orientation::Vertical</enum>
           </property>
@@ -9736,28 +9802,77 @@ Bogotá, D.C. Colombia
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="button_cargar_ex1">
+         <widget class="QPushButton" name="button_cargar_ex01">
           <property name="text">
-           <string>Cargar Ejemplo 1</string>
+           <string>Básico</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="button_cargar_ex2">
+         <widget class="QPushButton" name="button_cargar_ex02">
           <property name="text">
-           <string>Cargar Ejemplo 2</string>
+           <string>Librerías</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="button_cargar_ex3">
+         <widget class="QPushButton" name="button_cargar_ex03">
           <property name="text">
-           <string>Cargar Ejemplo 3</string>
+           <string>Referencias</string>
           </property>
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_8">
+         <widget class="QPushButton" name="button_cargar_ex04">
+          <property name="text">
+           <string>Factorial Manual</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex05">
+          <property name="text">
+           <string>MCD</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex06">
+          <property name="text">
+           <string>Peces</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex07">
+          <property name="text">
+           <string>Tesoros</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex08">
+          <property name="text">
+           <string>Suma Impares</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex09">
+          <property name="text">
+           <string>Suma Sucesión</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_cargar_ex10">
+          <property name="text">
+           <string>Mayor Secuencia</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Orientation::Vertical</enum>
           </property>

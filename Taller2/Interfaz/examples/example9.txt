@@ -1,0 +1,23 @@
+// Calcula el promedio de una sucesión y aplica pow al final.
+// RESULTADO ESPERADO: 16
+
+IMPORTA " Math.txt "
+
+FUNZIONE main() {
+  contador = 0;
+  suma = 0;
+  conteo = 0;
+  limite = 5;
+  valor = 0;
+
+  MENTRE contador < limite {
+    valor = contador + 3;
+    se valor < 6 {
+      suma = suma + valor;
+      conteo = conteo + 1;
+    }
+    contador = contador + 1;
+  }
+  prom = suma / conteo;
+  resultado = pow(prom);
+}

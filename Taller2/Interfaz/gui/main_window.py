@@ -97,6 +97,7 @@ class Ui_MainWindow(object):
         self.textEditCodigoFuente.setMaximumSize(QSize(16777215, 16777215))
         self.textEditCodigoFuente.setFrameShape(QFrame.Shape.StyledPanel)
         self.textEditCodigoFuente.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.textEditCodigoFuente.setLineWrapMode(QTextEdit.LineWrapMode.WidgetWidth)
 
         self.layfuent.addWidget(self.textEditCodigoFuente)
 
@@ -223,14 +224,12 @@ class Ui_MainWindow(object):
 
         self.laymaqreloc.addWidget(self.textEditCodigoReloc)
 
-        self.label_6 = QLabel(self.centralwidget)
-        self.label_6.setObjectName(u"label_6")
-        sizePolicy6.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
-        self.label_6.setSizePolicy(sizePolicy6)
+        self.button_saveAsLib = QPushButton(self.centralwidget)
+        self.button_saveAsLib.setObjectName(u"button_saveAsLib")
 
-        self.laymaqreloc.addWidget(self.label_6)
+        self.laymaqreloc.addWidget(self.button_saveAsLib)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 56, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.laymaqreloc.addItem(self.verticalSpacer_5)
 
@@ -256,6 +255,13 @@ class Ui_MainWindow(object):
 
         self.laylibs.addWidget(self.textEditCodigoLib)
 
+        self.label_6 = QLabel(self.centralwidget)
+        self.label_6.setObjectName(u"label_6")
+        sizePolicy6.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy6)
+
+        self.laylibs.addWidget(self.label_6)
+
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
@@ -264,6 +270,7 @@ class Ui_MainWindow(object):
         sizePolicy6.setHeightForWidth(self.spinBox_pos_enlazar.sizePolicy().hasHeightForWidth())
         self.spinBox_pos_enlazar.setSizePolicy(sizePolicy6)
         self.spinBox_pos_enlazar.setMaximumSize(QSize(16777215, 30))
+        self.spinBox_pos_enlazar.setMinimum(2000)
         self.spinBox_pos_enlazar.setMaximum(8192)
 
         self.horizontalLayout_2.addWidget(self.spinBox_pos_enlazar)
@@ -280,7 +287,7 @@ class Ui_MainWindow(object):
 
         self.laylibs.addLayout(self.horizontalLayout_2)
 
-        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_6 = QSpacerItem(20, 18, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.laylibs.addItem(self.verticalSpacer_6)
 
@@ -456,8 +463,8 @@ class Ui_MainWindow(object):
             self.table_alu.setColumnCount(1)
         __qtablewidgetitem18 = QTableWidgetItem()
         self.table_alu.setHorizontalHeaderItem(0, __qtablewidgetitem18)
-        if (self.table_alu.rowCount() < 18):
-            self.table_alu.setRowCount(18)
+        if (self.table_alu.rowCount() < 28):
+            self.table_alu.setRowCount(28)
         __qtablewidgetitem19 = QTableWidgetItem()
         self.table_alu.setVerticalHeaderItem(0, __qtablewidgetitem19)
         __qtablewidgetitem20 = QTableWidgetItem()
@@ -494,6 +501,26 @@ class Ui_MainWindow(object):
         self.table_alu.setVerticalHeaderItem(16, __qtablewidgetitem35)
         __qtablewidgetitem36 = QTableWidgetItem()
         self.table_alu.setVerticalHeaderItem(17, __qtablewidgetitem36)
+        __qtablewidgetitem37 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(18, __qtablewidgetitem37)
+        __qtablewidgetitem38 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(19, __qtablewidgetitem38)
+        __qtablewidgetitem39 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(20, __qtablewidgetitem39)
+        __qtablewidgetitem40 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(21, __qtablewidgetitem40)
+        __qtablewidgetitem41 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(22, __qtablewidgetitem41)
+        __qtablewidgetitem42 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(23, __qtablewidgetitem42)
+        __qtablewidgetitem43 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(24, __qtablewidgetitem43)
+        __qtablewidgetitem44 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(25, __qtablewidgetitem44)
+        __qtablewidgetitem45 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(26, __qtablewidgetitem45)
+        __qtablewidgetitem46 = QTableWidgetItem()
+        self.table_alu.setVerticalHeaderItem(27, __qtablewidgetitem46)
         self.table_alu.setObjectName(u"table_alu")
         sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy10.setHorizontalStretch(0)
@@ -506,7 +533,7 @@ class Ui_MainWindow(object):
         self.table_alu.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.table_alu.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.table_alu.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.table_alu.setRowCount(18)
+        self.table_alu.setRowCount(28)
         self.table_alu.setColumnCount(1)
         self.table_alu.horizontalHeader().setVisible(False)
         self.table_alu.horizontalHeader().setDefaultSectionSize(153)
@@ -777,33 +804,68 @@ class Ui_MainWindow(object):
 
         self.layexm = QVBoxLayout()
         self.layexm.setObjectName(u"layexm")
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.layexm.addItem(self.verticalSpacer)
+        self.layexm.addItem(self.verticalSpacer_8)
 
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName(u"label_7")
 
         self.layexm.addWidget(self.label_7)
 
-        self.button_cargar_ex1 = QPushButton(self.centralwidget)
-        self.button_cargar_ex1.setObjectName(u"button_cargar_ex1")
+        self.button_cargar_ex01 = QPushButton(self.centralwidget)
+        self.button_cargar_ex01.setObjectName(u"button_cargar_ex01")
 
-        self.layexm.addWidget(self.button_cargar_ex1)
+        self.layexm.addWidget(self.button_cargar_ex01)
 
-        self.button_cargar_ex2 = QPushButton(self.centralwidget)
-        self.button_cargar_ex2.setObjectName(u"button_cargar_ex2")
+        self.button_cargar_ex02 = QPushButton(self.centralwidget)
+        self.button_cargar_ex02.setObjectName(u"button_cargar_ex02")
 
-        self.layexm.addWidget(self.button_cargar_ex2)
+        self.layexm.addWidget(self.button_cargar_ex02)
 
-        self.button_cargar_ex3 = QPushButton(self.centralwidget)
-        self.button_cargar_ex3.setObjectName(u"button_cargar_ex3")
+        self.button_cargar_ex03 = QPushButton(self.centralwidget)
+        self.button_cargar_ex03.setObjectName(u"button_cargar_ex03")
 
-        self.layexm.addWidget(self.button_cargar_ex3)
+        self.layexm.addWidget(self.button_cargar_ex03)
 
-        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.button_cargar_ex04 = QPushButton(self.centralwidget)
+        self.button_cargar_ex04.setObjectName(u"button_cargar_ex04")
 
-        self.layexm.addItem(self.verticalSpacer_8)
+        self.layexm.addWidget(self.button_cargar_ex04)
+
+        self.button_cargar_ex05 = QPushButton(self.centralwidget)
+        self.button_cargar_ex05.setObjectName(u"button_cargar_ex05")
+
+        self.layexm.addWidget(self.button_cargar_ex05)
+
+        self.button_cargar_ex06 = QPushButton(self.centralwidget)
+        self.button_cargar_ex06.setObjectName(u"button_cargar_ex06")
+
+        self.layexm.addWidget(self.button_cargar_ex06)
+
+        self.button_cargar_ex07 = QPushButton(self.centralwidget)
+        self.button_cargar_ex07.setObjectName(u"button_cargar_ex07")
+
+        self.layexm.addWidget(self.button_cargar_ex07)
+
+        self.button_cargar_ex08 = QPushButton(self.centralwidget)
+        self.button_cargar_ex08.setObjectName(u"button_cargar_ex08")
+
+        self.layexm.addWidget(self.button_cargar_ex08)
+
+        self.button_cargar_ex09 = QPushButton(self.centralwidget)
+        self.button_cargar_ex09.setObjectName(u"button_cargar_ex09")
+
+        self.layexm.addWidget(self.button_cargar_ex09)
+
+        self.button_cargar_ex10 = QPushButton(self.centralwidget)
+        self.button_cargar_ex10.setObjectName(u"button_cargar_ex10")
+
+        self.layexm.addWidget(self.button_cargar_ex10)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.layexm.addItem(self.verticalSpacer)
 
 
         self.detailshorizlay.addLayout(self.layexm)
@@ -849,8 +911,12 @@ class Ui_MainWindow(object):
         self.labelASM.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; color:#27ae60;\">Programa en Assembler</span></p></body></html>", None))
         self.button_assembler.setText(QCoreApplication.translate("MainWindow", u"Ensamblar", None))
         self.labelMaquinaRelocalizable.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"right\"><span style=\" font-size:12pt; color:#aa00ff;\">C\u00f3digo m\u00e1quina relocalizable</span></p></body></html>", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"right\">Posici\u00f3n de memoria inicial:</p></body></html>", None))
+#if QT_CONFIG(tooltip)
+        self.button_saveAsLib.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>No implementado</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.button_saveAsLib.setText(QCoreApplication.translate("MainWindow", u"Guardar Como Librer\u00eda", None))
         self.labelLibs.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:12pt; color:#aa00ff;\">+ Librer\u00edas</span></p></body></html>", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Posici\u00f3n de memoria inicial:</p></body></html>", None))
         self.button_linker.setText(QCoreApplication.translate("MainWindow", u"Enlazar y Cargar", None))
         self.label_ram.setText(QCoreApplication.translate("MainWindow", u"<html><div align='center'><span style='font-size:14pt; color:#2c3e50;'>RAM</span></div></html>", None))
 
@@ -918,9 +984,29 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem21 = self.table_alu.verticalHeaderItem(15)
         ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"R19", None));
         ___qtablewidgetitem22 = self.table_alu.verticalHeaderItem(16)
-        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"R30", None));
+        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"R20", None));
         ___qtablewidgetitem23 = self.table_alu.verticalHeaderItem(17)
-        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"R31", None));
+        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"R21", None));
+        ___qtablewidgetitem24 = self.table_alu.verticalHeaderItem(18)
+        ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"R22", None));
+        ___qtablewidgetitem25 = self.table_alu.verticalHeaderItem(19)
+        ___qtablewidgetitem25.setText(QCoreApplication.translate("MainWindow", u"R23", None));
+        ___qtablewidgetitem26 = self.table_alu.verticalHeaderItem(20)
+        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"R24", None));
+        ___qtablewidgetitem27 = self.table_alu.verticalHeaderItem(21)
+        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"R25", None));
+        ___qtablewidgetitem28 = self.table_alu.verticalHeaderItem(22)
+        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"R26", None));
+        ___qtablewidgetitem29 = self.table_alu.verticalHeaderItem(23)
+        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"R27", None));
+        ___qtablewidgetitem30 = self.table_alu.verticalHeaderItem(24)
+        ___qtablewidgetitem30.setText(QCoreApplication.translate("MainWindow", u"R28", None));
+        ___qtablewidgetitem31 = self.table_alu.verticalHeaderItem(25)
+        ___qtablewidgetitem31.setText(QCoreApplication.translate("MainWindow", u"R29", None));
+        ___qtablewidgetitem32 = self.table_alu.verticalHeaderItem(26)
+        ___qtablewidgetitem32.setText(QCoreApplication.translate("MainWindow", u"R30", None));
+        ___qtablewidgetitem33 = self.table_alu.verticalHeaderItem(27)
+        ___qtablewidgetitem33.setText(QCoreApplication.translate("MainWindow", u"R31", None));
         self.label_control.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; color:#aa00ff;\">Unidad de control</span></p></body></html>", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Argumento 2", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Program Counter", None))
@@ -961,8 +1047,15 @@ class Ui_MainWindow(object):
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Entrada del computador", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Salida del computador", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; color:#5555ff;\">Ejemplos</span></p></body></html>", None))
-        self.button_cargar_ex1.setText(QCoreApplication.translate("MainWindow", u"Cargar Ejemplo 1", None))
-        self.button_cargar_ex2.setText(QCoreApplication.translate("MainWindow", u"Cargar Ejemplo 2", None))
-        self.button_cargar_ex3.setText(QCoreApplication.translate("MainWindow", u"Cargar Ejemplo 3", None))
+        self.button_cargar_ex01.setText(QCoreApplication.translate("MainWindow", u"B\u00e1sico", None))
+        self.button_cargar_ex02.setText(QCoreApplication.translate("MainWindow", u"Librer\u00edas", None))
+        self.button_cargar_ex03.setText(QCoreApplication.translate("MainWindow", u"Referencias", None))
+        self.button_cargar_ex04.setText(QCoreApplication.translate("MainWindow", u"Factorial Manual", None))
+        self.button_cargar_ex05.setText(QCoreApplication.translate("MainWindow", u"MCD", None))
+        self.button_cargar_ex06.setText(QCoreApplication.translate("MainWindow", u"Peces", None))
+        self.button_cargar_ex07.setText(QCoreApplication.translate("MainWindow", u"Tesoros", None))
+        self.button_cargar_ex08.setText(QCoreApplication.translate("MainWindow", u"Suma Impares", None))
+        self.button_cargar_ex09.setText(QCoreApplication.translate("MainWindow", u"Suma Sucesi\u00f3n", None))
+        self.button_cargar_ex10.setText(QCoreApplication.translate("MainWindow", u"Mayor Secuencia", None))
     # retranslateUi
 

@@ -1,4 +1,11 @@
-INCLUDERE <"testlib.txt">
-FUNZIONE calcular
-SE x > 10
-ALTRIMENTI x = x + 1
+// Básico
+// RESULTADO ESPERADO: 5
+
+FUNZIONE main() {
+  x = 8;
+  resultado = 0;
+
+  se x > 5 {
+    resultado = x - 3;
+  }
+}

@@ -2,14 +2,16 @@
 # Ignora todo
 !/**/
 # No ignora los directorios
-!*.*
+!*.* 
 # No ignora los archivos que tengan extensión.
 # Solo quedan los archivos que no tengan extensión
 *.exe
 exe/*
 
 # Ignora todo en taller2/nlp_env
-taller2/nlp_env/**
+Taller2/nlp_env/**
+Taller2/Interfaz/rawModules/Compilador/build/**
+Taller2/Interfaz/build/**
 
 # Excepciones para LICENSE y Makefile
 !LICENSE

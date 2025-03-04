@@ -1,0 +1,20 @@
+Tabla de Símbolos:
+ Math.txt : STRING
+main: ID
+dia: ID
+0: NUMBER
+peces: ID
+10: NUMBER
+energia: ID
+2: NUMBER
+max_dias: ID
+4: NUMBER
+valor: ID
+tiempo: ID
+temporal: ID
+5: NUMBER
+1: NUMBER
+resultado: ID
+efectivo: ID
+resultado2: ID
+pow: ID

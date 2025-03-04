@@ -1,0 +1,20 @@
+// Busca el mayor valor en una secuencia y aplica fact al final.
+// RESULTADO ESPERADO: 5040
+
+IMPORTA " Math.txt "
+FUNZIONE main() {
+  contador = 0;
+  mayor = 5;
+  valor = 0;
+  limite = 3;
+
+  MENTRE contador < limite {
+    valor = contador + 5;
+    se valor > mayor {
+      mayor = valor;
+    }
+    contador = contador + 1;
+  }
+
+  resultado = fact(mayor);
+}
